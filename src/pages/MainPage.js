@@ -1,11 +1,13 @@
-import {Container} from "react-bootstrap";
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 const MainPage = () => {
     return(
-        <div>
-            <Container>
-                <h1>asdadadadad</h1>
-            </Container>
+        <div className="container-fluid">
+           <div className="row d-flex">
+               <div className="col-md-12">
+                   <h1>Content</h1>
+               </div>
+           </div>
         </div>
     )
 }
