@@ -1,7 +1,6 @@
-.box ul>li:hover{
-    margin-left: 8px;
-    transition: 0.3s;
+.dx:hover{
     background-color: #157ED9;
     border-radius: 5px;
     padding: 4px 8px;
+    display: block;
 }

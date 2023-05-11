@@ -6,7 +6,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import ModbusClients from "./pages/componenets/ModbusClients";
 import ModbusItems from "./pages/componenets/ModbusItems";
 import React, {useState} from "react";
-import {BsArrowLeftSquareFill, BsArrowRightSquareFill} from "react-icons/bs";
+import {FaBars} from "react-icons/fa";
+import {GrClose} from "react-icons/gr";
 
 function App() {
     const [open,setOpen] = useState(false);
@@ -18,7 +19,7 @@ function App() {
       <div className={'p-0 m-0 w-100'}>
           <div className="d-flex">
               <div className="p-2" style={open?{height:"100vh",backgroundColor:"#042038",width:"5%"}:{height:"100vh",backgroundColor:"#042038",width:"20%"}}>
-                  <button className="btn btn-light" onClick={isOpen}>{open?<BsArrowRightSquareFill style={{color:"#042038"}}/>:<BsArrowLeftSquareFill style={{color:"#042038"}}/> }</button>
+                  <button className="btn btn-light" onClick={isOpen}>{open?<FaBars style={{color:"#042038"}}/>:<GrClose style={{color:"#042038"}}/> }</button>
                       <DashboardMenu open={open}/>
               </div>
               <div className=" p-2" style={open?{width:"95%"}:{width:"80%"}}>

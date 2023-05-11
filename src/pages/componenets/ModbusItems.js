@@ -87,22 +87,27 @@ const ModbusItems =()=> {
     }
 
     const sendData=()=>{
-        axios.post(SAVE_MODBUS_ITEM,{
-            tagName:document.getElementById('tagName').value,
-            register:document.getElementById('register').value,
-            type:document.getElementById('type').value,
-            address:document.getElementById('address').value,
-            modbusC:modbus
-        })
-            .then(res=>{
-                console.log(res)
-                getModItems()
-                setIsOpen(false)
-                toast.success("Saved");
+        if (document.getElementById('tagName').value!=="" && document.getElementById('register').value!=="" && document.getElementById('type').value!=="" && document.getElementById('address').value!==''){
+            axios.post(SAVE_MODBUS_ITEM,{
+                tagName:document.getElementById('tagName').value,
+                register:document.getElementById('register').value,
+                type:document.getElementById('type').value,
+                address:document.getElementById('address').value,
+                modbusC:modbus
             })
-            .catch(error=>{
-                toast.error("No Saved");
-            })
+                .then(res=>{
+                    console.log(res)
+                    getModItems()
+                    setIsOpen(false)
+                    toast.success("Saved");
+                })
+                .catch(error=>{
+                    toast.error("No Saved");
+                })
+        }else {
+            toast.error("Object null! No Saved");
+        }
+
     }
     //   ****Register Types*********
     const [types,setTypes] = useState([]);

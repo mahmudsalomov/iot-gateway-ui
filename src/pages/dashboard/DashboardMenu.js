@@ -10,20 +10,17 @@ const DashboardMenu =(props)=> {
         fontSize:"22px",
         textDecoration:"none"
     };
-    const styleLi = {
-        padding:"3px 0"
-    };
 
         return (
                 <div className=" position-fixed p-3 box" style={props.open?{width:"5%"}:{width:"20%"}} >
-                    <div className="d-flex justify-content-between align-items-center">
-                        <h2 className="text-white"><MdOutlineAdminPanelSettings /> {props.open?"":"IOT Gateway Admin"}</h2>
-                    </div>
-                    <div style={{backgroundColor:"white",width:"100%",height:"2px"}}></div>
-                    <ul className="list-unstyled p-3">
-                       <li style={styleLi}><NavLink style={styleNavLink} className="text-white" to="/"><RiFileList2Fill/>{props.open?"":"Modbus Clients"}</NavLink></li>
-                       <li style={styleLi}><NavLink style={styleNavLink} className="text-white" to="/items"><RiFileList3Fill/>{props.open?"":"Modbus Items"}</NavLink></li>
-                       <li style={styleLi}><NavLink style={styleNavLink} className="text-white" to="/"><ImExit/>{props.open?"":"Exit"}</NavLink></li>
+                    <ul className=" list-unstyled p-3">
+                        <div className="d-flex justify-content-between align-items-center">
+                            <h3 className="text-white"><MdOutlineAdminPanelSettings style={{fontSize:"32px"}} /> {props.open?"":"IOT Gateway Admin"}</h3>
+                        </div>
+                        <div className="my-2" style={{backgroundColor:"white",width:"100%",height:"2px"}}></div>
+                       <NavLink style={styleNavLink} className="text-white dx d-block" to="/"><RiFileList2Fill/>{props.open?"":"Modbus Clients"}</NavLink>
+                       <NavLink style={styleNavLink} className="text-white dx d-block" to="/items"><RiFileList3Fill/>{props.open?"":"Modbus Items"}</NavLink>
+                       <NavLink style={styleNavLink} className="text-white dx d-block" to="/"><ImExit/>{props.open?"":"Exit"}</NavLink>
                     </ul>
                 </div>
         );

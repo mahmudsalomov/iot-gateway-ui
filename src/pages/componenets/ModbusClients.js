@@ -56,28 +56,31 @@ const ModbusClients =()=> {
     }
 
     const sendData=()=>{
-        axios.post(SAVE_MODBUS_CLIENT,{
-            id:null,
-            name:document.getElementById('name')?.value,
-            ip:document.getElementById('ip')?.value,
-            port:document.getElementById('port')?.value,
-            polling:document.getElementById('polling')?.value,
-            slaveId:document.getElementById('slaveId')?.value,
-            enable:document.getElementById('enable')?.checked
-        })
+        if (document.getElementById('name').value!=="" && document.getElementById('ip').value!=="" && document.getElementById('port').value!=='' && document.getElementById('polling').value!=='' && document.getElementById('slaveId').value!==''){
+            axios.post(SAVE_MODBUS_CLIENT,{
+                id:null,
+                name:document.getElementById('name')?.value,
+                ip:document.getElementById('ip')?.value,
+                port:document.getElementById('port')?.value,
+                polling:document.getElementById('polling')?.value,
+                slaveId:document.getElementById('slaveId')?.value,
+                enable:document.getElementById('enable')?.checked
+            })
 
-            .then(res=>{
-                console.log(res)
-                setIsOpen(false)
-                getMClients()
-                toast.success("Saved");
-            })
-            .catch(error=>{
-                toast.error("Error");
-                setIsOpen(false)
-            })
+                .then(res=>{
+                    console.log(res)
+                    setIsOpen(false)
+                    getMClients()
+                    toast.success("Saved");
+                })
+                .catch(error=>{
+                    toast.error("Error");
+                    setIsOpen(false)
+                })
+        }else {
+            toast.error("Object null! No saved")
+        }
     }
-
     const deleteModC=(id)=>{
         axios.delete(DELETE_MODBUS_CLIENT+id)
             .then(res=>{
