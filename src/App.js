@@ -5,15 +5,23 @@ import DashboardMenu from "./pages/dashboard/DashboardMenu";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import ModbusClients from "./pages/componenets/ModbusClients";
 import ModbusItems from "./pages/componenets/ModbusItems";
+import React, {useState} from "react";
+import {BsArrowLeftSquareFill, BsArrowRightSquareFill} from "react-icons/bs";
 
 function App() {
+    const [open,setOpen] = useState(false);
+    const isOpen=()=>{
+        setOpen(!open);
+    }
+
   return (
       <div className={'p-0 m-0 w-100'}>
           <div className="d-flex">
-              <div className="p-3" style={{height:"100vh",backgroundColor:"#042038",width:"20%"}}>
-                      <DashboardMenu/>
+              <div className="p-2" style={open?{height:"100vh",backgroundColor:"#042038",width:"5%"}:{height:"100vh",backgroundColor:"#042038",width:"20%"}}>
+                  <button className="btn btn-light" onClick={isOpen}>{open?<BsArrowRightSquareFill style={{color:"#042038"}}/>:<BsArrowLeftSquareFill style={{color:"#042038"}}/> }</button>
+                      <DashboardMenu open={open}/>
               </div>
-              <div className=" p-3" style={{width:"80%"}}>
+              <div className=" p-2" style={open?{width:"95%"}:{width:"80%"}}>
                   <Routes>
                       {/*<Route path={"/wells/:wellId"} element={<MapLayout/>}/>*/}
                       <Route exact path={"/"} element={<ModbusClients/>}/>

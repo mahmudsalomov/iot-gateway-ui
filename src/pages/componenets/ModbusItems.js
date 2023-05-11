@@ -3,7 +3,7 @@ import {BiEdit} from "react-icons/bi";
 import {RiDeleteBin6Fill} from "react-icons/ri";
 import axios from "axios";
 import {
-    DELETE_MODBUS_ITEM,
+    DELETE_MODBUS_ITEM, EDIT_MODBUS_ITEM,
     GET_ALL_MODBUS_CLIENT,
     GET_ALL_MODBUS_ITEM, GET_ALL_REGISTER_TYPE, GET_ALL_REGISTER_VAR_TYPE,
     GET_BY_MC_ID_MODBUS_ITEM,
@@ -11,6 +11,8 @@ import {
 } from "../../utils/API_PATH";
 import Modal from "react-modal";
 import {type} from "@testing-library/user-event/dist/type";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ModbusItems =()=> {
 
@@ -75,6 +77,15 @@ const ModbusItems =()=> {
         setIsOpen(false);
     }
 
+    const [modalEditIsOpen, setEdetIsOpen] = React.useState(false);
+
+    function openEditModal() {
+        setEdetIsOpen(true);
+    }
+    function closeEditModal() {
+        setEdetIsOpen(false);
+    }
+
     const sendData=()=>{
         axios.post(SAVE_MODBUS_ITEM,{
             tagName:document.getElementById('tagName').value,
@@ -87,6 +98,10 @@ const ModbusItems =()=> {
                 console.log(res)
                 getModItems()
                 setIsOpen(false)
+                toast.success("Saved");
+            })
+            .catch(error=>{
+                toast.error("No Saved");
             })
     }
     //   ****Register Types*********
@@ -111,14 +126,52 @@ const ModbusItems =()=> {
         axios.delete(DELETE_MODBUS_ITEM+id)
             .then(res=>{
                 getModItems()
+                toast.success("Deleted");
+            })
+            .catch(error=>{
+                toast.error("No Deleted");
+            })
+    }
+
+
+    const [mItem,setMItem] = useState({});
+    const [tagname,setTagname] = useState("");
+    const [register,setRegister] = useState("");
+    const [registerType,setRegisterType] = useState("");
+    const [address,setAddress] = useState(0);
+    const [mClient,setMClient] = useState({});
+    const editItem=(item)=>{
+        openEditModal();
+        setMItem(item);
+        setMClient(item?.modbusC)
+    }
+
+    const sendEditData=()=>{
+        axios.put(EDIT_MODBUS_ITEM,{
+            id:mItem?.id,
+            tagName:tagname!==""?tagname:mItem.tagName,
+            register:register!==""?register:mItem.register,
+            type:registerType!==""?registerType:mItem.type,
+            address:address!==0?address:mItem.address,
+            modbusC:mClient
+        })
+            .then(res=>{
+                closeEditModal();
+                getModItems();
+                toast.success("Edited");
+            })
+            .catch(error=>{
+                toast.error("No Edited");
             })
     }
 
     useEffect(()=>{
-        getModItems();
+        // setInterval(()=>{getModItems()},5000)
         getMClients();
         getAllRegisterType();
         getAllRegisterVarType();
+        getModItems()
+
     },[])
 
         return (
@@ -141,6 +194,7 @@ const ModbusItems =()=> {
                                 <th>ID</th>
                                 <th>ADDRESS</th>
                                 <th>TAG NAME</th>
+                                <th>REGISTER</th>
                                 <th>TYPE</th>
                                 <th>VALUE</th>
                                 <th>Edit</th>
@@ -154,15 +208,16 @@ const ModbusItems =()=> {
                                     <td>{mItem.id}</td>
                                     <td>{mItem.address}</td>
                                     <td>{mItem.tagName}</td>
+                                    <td>{mItem.register}</td>
                                     <td>{mItem.type}</td>
-                                    <td>{mItem.value}</td>
-                                    <td><button className="btn btn-primary" ><BiEdit/></button></td>
+                                    <td>{mItem.value==="ERROR"?"No Segnal":mItem.value}</td>
+                                    <td><button className="btn btn-primary" onClick={()=>editItem(mItem)}><BiEdit/></button></td>
                                     <td><button className="btn btn-danger" onClick={()=>removeItem(mItem.id)}><RiDeleteBin6Fill/></button></td>
                                 </tr>
                             )}
                             </tbody>
                         </table>
-
+                        <ToastContainer />
 
                         <Modal
                             style={customStyles}
@@ -204,6 +259,49 @@ const ModbusItems =()=> {
                             <div className="d-flex justify-content-between my-2">
                                 <button onClick={closeModal} className="btn btn-danger">close</button>
                                 <button onClick={()=>sendData()} className="btn btn-success">Save</button>
+                            </div>
+                        </Modal>
+
+                        <Modal
+                            style={customStyles}
+                            isOpen={modalEditIsOpen}
+                            contentLabel="Example Modal"
+                        >
+                            <div>
+                                <input id="tagName" className="form-control my-2" defaultValue={mItem.tagName} onChange={(e)=>setTagname(e.target.value)} required={true} type="text" placeholder="Enter TagName"/>
+                                {/*<input id="register" className="form-control my-2" required={true} type="text" placeholder="Enter Register"/>*/}
+                                <div className="d-flex justify-content-between align-items-center my-2 p-2 border">
+                                    <p className="my-0">Register : </p>
+                                    <select defaultValue={mItem.register} name="" id="register" onChange={(e)=>setRegister(e.target.value)} className="form-select-sm">
+                                        {
+                                            types?.map(type=>
+                                                <option value={type}>{type}</option>
+                                            )
+                                        }
+                                    </select>
+                                </div>
+                                <div className="d-flex justify-content-between align-items-center my-2 p-2 border">
+                                    <p className="my-0">Register Type : </p>
+                                    <select name="" defaultValue={mItem.type} onChange={(e)=>setRegisterType(e.target.value)} id="type" className="form-select-sm">
+                                        {
+                                            varTypes?.map(type=>
+                                                <option value={type}>{type}</option>
+                                            )
+                                        }
+                                    </select>
+                                </div>
+
+                                <input id="address" defaultValue={mItem.address} onChange={(e)=>setAddress(e.target.value)} className="form-control my-2" required={true} type="number" placeholder="Enter Address"/>
+                                <div className="d-flex justify-content-between align-items-center p-2 border">
+                                    <p className="my-0">Modbus Client : </p>
+                                    <select value={mClient?.name} id="modbusC" className="form-select-sm my-1">
+                                        <option>{mClient?.name}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="d-flex justify-content-between my-2">
+                                <button onClick={closeEditModal} className="btn btn-danger">close</button>
+                                <button onClick={()=>sendEditData()} className="btn btn-success">Edit</button>
                             </div>
                         </Modal>
 
