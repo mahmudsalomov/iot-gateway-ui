@@ -22,7 +22,7 @@ function App() {
                   <button className="btn btn-light" onClick={isOpen}>{open?<FaBars style={{color:"#042038"}}/>:<GrClose style={{color:"#042038"}}/> }</button>
                       <DashboardMenu open={open}/>
               </div>
-              <div className=" p-2" style={open?{width:"95%"}:{width:"80%"}}>
+              <div className=" p-2" style={open?{width:"95%",backgroundColor:"#F7FAFA"}:{width:"80%",backgroundColor:"#F7FAFA"}}>
                   <Routes>
                       {/*<Route path={"/wells/:wellId"} element={<MapLayout/>}/>*/}
                       <Route exact path={"/"} element={<ModbusClients/>}/>

@@ -4,7 +4,7 @@ import {
     DELETE_MODBUS_CLIENT,
     EDIT_MODBUS_CLIENT,
     GET_ALL_MODBUS_CLIENT, IS_CONNECT_ID_MODBUS_CLIENT,
-    SAVE_MODBUS_CLIENT
+    SAVE_MODBUS_CLIENT, SEARCH_BY_NAME_MODBUS_CLIENT
 } from "../../utils/API_PATH";
 import {BiEdit} from "react-icons/bi";
 import {RiDeleteBin6Fill} from "react-icons/ri";
@@ -139,13 +139,31 @@ const ModbusClients =()=> {
             })
     }
 
+    const search=(name)=>{
+        if (name!==""){
+            axios.get(SEARCH_BY_NAME_MODBUS_CLIENT+name)
+                .then(res=>{
+                    console.log("dsdsd : ",res)
+                    setModbusClients(res.data)
+                })
+                .catch(error=>{
+                    console.log(error.message)
+                })
+        }else {
+            getMClients()
+        }
+    }
+
     useEffect(()=>{
        getMClients()
     },[])
         return (
             <div>
                 <h1>Modbus Clients</h1>
-                <button className="btn btn-success py-2 my-2" onClick={openModal}>Add</button>
+                <div className="d-flex align-items-center">
+                    <button className="btn btn-success py-2 my-2" onClick={openModal}>Add</button>
+                    <input type="text" className="form-control-sm mx-2" onChange={(e)=>search(e.target.value)} placeholder="search"/>
+                </div>
                 <div>
                     <table className="table table-striped table-bordered">
                         <thead>

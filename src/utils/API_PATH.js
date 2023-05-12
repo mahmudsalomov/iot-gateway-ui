@@ -6,6 +6,7 @@ export const SAVE_MODBUS_CLIENT = BASE_PATH + "/modbus/client";
 export const EDIT_MODBUS_CLIENT = BASE_PATH + "/modbus/client";
 export const DELETE_MODBUS_CLIENT = BASE_PATH + "/modbus/client/";
 export const GET_ID_MODBUS_CLIENT = BASE_PATH + "/modbus/client/";
+export const SEARCH_BY_NAME_MODBUS_CLIENT = BASE_PATH + "/modbus/client/search/";
 export const IS_CONNECT_ID_MODBUS_CLIENT = BASE_PATH + "/modbus/client/isConnect/";
 
 // ***********Modbus Items**********
