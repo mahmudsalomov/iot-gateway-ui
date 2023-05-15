@@ -35,7 +35,8 @@ const ModbusItems =()=> {
 
     const [modbus,setModbus] = useState({})
     const getItemByMCId=(id)=>{
-        if (id!==""){
+        console.log("id : ",id)
+        if (id!==undefined){
             axios.get(GET_BY_MC_ID_MODBUS_ITEM+id)
                 .then(res=>{
                     console.log(res.data.content)
@@ -46,7 +47,7 @@ const ModbusItems =()=> {
                     console.log(error.message)
                 })
         }else {
-            getModItems()
+            getModItems();
         }
 
     }
@@ -77,13 +78,13 @@ const ModbusItems =()=> {
         setIsOpen(false);
     }
 
-    const [modalEditIsOpen, setEdetIsOpen] = React.useState(false);
+    const [modalEditIsOpen, setEditIsOpen] = React.useState(false);
 
     function openEditModal() {
-        setEdetIsOpen(true);
+        setEditIsOpen(true);
     }
     function closeEditModal() {
-        setEdetIsOpen(false);
+        setEditIsOpen(false);
     }
 
     const sendData=()=>{
@@ -187,7 +188,7 @@ const ModbusItems =()=> {
                         <select onChange={(e)=>getItemByMCId(e.target.value)} className="form-select-sm mx-2" id="modbusC">
                             <option value="">Select Modbus Clients</option>
                             {modbusClients?.map((mClient,key)=>
-                                    <option  value={mClient.id}>{key+1+" | "+mClient.name}</option>
+                                    <option  value={mClient.id}>{key+1+" - "+mClient.name}</option>
                             )}
                         </select>
                     </div>
@@ -215,7 +216,7 @@ const ModbusItems =()=> {
                                     <td>{mItem.tagName}</td>
                                     <td>{mItem.register}</td>
                                     <td>{mItem.type}</td>
-                                    <td>{mItem.value==="ERROR"?"No Segnal":mItem.value}</td>
+                                    <td>{mItem?.value==="ERROR"?"No Segnal":mItem?.value}</td>
                                     <td><button className="btn btn-primary" onClick={()=>editItem(mItem)}><BiEdit/></button></td>
                                     <td><button className="btn btn-danger" onClick={()=>removeItem(mItem.id)}><RiDeleteBin6Fill/></button></td>
                                 </tr>
