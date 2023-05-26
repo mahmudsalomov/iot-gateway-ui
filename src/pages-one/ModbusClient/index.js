@@ -21,11 +21,17 @@ function ModbusClient() {
         if (open.item) {
             values["id"] = open?.item
         }
+        let methodType = "";
+        if (values?.id!==null){
+            methodType+="put"
+        }else {
+            methodType+="post"
+        }
         console.log("open : ",open?.item)
         setLoader(true)
         try {
             let resp = await instance({
-                method: "post",
+                method: methodType,
                 url: "/modbus/client",
                 data: values
             })
@@ -67,6 +73,7 @@ function ModbusClient() {
             })
             console.log("RESSSSSSSSSSS : ",resp)
             console.log("total : ",resp?.data?.totalElements)
+            setLoading(false)
             setTotal(resp?.data?.totalElements)
             setPage(resp?.data?.totalPages)
             setClients(resp?.data?.content)
@@ -117,16 +124,17 @@ function ModbusClient() {
                                 <td>
                                     <div className="d-flex justify-content-lg-center p-2">
                                         <FaEdit
-                                            style={{color: 'green',fontSize: 30}}
+                                            style={{color: 'green',fontSize: 24}}
                                             onClick={() => {
                                                 console.log("click")
                                                 setOpen({open: true, item: client?.id})
                                                 form.setFieldsValue(client)
                                             }}/>
+
                                         <Popconfirm
                                             onConfirm={()=>removeModbusClient(client?.id)}
                                                     title={"Are sure?"}>
-                                            <DeleteOutlined style={{color: 'red' ,fontSize: 30}}/>
+                                            <DeleteOutlined style={{color: 'red' ,fontSize: 24}}/>
                                         </Popconfirm>
                                     </div>
                                 </td>
@@ -134,6 +142,15 @@ function ModbusClient() {
                         )}
                         </tbody>
                     </table>
+
+                    <Pagination
+                        showQuickJumper
+                        defaultCurrent={1}
+                        total={total}
+                         />
+
+
+                {/*    ***********************Modal ***********************/}
 
                     <Modal
                         footer={false}
@@ -181,7 +198,7 @@ function ModbusClient() {
                                 {/*</Col>*/}
                                 <Col span={24} className="d-flex justify-content-end">
                                     <Button onClick={() => {
-                                        setOpen(false);
+                                        setOpen({open: false, item: undefined})
                                         form.resetFields()
                                     }} type="primary" danger htmlType="button">Cancel</Button>
                                     <Button type="default" className="mx-1" htmlType="reset">Reset</Button>
@@ -191,11 +208,6 @@ function ModbusClient() {
                         </Form>
                     </Modal>
 
-                    <Pagination
-                        showQuickJumper
-                        defaultCurrent={1}
-                        total={total}
-                         />
                 </Col>
             </Row>
         </div>
