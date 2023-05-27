@@ -14,6 +14,8 @@ import {GiMovementSensor} from "react-icons/gi";
 import {RiLogoutBoxLine} from "react-icons/ri";
 import AppRoutes from "../AppRoutes";
 import {SiMumble} from "react-icons/si";
+import {MdSensorWindow} from "react-icons/md";
+import {RxValue} from "react-icons/rx";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -23,6 +25,16 @@ const DashboardComponent= () => {
     const {
         token: { colorBgContainer },
     } = theme.useToken();
+
+    let dataModbus= [
+        {label:"Клиенты Modbus",icon:<BsDeviceSsd style={{fontSize:"20px"}}/>,key:"/"},
+        {label:"Пункт Modbus",icon:<GiMovementSensor style={{fontSize:"20px"}}/>,key:"/item"}
+    ];
+
+    let dataSimulation= [
+        {label:"Симуляция",icon:<BsDeviceSsd style={{fontSize:"20px"}}/>,key:"/simulation"},
+        {label:"Значение симуляция",icon:<RxValue style={{fontSize:"20px"}}/>,key:"/simValue"}
+    ];
 
     return (
         <Layout className="d-flex">
@@ -56,20 +68,31 @@ const DashboardComponent= () => {
                     defaultSelectedKeys={['1']}
                     items={[
                         {
-                            label: "Клиенты Modbus",
-                            icon: <BsDeviceSsd style={{fontSize:"20px"}}/>,
-                            key: "/"
+                            label: "Modbus",
+                            icon: <MdSensorWindow/>,
+                            children: (
+                                dataModbus?.map(value => {
+                                    return {
+                                        label:value?.label,
+                                        icon:value?.icon,
+                                        key:value?.key
+                                    }
+                                })
+                            )
                         },
-                        {
 
-                            label: "Пункт Modbus",
-                            key: "/item",
-                            icon: <GiMovementSensor style={{fontSize:"20px"}}/>
-                        },
                         {
-                            label: "Моделирование",
+                            label: "Симуляция",
                             icon: <SiMumble style={{fontSize:"20px"}}/>,
-                            key: '/simulation',
+                            children: (
+                                dataSimulation?.map(value => {
+                                    return {
+                                        label:value?.label,
+                                        icon:value?.icon,
+                                        key:value?.key
+                                    }
+                                })
+                            )
                         },
                         {
                             label: "Выход",
