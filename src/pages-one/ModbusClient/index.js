@@ -5,6 +5,8 @@ import {useEffect, useState} from "react";
 import instance from "../../utils/axios_config";
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 import {BiAddToQueue} from "react-icons/bi";
+import {GrUpdate} from "react-icons/gr";
+import {toast, ToastContainer} from "react-toastify";
 
 function ModbusClient() {
     const [form] = Form.useForm()
@@ -39,6 +41,11 @@ function ModbusClient() {
                 setLoader(false)
                 message.success(resp.data.message)
                 setOpen({open: false, item: undefined});
+            if (methodType==="post"){
+                toast.success("saved - "+values?.name)
+            }else {
+                toast.success("update - "+values?.name)
+            }
                 getAllMClient()
                 form.resetFields()
                 setReload(!reload)
@@ -48,19 +55,60 @@ function ModbusClient() {
             // }
         } catch (e) {
             message.error("Error")
+            if (values["id"]!==null){
+                toast.error("No update")
+            }else {
+                toast.error("No saved")
+            }
             setLoader(false)
         }
     }
-    const removeModbusClient=async (id)=> {
+
+    const resetModC=async (client)=>{
+        try {
+            setLoader(true)
+            let resp = await instance({
+                method: "get",
+                url: `/modbus/client/reset/${client?.id}`
+            })
+            setLoader(false)
+            toast.success("reset "+client?.name)
+            console.log(resp)
+        }catch (e){
+            console.log("error")
+            setLoader(false)
+        }
+    }
+    const removeModbusClient=async (client)=> {
         try {
             let resp = await instance({
                 method: "delete",
-                url: `/modbus/client/${id}`
+                url: `/modbus/client/${client?.id}`
             })
             getAllMClient();
             message.success(resp.data.message)
+            toast.success("Delete - "+client?.name)
         } catch (e) {
             message.error("Error")
+        }
+    }
+
+    const changeIsConnected=async (client,value)=>{
+        try {
+            console.log("connnn : ",value)
+            let res = await instance({
+                method:"get",
+                url: `/modbus/client/isConnect/${client?.id}`
+            })
+            console.log(res);
+            if (value){
+                toast.success(client?.name+" - Connected")
+            }else {
+                toast.success(client?.name+" - Disconnected")
+            }
+        }catch (e){
+            console.log("error");
+            toast.error("Server no connect")
         }
     }
 
@@ -108,7 +156,10 @@ function ModbusClient() {
                                 <th className="d-sm-none d-md-table-cell text-center">IP</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Name</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Port</th>
+                                <th className="d-sm-none d-md-table-cell text-center">Polling</th>
+                                <th className="d-sm-none d-md-table-cell text-center">Topic</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Enable</th>
+                                <th className="d-sm-none d-md-table-cell text-center">Обновлять</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Изменить / Удалить</th>
                             </tr>
                         </thead>
@@ -120,7 +171,16 @@ function ModbusClient() {
                                 <td className="text-center">{client?.ip}</td>
                                 <td className="text-center">{client?.name}</td>
                                 <td className="text-center">{client?.port}</td>
-                                <td className="text-center"><Checkbox ></Checkbox></td>
+                                <td className="text-center">{client?.polling}</td>
+                                <td className="text-center">{client?.topic}</td>
+                                <td className="text-center"><Checkbox defaultChecked={client?.enable}  onChange={(e)=>changeIsConnected(client,e.target.checked)}></Checkbox></td>
+                                <td className="text-center">
+                                    <Popconfirm
+                                        onConfirm={()=>resetModC(client)}
+                                        title={"Reset?"}>
+                                        <GrUpdate style={{fontSize:24,margin:"0 auto",color:"blue"}}  />
+                                    </Popconfirm>
+                                    </td>
                                 <td>
                                     <div className="d-flex justify-content-lg-center p-2">
                                         <FaEdit
@@ -132,7 +192,7 @@ function ModbusClient() {
                                             }}/>
 
                                         <Popconfirm
-                                            onConfirm={()=>removeModbusClient(client?.id)}
+                                            onConfirm={()=>removeModbusClient(client)}
                                                     title={"Are sure?"}>
                                             <DeleteOutlined style={{color: 'red' ,fontSize: 24}}/>
                                         </Popconfirm>
@@ -142,6 +202,8 @@ function ModbusClient() {
                         )}
                         </tbody>
                     </table>
+
+                    <ToastContainer />
 
                     <Pagination
                         showQuickJumper

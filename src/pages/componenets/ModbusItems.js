@@ -185,7 +185,7 @@ const ModbusItems =()=> {
                     <h1>Modbus Items</h1>
                     <div className="d-flex">
                         <button className="btn btn-success  my-2" onClick={openModal}>Add</button>
-                        <select onChange={(e)=>getItemByMCId(e.target.value)} className="form-select-sm mx-2" id="modbusC">
+                        <select onChange={(e)=>getItemByMCId(e)} className="form-select-sm mx-2" id="modbusC">
                             <option value="">Select Modbus Clients</option>
                             {modbusClients?.map((mClient,key)=>
                                     <option  value={mClient.id}>{key+1+" - "+mClient.name}</option>

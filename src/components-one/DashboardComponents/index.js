@@ -13,6 +13,7 @@ import {BsDeviceSsd} from "react-icons/bs";
 import {GiMovementSensor} from "react-icons/gi";
 import {RiLogoutBoxLine} from "react-icons/ri";
 import AppRoutes from "../AppRoutes";
+import {SiMumble} from "react-icons/si";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -65,12 +66,17 @@ const DashboardComponent= () => {
                             key: "/item",
                             icon: <GiMovementSensor style={{fontSize:"20px"}}/>
                         },
-
+                        {
+                            label: "Моделирование",
+                            icon: <SiMumble style={{fontSize:"20px"}}/>,
+                            key: '/simulation',
+                        },
                         {
                             label: "Выход",
                             icon: <RiLogoutBoxLine style={{fontSize:"20px"}}/>,
                             key: '/login',
                         },
+
                         // {
                         //     label: "Устройство",
                         //     icon: <GiOilPump/>,
