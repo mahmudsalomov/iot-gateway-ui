@@ -104,7 +104,7 @@ function ModbusClient() {
             if (value){
                 toast.success(client?.name+" - Connected")
             }else {
-                toast.success(client?.name+" - Disconnected")
+                toast.warning(client?.name+" - Disconnected")
             }
         }catch (e){
             console.log("error");
@@ -178,13 +178,13 @@ function ModbusClient() {
                                     <Popconfirm
                                         onConfirm={()=>resetModC(client)}
                                         title={"Reset?"}>
-                                        <GrUpdate style={{fontSize:24,margin:"0 auto",color:"blue"}}  />
+                                        <GrUpdate style={{fontSize:24,cursor:"pointer",margin:"0 auto",color:"blue"}}  />
                                     </Popconfirm>
                                     </td>
                                 <td>
                                     <div className="d-flex justify-content-lg-center p-2">
                                         <FaEdit
-                                            style={{color: 'green',fontSize: 24}}
+                                            style={{color: 'green',cursor:"pointer",fontSize: 24}}
                                             onClick={() => {
                                                 console.log("click")
                                                 setOpen({open: true, item: client?.id})

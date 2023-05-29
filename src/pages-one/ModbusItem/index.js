@@ -252,7 +252,7 @@ function ModbusItem() {
                         footer={false}
                         open={open.open}
                         onCancel={() => setOpen({open: false, item: undefined})}
-                        title="Окно добавления клиенты modbus"
+                        title="Окно добавления пункты modbus"
                     >
                         <Form form={form} layout="vertical" onFinish={sendData}>
                             <Row gutter={24}>

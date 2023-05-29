@@ -13,7 +13,7 @@ import {BsDeviceSsd} from "react-icons/bs";
 import {GiMovementSensor} from "react-icons/gi";
 import {RiLogoutBoxLine} from "react-icons/ri";
 import AppRoutes from "../AppRoutes";
-import {SiMumble} from "react-icons/si";
+import {SiMumble, SiMusicbrainz} from "react-icons/si";
 import {MdSensorWindow} from "react-icons/md";
 import {RxValue} from "react-icons/rx";
 
@@ -32,7 +32,7 @@ const DashboardComponent= () => {
     ];
 
     let dataSimulation= [
-        {label:"Симуляция",icon:<BsDeviceSsd style={{fontSize:"20px"}}/>,key:"/simulation"},
+        {label:"Симуляция",icon:<SiMusicbrainz style={{fontSize:"20px"}}/>,key:"/simulation"},
         {label:"Значение симуляция",icon:<RxValue style={{fontSize:"20px"}}/>,key:"/simValue"}
     ];
 
@@ -99,20 +99,6 @@ const DashboardComponent= () => {
                             icon: <RiLogoutBoxLine style={{fontSize:"20px"}}/>,
                             key: '/login',
                         },
-
-                        // {
-                        //     label: "Устройство",
-                        //     icon: <GiOilPump/>,
-                        //     children: (
-                        //         deviceType?.map(item => {
-                        //             return {
-                        //                 label: item.nameRu,
-                        //                 icon: <MdAreaChart style={{fontSize:"20px"}}/>,
-                        //                 key: item.id,
-                        //             }
-                        //         })
-                        //     )
-                        // },
                     ]}
                 />
             </Sider>
