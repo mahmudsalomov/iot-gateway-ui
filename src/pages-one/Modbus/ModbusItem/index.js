@@ -1,7 +1,7 @@
 import {Button, Col, Form, Input, message, Modal, Pagination, Popconfirm, Row, Select, Typography} from "antd";
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 import React, {useEffect, useState} from "react";
-import instance from "../../utils/axios_config";
+import instance from "../../../utils/axios_config";
 import {FaEdit} from "react-icons/fa";
 import {DeleteOutlined} from "@ant-design/icons";
 import {BiAddToQueue} from "react-icons/bi";
@@ -23,11 +23,7 @@ function ModbusItem() {
     const [total, setTotal] = useState(0);
     const [page, setPage] = useState(10);
     const [statusSelect, setStatusSelect] = useState({
-        statusSelection: "",
-        departmentId: undefined,
-        gasPlantId: undefined,
-        parentTypeId: undefined,
-        parentId: undefined,
+        statusSelection: ""
     });
 
     const getItems = async () => {
@@ -92,18 +88,14 @@ function ModbusItem() {
         }
     }
     const sendData = async (values) => {
+        let methodType = "";
+        values["modbusC"] = changeModClient;
         if (open.item) {
             values["id"] = open?.item
-        }
-       values["modbusC"] = changeModClient;
-
-        let methodType = "";
-        if (values?.id!==null){
-            methodType+="put"
+            methodType="put"
         }else {
             methodType+="post"
         }
-
     // ...modClients?.find(item=>item?.id===Number(values?.modbusC))
     //     console.log(modClients?.find(item=>item?.id===Number(values?.modbusC)))
     //     values = {...values,changeModClient}
@@ -133,19 +125,12 @@ function ModbusItem() {
     }
 
     const changeModbusClient = async (id) => {
-        modClients.map(mClient => {
+        modClients?.map(mClient => {
             if (mClient?.id == id) {
                 setChangeModClient(mClient);
             }
         })
     }
-
-    useEffect(() => {
-        getItems();
-        getIRegisters();
-        getAllMClient();
-        getIRegisterVarTypes();
-    }, []);
 
     const removeModbusItem = async (id) => {
         try {
@@ -160,6 +145,13 @@ function ModbusItem() {
         }
     }
 
+    useEffect(() => {
+        getItems();
+        getIRegisters();
+        getAllMClient();
+        getIRegisterVarTypes();
+    }, []);
+
     return (
         <div>
             <Row gutter={24}>
@@ -169,12 +161,14 @@ function ModbusItem() {
                     </Typography.Title>
                 </Col>
             </Row>
-            <Row gutter={24}>
-                <Col span={24} className="d-flex align-items-center">
+            <Row gutter={24} className="align-items-center">
+                <Col sm={24} xs={12} md={12} lg={2} className="d-flex align-items-center">
                     <Button type={"primary"} onClick={() => setOpen({open: true, item: undefined})}
                             className="my-1 bg-success"><BiAddToQueue style={{fontSize: "26px"}}/></Button>
+                </Col>
+                <Col sm={24} xs={12} md={12} lg={4}>
                     <Select allowClear
-                            className="mx-2"
+                            className="mx-2 w-100"
                             onSelect={(value) => {
                                 setStatusSelect({
                                     modbusC: value,
@@ -251,7 +245,9 @@ function ModbusItem() {
                     <Modal
                         footer={false}
                         open={open.open}
-                        onCancel={() => setOpen({open: false, item: undefined})}
+                        onCancel={() => {setOpen({open: false, item: undefined})
+                                                form.resetFields()
+                        }}
                         title="Окно добавления пункты modbus"
                     >
                         <Form form={form} layout="vertical" onFinish={sendData}>

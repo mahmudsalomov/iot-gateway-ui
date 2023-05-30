@@ -2,7 +2,7 @@ import {Button, Checkbox, Col, Popconfirm, Row, Typography, Modal, Form, Input} 
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 import {useEffect, useState} from "react";
 import {toast, ToastContainer} from "react-toastify";
-import instance from "../../utils/axios_config";
+import instance from "../../../utils/axios_config";
 import {FaEdit} from "react-icons/fa";
 import {DeleteOutlined} from "@ant-design/icons";
 import {BiAddToQueue} from "react-icons/bi";
@@ -28,12 +28,51 @@ function Simulation() {
             setSimulations(resp?.data)
         }catch (e){
             console.log("error")
-            toast.error("Disconnect server")
         }
     }
 
-    const sendData = async (values) => {
+    const removeSimulation = async (simulation) => {
+        try {
+            let res = await instance({
+                method:"delete",
+                url:`/simulation/${simulation?.id}`
+            })
+            getAllSimulation()
+            toast.success(simulation?.name+" - deleted")
+            setOpen({open: false, item: undefined})
+        }catch (e){
+            toast.error("No deleted")
+        }
+    }
 
+    const sendData = async (values,id) => {
+        let methodType = "";
+        let url = "";
+        if (open?.item){
+            values["id"] = open?.item
+            methodType="put"
+            url=`/simulation/${values?.id}`
+        }else {
+            methodType="post"
+            url="/simulation"
+        }
+        try {
+            let res = await instance({
+                method:methodType,
+                url:url,
+                data:values
+            })
+            setOpen({open: false, item: undefined})
+            if (methodType==="put"){
+                toast.success(values?.name+" - updated")
+            }else {
+                toast.success(values?.name+" - saved")
+            }
+            getAllSimulation()
+        }catch (e){
+            console.log("No post")
+            toast.error("No saved");
+        }
     }
 
     const changeIsEnabled=async (simulation,value)=>{
@@ -65,7 +104,7 @@ function Simulation() {
                     <Typography.Title level={4}>
                         Симуляция
                     </Typography.Title>
-                    <Button type={"primary"} className="my-1 bg-success"><BiAddToQueue style={{fontSize:"26px"}} onClick={()=>setOpen({open: true, item: undefined})} /></Button>
+                    <Button onClick={()=>setOpen({open: true, item: undefined})} type={"primary"} className="my-1 bg-success"><BiAddToQueue style={{fontSize:"26px"}}  /></Button>
                 </Col>
                 <Col span={24}>
                     <table style={{verticalAlign: "middle"}} className="table table-bordered table-striped table-hover responsiveTable w-100">
@@ -93,9 +132,15 @@ function Simulation() {
                                         <div className="d-flex justify-content-lg-center p-2">
                                             <FaEdit
                                                 style={{color: 'green',fontSize: 24}}
+                                                onClick={() => {
+                                                    console.log("click")
+                                                    setOpen({open: true, item: simulation?.id})
+                                                    form.setFieldsValue(simulation)
+                                                }}
                                               />
 
                                             <Popconfirm
+                                                onConfirm={()=>removeSimulation(simulation)}
                                                 title={"Are sure?"}>
                                                 <DeleteOutlined style={{color: 'red' ,fontSize: 24}}/>
                                             </Popconfirm>
@@ -113,7 +158,10 @@ function Simulation() {
                     <Modal
                         footer={false}
                         open={open.open}
-                        onCancel={() => setOpen({open: false, item: undefined})}
+                        onCancel={
+                        () => {setOpen({open: false, item: undefined})
+                            form.resetFields()
+                    }}
                         title="Добавить окно симуляция"
                     >
                         <Form form={form} layout="vertical" onFinish={sendData}>
@@ -125,35 +173,17 @@ function Simulation() {
                                     </Form.Item>
                                 </Col>
                                 <Col span={24}>
-                                    <Form.Item rules={[{required: true, message: "Fill the field!"}]} name="ip"
-                                               label="Ip address">
-                                        <Input placeholder="Enter ip address"/>
-                                    </Form.Item>
-                                </Col>
-                                <Col span={24}>
-                                    <Form.Item rules={[{required: true, message: "Fill the field!"}]} name="port"
-                                               label="Port">
-                                        <Input type="number"  placeholder="Enter port"/>
-                                    </Form.Item>
-                                </Col>
-                                <Col span={24}>
                                     <Form.Item rules={[{required: true, message: "Fill the field!"}]} name="polling"
                                                label="Polling">
-                                        <Input type="number"  placeholder="Enter polling"/>
+                                        <Input type="number" placeholder="Enter polling"/>
                                     </Form.Item>
                                 </Col>
                                 <Col span={24}>
-                                    <Form.Item rules={[{required: true, message: "Fill the field!"}]} name="slaveId"
-                                               label="SlaveId">
-                                        <Input type="number"  placeholder="Enter slaveId"/>
+                                    <Form.Item name="enable"
+                                               label="Enable">
+                                        <Checkbox defaultChecked={false}  placeholder="isEnable"/>
                                     </Form.Item>
                                 </Col>
-                                {/*<Col span={24}>*/}
-                                {/*    <Form.Item valuePropName="checked" rules={[{required: false, message: "Fill the field!"}]} name="enable"*/}
-                                {/*               label="Is Connected">*/}
-                                {/*        <Checkbox  placeholder="Checked enable"/>*/}
-                                {/*    </Form.Item>*/}
-                                {/*</Col>*/}
                                 <Col span={24} className="d-flex justify-content-end">
                                     <Button onClick={() => {
                                         setOpen({open: false, item: undefined})

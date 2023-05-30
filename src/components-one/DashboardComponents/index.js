@@ -69,7 +69,7 @@ const DashboardComponent= () => {
                     items={[
                         {
                             label: "Modbus",
-                            icon: <MdSensorWindow/>,
+                            icon: <MdSensorWindow style={{fontSize:"20px"}}/>,
                             children: (
                                 dataModbus?.map(value => {
                                     return {
