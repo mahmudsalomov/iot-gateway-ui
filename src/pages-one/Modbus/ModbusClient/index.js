@@ -21,17 +21,16 @@ import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 import {BiAddToQueue} from "react-icons/bi";
 import {GrUpdate} from "react-icons/gr";
 import {toast, ToastContainer} from "react-toastify";
+import {useGetAllData} from "../../../custom_hooks/useGetAllData";
 
 function ModbusClient() {
     const [form] = Form.useForm()
-    const [clients, setClients] = useState([]);
     const [loader, setLoader] = useState(false)
     const [reload, setReload] = useState(false)
-    const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState({open: false, item: undefined});
-    const [currentpage,setCurrentPage] = useState(1);
-    const [pageSize,setPageSize] = useState(10)
-    const [totalElements,setTotalElements] = useState(0)
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+
 
 
     const sendData = async (values) => {
@@ -54,6 +53,7 @@ function ModbusClient() {
             })
             // if (resp?.data?.success) {
             setLoader(false)
+            setReload(!reload)
             message.success(resp.data.message)
             setOpen({open: false, item: undefined});
             if (methodType === "post") {
@@ -61,7 +61,6 @@ function ModbusClient() {
             } else {
                 toast.success("update - " + values?.name)
             }
-            getAllMClient()
             form.resetFields()
             setReload(!reload)
             // } else {
@@ -87,6 +86,7 @@ function ModbusClient() {
                 url: `/modbus/client/reset/${client?.id}`
             })
             setLoader(false)
+            setReload(!reload)
             toast.success("reset " + client?.name)
             console.log(resp)
         } catch (e) {
@@ -100,15 +100,15 @@ function ModbusClient() {
                 method: "delete",
                 url: `/modbus/client/${client?.id}`
             })
-            getAllMClient();
             message.success(resp.data.message)
+            setReload(!reload)
             toast.success("Delete - " + client?.name)
         } catch (e) {
             message.error("Error")
         }
     }
 
-    const changeIsConnected = async (client, value) => {
+    const changeIsConnected = async (client, value) =>  {
         try {
             console.log("connnn : ", value)
             let res = await instance({
@@ -116,6 +116,7 @@ function ModbusClient() {
                 url: `/modbus/client/isConnect/${client?.id}`
             })
             console.log(res);
+            _clients.reload=!_clients.reload
             if (value) {
                 toast.success(client?.name + " - Connected")
             } else {
@@ -127,32 +128,20 @@ function ModbusClient() {
         }
     }
 
-    const getAllMClient = async () => {
-        try {
-            setLoading(true);
-            let resp = await instance({
-                method: "get",
-                url: "/modbus/client"
-            })
-            console.log("RESSSSSSSSSSS : ", resp)
-            console.log("total : ", resp?.data?.totalElements)
-            setLoading(false)
-            setTotalElements(resp?.data?.totalElements)
-            setCurrentPage(resp?.data?.totalPages)
-            setClients(resp?.data?.content)
-        } catch (e) {
-            message.error("Error")
-            setLoading(false)
-        }
-    }
+    const  _clients = useGetAllData({
+        url: "/modbus/client",
+        params: {page: currentPage, size: pageSize},
+        reFetch: [currentPage, pageSize]
+    })
 
     useEffect(() => {
-        getAllMClient();
-    }, []);
+
+    }, [_clients.reload]);
 
 
     return (
         <div>
+            <Spin spinning={_clients.loading} size={20} direction="vertical">
             <Row gutter={24}>
                 <Col span={24}>
                     <Typography.Title level={4}>
@@ -182,9 +171,9 @@ function ModbusClient() {
                         </tr>
                         </thead>
                         <tbody>
-                        {clients?.map((client, key) =>
+                        {_clients?.data.map((client, key) =>
                             <tr>
-                                <td className="text-center">{key + 1}</td>
+                                <td>{((currentPage-1) * pageSize) + (key + 1)}</td>
                                 <td className="text-center">{client?.id}</td>
                                 <td className="text-center">{client?.ip}</td>
                                 <td className="text-center">{client?.name}</td>
@@ -227,9 +216,13 @@ function ModbusClient() {
                     <ToastContainer/>
 
                     <Pagination
-                        showQuickJumper
-                        defaultCurrent={1}
-                        total={clients?.length}
+                        style={{float:"right"}}
+                        current={currentPage}
+                        pageSize={pageSize}
+                        total={_clients?._meta.totalElements}
+                        onChange={(page) => setCurrentPage(page)}
+                        onShowSizeChange={(page, size) => setPageSize(size)}
+                        showSizeChanger={true}
                     />
 
 
@@ -296,6 +289,7 @@ function ModbusClient() {
 
                 </Col>
             </Row>
+            </Spin>
         </div>
     );
 }

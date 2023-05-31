@@ -1,17 +1,17 @@
-import {Button, Col, Form, Input, message, Modal, Pagination, Popconfirm, Row, Select, Typography} from "antd";
+import {Button, Col, Form, Input, message, Modal, Pagination, Popconfirm, Row, Select, Spin, Typography} from "antd";
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 import React, {useEffect, useState} from "react";
 import instance from "../../../utils/axios_config";
 import {FaEdit} from "react-icons/fa";
 import {DeleteOutlined} from "@ant-design/icons";
 import {BiAddToQueue} from "react-icons/bi";
+import {useGetAllData} from "../../../custom_hooks/useGetAllData";
 
 const {Option} = Select
 const {TextArea} = Input
 
 function ModbusItem() {
     const [form] = Form.useForm()
-    const [loading, setLoading] = useState(false);
     const [items, setItems] = useState([]);
     const [registers, setRegisters] = useState([]);
     const [modClients, setModClients] = useState([]);
@@ -20,15 +20,20 @@ function ModbusItem() {
     const [loader, setLoader] = useState(false)
     const [reload, setReload] = useState(false)
     const [open, setOpen] = useState({open: false, item: undefined});
-    const [total, setTotal] = useState(0);
-    const [page, setPage] = useState(10);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
     const [statusSelect, setStatusSelect] = useState({
         statusSelection: ""
     });
 
+    const  _clients = useGetAllData({
+        url: "/modbus/client",
+        params: {page: currentPage, size: pageSize},
+        reFetch: [currentPage, pageSize]
+    })
+
     const getItems = async () => {
         try {
-            setLoading(true);
             let resp = await instance({
                 method: "get",
                 url: "/modbus/item"
@@ -37,12 +42,10 @@ function ModbusItem() {
             setItems(resp?.data?.content)
         } catch (e) {
             message.error("Error")
-            setLoading(false)
         }
     }
     const getIRegisters = async () => {
         try {
-            setLoading(true);
             let resp = await instance({
                 method: "get",
                 url: "/modbus/register-type/all"
@@ -51,12 +54,10 @@ function ModbusItem() {
             setRegisters(resp?.data)
         } catch (e) {
             message.error("Error")
-            setLoading(false)
         }
     }
     const getIRegisterVarTypes = async () => {
         try {
-            setLoading(true);
             let resp = await instance({
                 method: "get",
                 url: "/modbus/registerVar-type/all"
@@ -65,26 +66,20 @@ function ModbusItem() {
             setRegisterVarTypes(resp?.data)
         } catch (e) {
             message.error("Error")
-            setLoading(false)
         }
     }
 
     const getAllMClient = async () => {
         try {
-            setLoading(true);
             let resp = await instance({
                 method: "get",
                 url: "/modbus/client"
             })
             console.log("RESSSSSSSSSSS : ", resp)
             console.log("total : ", resp?.data?.totalElements)
-            setLoading(false)
-            setTotal(resp?.data?.totalElements)
-            setPage(resp?.data?.totalPages)
             setModClients(resp?.data?.content)
         } catch (e) {
             message.error("Error")
-            setLoading(false)
         }
     }
     const sendData = async (values) => {
@@ -183,7 +178,7 @@ function ModbusItem() {
                             }}
                             onChange={(e) => changeModbusClient(e)}
                     >
-                        {modClients?.map((modC, key) =>
+                        {_clients.data?.map((modC, key) =>
                             <Option key={modC?.id}>{modC?.name}</Option>
                         )}
                     </Select>
@@ -198,6 +193,8 @@ function ModbusItem() {
                             <th className="d-sm-none d-md-table-cell text-center">T/R</th>
                             <th className="d-sm-none d-md-table-cell text-center">ID</th>
                             <th className="d-sm-none d-md-table-cell text-center">Tag name</th>
+                            <th className="d-sm-none d-md-table-cell text-center">Address</th>
+                            <th className="d-sm-none d-md-table-cell text-center">Var type</th>
                             <th className="d-sm-none d-md-table-cell text-center">Register</th>
                             <th className="d-sm-none d-md-table-cell text-center">Value</th>
                             <th className="d-sm-none d-md-table-cell text-center">Изменить / Удалить</th>
@@ -210,6 +207,8 @@ function ModbusItem() {
                                     <td className="text-center">{key + 1}</td>
                                     <td className="text-center">{item?.id}</td>
                                     <td className="text-center">{item?.tagName}</td>
+                                    <td className="text-center">{item?.address}</td>
+                                    <td className="text-center">{item?.type}</td>
                                     <td className="text-center">{item?.register}</td>
                                     <td className="text-center">{item?.value}</td>
                                     <td className="text-center">
@@ -236,10 +235,13 @@ function ModbusItem() {
                     </table>
 
                     <Pagination
-                        showQuickJumper
-                        defaultCurrent={1}
-                        total={total}
-                    />
+                        style={{float:"right"}}
+                        current={currentPage}
+                        pageSize={pageSize}
+                        total={_clients?._meta.totalElements}
+                        onChange={(page) => setCurrentPage(page)}
+                        onShowSizeChange={(page, size) => setPageSize(size)}
+                        showSizeChan />
 
                     {/*    ************************Modal***************************/}
                     <Modal
@@ -323,7 +325,7 @@ function ModbusItem() {
                                                 })
                                             }}
                                     >
-                                        {modClients?.map((modC, key) =>
+                                        {_clients.data?.map((modC, key) =>
                                             <Option key={modC?.id}>{modC?.name}</Option>
                                         )}
                                     </Select>
