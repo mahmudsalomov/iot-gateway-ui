@@ -26,6 +26,7 @@ export const useGetAllData = ({url, isCall = "auto", params, reFetch = []}) => {
             if (resp.data?.body?.success) {
                 console.log(resp)
                 setData(resp?.data?.body?.object);
+
                 setReload(!reload)
                 setMeta({
                     totalElements: resp?.data?.body.totalElements,

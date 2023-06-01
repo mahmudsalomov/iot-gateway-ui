@@ -1,4 +1,4 @@
-import {Button, Checkbox, Col, Form, Input, Modal, Popconfirm, Row, Select, Typography} from "antd";
+import {Button, Checkbox, Col, Form, Input, Modal, Pagination, Popconfirm, Row, Select, Typography} from "antd";
 import {BiAddToQueue} from "react-icons/bi";
 import React, {useEffect, useState} from "react";
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
@@ -6,6 +6,7 @@ import {toast, ToastContainer} from "react-toastify";
 import instance from "../../../utils/axios_config";
 import {FaEdit} from "react-icons/fa";
 import {DeleteOutlined} from "@ant-design/icons";
+import {useGetAllData} from "../../../custom_hooks/useGetAllData";
 
 const {Option} = Select
 const {TextArea} = Input
@@ -15,34 +16,28 @@ function SimulationValue() {
     const [simulationValues,setSimulationValues] = useState([]);
     const [simulations,setSimulations] = useState([]);
     const [simulation,setSimulation] = useState({});
-    const [loading,setLoading] = useState(false);
     const [editState,setEditState] = useState({isEdit:false,simulation:{}});
     const [loader, setLoader] = useState(false)
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
     const [statusSelect, setStatusSelect] = useState({
         statusSelection: ""
     });
 
-    const getAllSimValues = async()=>{
-        try {
-            let res = await instance({
-                method:"get",
-                url:"/simulation/value"
-            })
-            setSimulationValues(res?.data)
-        }catch (e){
-            console.log("No connect server");
-        }
-    }
+    const  _simValues = useGetAllData({
+        url: "/simulation/value/pages",
+        params: {page: currentPage, size: pageSize},
+        reFetch: [currentPage, pageSize]
+    })
+
 
     const getAllSimulation=async ()=>{
         try {
-            setLoading(true);
             let resp = await instance({
                 method:"get",
                 url:"/simulation"
             })
             console.log("RESSSSSSSSSSS : ",resp)
-            setLoading(false)
             setSimulations(resp?.data)
         }catch (e){
             console.log("error")
@@ -69,7 +64,6 @@ function SimulationValue() {
                 data:values
             })
             setOpen({open: false, item: undefined});
-            getAllSimValues();
             form.resetFields()
             if (methodType==="put"){
                 toast.success(values?.tagName+" - updated")
@@ -114,7 +108,6 @@ function SimulationValue() {
                 method:"delete",
                 url:`/simulation/value/${value?.id}`
             })
-            getAllSimValues();
             toast.success(value?.tagName+" - deleted")
         }catch (e){
             toast.error("No deleted")
@@ -122,7 +115,6 @@ function SimulationValue() {
     }
 
     useEffect(()=>{
-        getAllSimValues();
         getAllSimulation();
     },[])
     return(
@@ -179,7 +171,7 @@ function SimulationValue() {
                             </tr>
                         </thead>
                         <tbody>
-                            {simulationValues?.map((value,key) =>
+                            {_simValues.data?.map((value,key) =>
                                 <tr>
                                     <td className="text-center">{key+1}</td>
                                     <td className="text-center">{value?.tagName}</td>
@@ -216,6 +208,15 @@ function SimulationValue() {
 
                     <ToastContainer />
 
+                    <Pagination
+                        style={{float:"right"}}
+                        showQuickJumper
+                        current={currentPage}
+                        pageSize={pageSize}
+                        total={_simValues?._meta.totalElements}
+                        onChange={(page) => setCurrentPage(page)}
+                        onShowSizeChange={(page, size) => setPageSize(size)}
+                        showSizeChanger={true} />
 
 
                 {/*    ******************** MODAL **************************/}

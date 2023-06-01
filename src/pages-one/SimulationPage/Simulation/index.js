@@ -1,4 +1,4 @@
-import {Button, Checkbox, Col, Popconfirm, Row, Typography, Modal, Form, Input} from "antd";
+import {Button, Checkbox, Col, Popconfirm, Row, Typography, Modal, Form, Input, Pagination} from "antd";
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 import {useEffect, useState} from "react";
 import {toast, ToastContainer} from "react-toastify";
@@ -6,30 +6,33 @@ import instance from "../../../utils/axios_config";
 import {FaEdit} from "react-icons/fa";
 import {DeleteOutlined} from "@ant-design/icons";
 import {BiAddToQueue} from "react-icons/bi";
+import {useGetAllData} from "../../../custom_hooks/useGetAllData";
 
 function Simulation() {
     const [form] = Form.useForm()
-    const [simulations,setSimulations] = useState([]);
-    const [loading,setLoading] = useState(false);
     const [loader, setLoader] = useState(false)
-    const [total,setTotal] = useState(0);
-    const [page,setPage]=useState(10);
     const [open, setOpen] = useState({open: false, item: undefined});
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
 
-    const getAllSimulation=async ()=>{
-        try {
-            setLoading(true);
-            let resp = await instance({
-                method:"get",
-                url:"/simulation"
-            })
-            console.log("RESSSSSSSSSSS : ",resp)
-            setLoading(false)
-            setSimulations(resp?.data)
-        }catch (e){
-            console.log("error")
-        }
-    }
+    const  _simulations = useGetAllData({
+        url: "/simulation/pages",
+        params: {page: currentPage, size: pageSize},
+        reFetch: [currentPage, pageSize]
+    })
+
+    // const getAllSimulation=async ()=>{
+    //     try {
+    //         let resp = await instance({
+    //             method:"get",
+    //             url:"/simulation"
+    //         })
+    //         console.log("RESSSSSSSSSSS : ",resp)
+    //         setSimulations(resp?.data)
+    //     }catch (e){
+    //         console.log("error")
+    //     }
+    // }
 
     const removeSimulation = async (simulation) => {
         try {
@@ -37,7 +40,6 @@ function Simulation() {
                 method:"delete",
                 url:`/simulation/${simulation?.id}`
             })
-            getAllSimulation()
             toast.success(simulation?.name+" - deleted")
             setOpen({open: false, item: undefined})
         }catch (e){
@@ -68,7 +70,6 @@ function Simulation() {
             }else {
                 toast.success(values?.name+" - saved")
             }
-            getAllSimulation()
         }catch (e){
             console.log("No post")
             toast.error("No saved");
@@ -95,7 +96,6 @@ function Simulation() {
     }
 
     useEffect(()=>{
-        getAllSimulation()
     },[]);
     return(
         <div>
@@ -120,7 +120,7 @@ function Simulation() {
                             </tr>
                         </thead>
                         <tbody>
-                            {simulations?.map((simulation,key) =>
+                            {_simulations.data?.map((simulation,key) =>
                                 <tr>
                                     <td className="text-center">{key + 1}</td>
                                     <td className="text-center">{simulation?.id}</td>
@@ -152,6 +152,17 @@ function Simulation() {
                     </table>
                     <ToastContainer />
 
+
+                    <Pagination
+                        showQuickJumper
+                        style={{float:"right"}}
+                        current={currentPage}
+                        pageSize={pageSize}
+                        total={_simulations._meta.totalElements}
+                        onChange={(page) => setCurrentPage(page)}
+                        onShowSizeChange={(page, size) => setPageSize(size)}
+                        showSizeChanger={true}
+                    />
 
                 {/*    ***************************** MODAL ************************/}
 

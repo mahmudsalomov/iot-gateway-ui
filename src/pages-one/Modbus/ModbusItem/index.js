@@ -12,9 +12,7 @@ const {TextArea} = Input
 
 function ModbusItem() {
     const [form] = Form.useForm()
-    const [items, setItems] = useState([]);
     const [registers, setRegisters] = useState([]);
-    const [modClients, setModClients] = useState([]);
     const [changeModClient, setChangeModClient] = useState({})
     const [registerVarTypes, setRegisterVarTypes] = useState([]);
     const [loader, setLoader] = useState(false)
@@ -32,18 +30,24 @@ function ModbusItem() {
         reFetch: [currentPage, pageSize]
     })
 
-    const getItems = async () => {
-        try {
-            let resp = await instance({
-                method: "get",
-                url: "/modbus/item"
-            })
-            console.log(resp?.data?.content)
-            setItems(resp?.data?.content)
-        } catch (e) {
-            message.error("Error")
-        }
-    }
+    const  _items = useGetAllData({
+        url: "/modbus/item",
+        params: {page: currentPage, size: pageSize},
+        reFetch: [currentPage, pageSize]
+    })
+
+    // const getItems = async () => {
+    //     try {
+    //         let resp = await instance({
+    //             method: "get",
+    //             url: "/modbus/item"
+    //         })
+    //         console.log(resp?.data?.content)
+    //         setItems(resp?.data?.content)
+    //     } catch (e) {
+    //         message.error("Error")
+    //     }
+    // }
     const getIRegisters = async () => {
         try {
             let resp = await instance({
@@ -69,19 +73,19 @@ function ModbusItem() {
         }
     }
 
-    const getAllMClient = async () => {
-        try {
-            let resp = await instance({
-                method: "get",
-                url: "/modbus/client"
-            })
-            console.log("RESSSSSSSSSSS : ", resp)
-            console.log("total : ", resp?.data?.totalElements)
-            setModClients(resp?.data?.content)
-        } catch (e) {
-            message.error("Error")
-        }
-    }
+    // const getAllMClient = async () => {
+    //     try {
+    //         let resp = await instance({
+    //             method: "get",
+    //             url: "/modbus/client"
+    //         })
+    //         console.log("RESSSSSSSSSSS : ", resp)
+    //         console.log("total : ", resp?.data?.totalElements)
+    //         setModClients(resp?.data?.content)
+    //     } catch (e) {
+    //         message.error("Error")
+    //     }
+    // }
     const sendData = async (values) => {
         let methodType = "";
         values["modbusC"] = changeModClient;
@@ -106,7 +110,6 @@ function ModbusItem() {
             setLoader(false)
             message.success(resp.data.message)
             setOpen({open: false, item: undefined});
-            getItems()
             form.resetFields()
             setReload(!reload)
             // } else {
@@ -120,7 +123,7 @@ function ModbusItem() {
     }
 
     const changeModbusClient = async (id) => {
-        modClients?.map(mClient => {
+        _clients.data?.map(mClient => {
             if (mClient?.id == id) {
                 setChangeModClient(mClient);
             }
@@ -133,7 +136,6 @@ function ModbusItem() {
                 method: "delete",
                 url: `/modbus/item/${id}`
             })
-            getItems();
             message.success(resp.data.message)
         } catch (e) {
             message.error("Error")
@@ -141,209 +143,210 @@ function ModbusItem() {
     }
 
     useEffect(() => {
-        getItems();
         getIRegisters();
-        getAllMClient();
         getIRegisterVarTypes();
     }, []);
 
     return (
         <div>
-            <Row gutter={24}>
-                <Col span={24}>
-                    <Typography.Title level={4}>
-                        Пункт Modbus
-                    </Typography.Title>
-                </Col>
-            </Row>
-            <Row gutter={24} className="align-items-center">
-                <Col sm={24} xs={12} md={12} lg={2} className="d-flex align-items-center">
-                    <Button type={"primary"} onClick={() => setOpen({open: true, item: undefined})}
-                            className="my-1 bg-success"><BiAddToQueue style={{fontSize: "26px"}}/></Button>
-                </Col>
-                <Col sm={24} xs={12} md={12} lg={4}>
-                    <Select allowClear
-                            className="mx-2 w-100"
-                            onSelect={(value) => {
-                                setStatusSelect({
-                                    modbusC: value,
-                                    statusSelection: "modbusC"
-                                })
-                                form.setFieldValue("modbusC", value)
-                            }}
-                            onClear={() => {
-                                form.setFieldsValue({
-                                    modbusC: undefined,
-                                })
-                            }}
-                            onChange={(e) => changeModbusClient(e)}
-                    >
-                        {_clients.data?.map((modC, key) =>
-                            <Option key={modC?.id}>{modC?.name}</Option>
-                        )}
-                    </Select>
-                </Col>
-            </Row>
-            <Row gutter={24}>
-                <Col span={24}>
-                    <table style={{verticalAlign: "middle"}}
-                           className="table table-bordered table-striped table-hover responsiveTable w-100">
-                        <thead className="d-md-table-header-group">
-                        <tr>
-                            <th className="d-sm-none d-md-table-cell text-center">T/R</th>
-                            <th className="d-sm-none d-md-table-cell text-center">ID</th>
-                            <th className="d-sm-none d-md-table-cell text-center">Tag name</th>
-                            <th className="d-sm-none d-md-table-cell text-center">Address</th>
-                            <th className="d-sm-none d-md-table-cell text-center">Var type</th>
-                            <th className="d-sm-none d-md-table-cell text-center">Register</th>
-                            <th className="d-sm-none d-md-table-cell text-center">Value</th>
-                            <th className="d-sm-none d-md-table-cell text-center">Изменить / Удалить</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {
-                            items?.map((item, key) =>
-                                <tr>
-                                    <td className="text-center">{key + 1}</td>
-                                    <td className="text-center">{item?.id}</td>
-                                    <td className="text-center">{item?.tagName}</td>
-                                    <td className="text-center">{item?.address}</td>
-                                    <td className="text-center">{item?.type}</td>
-                                    <td className="text-center">{item?.register}</td>
-                                    <td className="text-center">{item?.value}</td>
-                                    <td className="text-center">
-                                        <div className="d-flex justify-content-lg-center p-2">
-                                            <FaEdit
-                                                style={{color: 'green', fontSize: 24}}
-                                                onClick={() => {
-                                                    console.log("click")
-                                                    setOpen({open: true, item: item?.id})
-                                                    form.setFieldsValue(item)
-                                                }}/>
+           <Spin spinning={_clients.loading} size={20} direction="vertical">
+               <Row gutter={24}>
+                   <Col span={24}>
+                       <Typography.Title level={4}>
+                           Пункт Modbus
+                       </Typography.Title>
+                   </Col>
+               </Row>
+               <Row gutter={24} className="align-items-center">
+                   <Col sm={24} xs={12} md={12} lg={2} className="d-flex align-items-center">
+                       <Button type={"primary"} onClick={() => setOpen({open: true, item: undefined})}
+                               className="my-1 bg-success"><BiAddToQueue style={{fontSize: "26px"}}/></Button>
+                   </Col>
+                   <Col sm={24} xs={12} md={12} lg={4}>
+                       <Select allowClear
+                               className="mx-2 w-100"
+                               onSelect={(value) => {
+                                   setStatusSelect({
+                                       modbusC: value,
+                                       statusSelection: "modbusC"
+                                   })
+                                   form.setFieldValue("modbusC", value)
+                               }}
+                               onClear={() => {
+                                   form.setFieldsValue({
+                                       modbusC: undefined,
+                                   })
+                               }}
+                               onChange={(e) => changeModbusClient(e)}
+                       >
+                           {_clients.data?.map((modC, key) =>
+                               <Option key={modC?.id}>{modC?.name}</Option>
+                           )}
+                       </Select>
+                   </Col>
+               </Row>
+               <Row gutter={24}>
+                   <Col span={24}>
+                       <table style={{verticalAlign: "middle",overflowY:"scroll",maxHeight:"90%"}}
+                              className="table table-bordered table-striped table-hover responsiveTable w-100">
+                           <thead className="d-md-table-header-group">
+                           <tr>
+                               <th className="d-sm-none d-md-table-cell text-center">T/R</th>
+                               <th className="d-sm-none d-md-table-cell text-center">ID</th>
+                               <th className="d-sm-none d-md-table-cell text-center">Tag name</th>
+                               <th className="d-sm-none d-md-table-cell text-center">Address</th>
+                               <th className="d-sm-none d-md-table-cell text-center">Var type</th>
+                               <th className="d-sm-none d-md-table-cell text-center">Register</th>
+                               <th className="d-sm-none d-md-table-cell text-center">Value</th>
+                               <th className="d-sm-none d-md-table-cell text-center">Изменить / Удалить</th>
+                           </tr>
+                           </thead>
+                           <tbody>
+                           {
+                               _items.data?.map((item, key) =>
+                                   <tr>
+                                       <td className="text-center">{key + 1}</td>
+                                       <td className="text-center">{item?.id}</td>
+                                       <td className="text-center">{item?.tagName}</td>
+                                       <td className="text-center">{item?.address}</td>
+                                       <td className="text-center">{item?.type}</td>
+                                       <td className="text-center">{item?.register}</td>
+                                       <td className="text-center">{item?.value}</td>
+                                       <td className="text-center">
+                                           <div className="d-flex justify-content-lg-center p-2">
+                                               <FaEdit
+                                                   style={{color: 'green', fontSize: 24}}
+                                                   onClick={() => {
+                                                       console.log("click")
+                                                       setOpen({open: true, item: item?.id})
+                                                       form.setFieldsValue(item)
+                                                   }}/>
 
-                                            <Popconfirm
-                                                onConfirm={() => removeModbusItem(item?.id)}
-                                                title={"Are sure?"}>
-                                                <DeleteOutlined style={{color: 'red', fontSize: 24}}/>
-                                            </Popconfirm>
-                                        </div>
-                                    </td>
-                                </tr>
-                            )
-                        }
-                        </tbody>
-                    </table>
+                                               <Popconfirm
+                                                   onConfirm={() => removeModbusItem(item?.id)}
+                                                   title={"Are sure?"}>
+                                                   <DeleteOutlined style={{color: 'red', fontSize: 24}}/>
+                                               </Popconfirm>
+                                           </div>
+                                       </td>
+                                   </tr>
+                               )
+                           }
+                           </tbody>
+                       </table>
 
-                    <Pagination
-                        style={{float:"right"}}
-                        current={currentPage}
-                        pageSize={pageSize}
-                        total={_clients?._meta.totalElements}
-                        onChange={(page) => setCurrentPage(page)}
-                        onShowSizeChange={(page, size) => setPageSize(size)}
-                        showSizeChan />
+                       <Pagination
+                           style={{float:"right"}}
+                           showQuickJumper
+                           current={currentPage}
+                           pageSize={pageSize}
+                           total={_items?._meta.totalElements}
+                           onChange={(page) => setCurrentPage(page)}
+                           onShowSizeChange={(page, size) => setPageSize(size)}
+                           showSizeChanger={true} />
 
-                    {/*    ************************Modal***************************/}
-                    <Modal
-                        footer={false}
-                        open={open.open}
-                        onCancel={() => {setOpen({open: false, item: undefined})
-                                                form.resetFields()
-                        }}
-                        title="Окно добавления пункты modbus"
-                    >
-                        <Form form={form} layout="vertical" onFinish={sendData}>
-                            <Row gutter={24}>
-                                <Col span={24}>
-                                    <Form.Item rules={[{required: true, message: "Fill the field!"}]} name="tagName"
-                                               label="Tag name">
-                                        <Input placeholder="Enter tag name"/>
-                                    </Form.Item>
-                                </Col>
-                                <Col span={24}>
-                                    <Form.Item rules={[{required: true, message: "Fill the field!"}]} name="register"
-                                               label="Register">
-                                        <Select allowClear
-                                                onSelect={(value) => {
-                                                    setStatusSelect({
-                                                        register: value,
-                                                        statusSelection: "register"
-                                                    })
-                                                }}
-                                                onClear={() => {
-                                                    form.setFieldsValue({
-                                                        register: undefined,
-                                                    })
-                                                }}
-                                        >
-                                            {registers?.map((register, key) =>
-                                                <Option key={register}>{register}</Option>
-                                            )}
-                                        </Select>
-                                    </Form.Item>
-                                </Col>
-                                <Col span={24}>
-                                    <Form.Item rules={[{required: true, message: "Fill the field!"}]} name="type"
-                                               label="Enter Register var type">
-                                        <Select allowClear
-                                                onSelect={(value) => {
-                                                    setStatusSelect({
-                                                        type: value,
-                                                        statusSelection: "type"
-                                                    })
-                                                }}
-                                                onClear={() => {
-                                                    form.setFieldsValue({
-                                                        type: undefined,
-                                                    })
-                                                }}
-                                        >
-                                            {registerVarTypes?.map((registertype, key) =>
-                                                <Option key={registertype}>{registertype}</Option>
-                                            )}
-                                        </Select>
-                                    </Form.Item>
-                                </Col>
-                                <Col span={24}>
-                                    <Form.Item rules={[{required: true, message: "Fill the field!"}]} name="address"
-                                               label="Address">
-                                        <Input type="number" placeholder="Enter address"/>
-                                    </Form.Item>
-                                </Col>
-                                <Form.Item rules={[{required: true, message: "Fill the field!"}]} name="modbusC"
-                                           label="Modbus Client">
-                                    <Select allowClear
-                                            onSelect={(value) => {
-                                                setStatusSelect({
-                                                    modbusC: value,
-                                                    statusSelection: "modbusC"
-                                                })
-                                            }}
-                                            onClear={() => {
-                                                form.setFieldsValue({
-                                                    modbusC: {},
-                                                })
-                                            }}
-                                    >
-                                        {_clients.data?.map((modC, key) =>
-                                            <Option key={modC?.id}>{modC?.name}</Option>
-                                        )}
-                                    </Select>
-                                </Form.Item>
-                                <Col span={24} className="d-flex justify-content-end">
-                                    <Button onClick={() => {
-                                        setOpen({open: false, item: undefined})
-                                        form.resetFields()
-                                    }} type="primary" danger htmlType="button">Cancel</Button>
-                                    <Button type="default" className="mx-1" htmlType="reset">Reset</Button>
-                                    <Button loading={loader} type="primary" htmlType="submit">Send</Button>
-                                </Col>
-                            </Row>
-                        </Form>
-                    </Modal>
+                       {/*    ************************Modal***************************/}
+                       <Modal
+                           footer={false}
+                           open={open.open}
+                           onCancel={() => {setOpen({open: false, item: undefined})
+                               form.resetFields()
+                           }}
+                           title="Окно добавления пункты modbus"
+                       >
+                           <Form form={form} layout="vertical" onFinish={sendData}>
+                               <Row gutter={24}>
+                                   <Col span={24}>
+                                       <Form.Item rules={[{required: true, message: "Fill the field!"}]} name="tagName"
+                                                  label="Tag name">
+                                           <Input placeholder="Enter tag name"/>
+                                       </Form.Item>
+                                   </Col>
+                                   <Col span={24}>
+                                       <Form.Item rules={[{required: true, message: "Fill the field!"}]} name="register"
+                                                  label="Register">
+                                           <Select allowClear
+                                                   onSelect={(value) => {
+                                                       setStatusSelect({
+                                                           register: value,
+                                                           statusSelection: "register"
+                                                       })
+                                                   }}
+                                                   onClear={() => {
+                                                       form.setFieldsValue({
+                                                           register: undefined,
+                                                       })
+                                                   }}
+                                           >
+                                               {registers?.map((register, key) =>
+                                                   <Option key={register}>{register}</Option>
+                                               )}
+                                           </Select>
+                                       </Form.Item>
+                                   </Col>
+                                   <Col span={24}>
+                                       <Form.Item rules={[{required: true, message: "Fill the field!"}]} name="type"
+                                                  label="Enter Register var type">
+                                           <Select allowClear
+                                                   onSelect={(value) => {
+                                                       setStatusSelect({
+                                                           type: value,
+                                                           statusSelection: "type"
+                                                       })
+                                                   }}
+                                                   onClear={() => {
+                                                       form.setFieldsValue({
+                                                           type: undefined,
+                                                       })
+                                                   }}
+                                           >
+                                               {registerVarTypes?.map((registertype, key) =>
+                                                   <Option key={registertype}>{registertype}</Option>
+                                               )}
+                                           </Select>
+                                       </Form.Item>
+                                   </Col>
+                                   <Col span={24}>
+                                       <Form.Item rules={[{required: true, message: "Fill the field!"}]} name="address"
+                                                  label="Address">
+                                           <Input type="number" placeholder="Enter address"/>
+                                       </Form.Item>
+                                   </Col>
+                                   <Form.Item rules={[{required: true, message: "Fill the field!"}]} name="modbusC"
+                                              label="Modbus Client">
+                                       <Select allowClear
+                                               onSelect={(value) => {
+                                                   setStatusSelect({
+                                                       modbusC: value,
+                                                       statusSelection: "modbusC"
+                                                   })
+                                               }}
+                                               onClear={() => {
+                                                   form.setFieldsValue({
+                                                       modbusC: {},
+                                                   })
+                                               }}
+                                       >
+                                           {_clients.data?.map((modC, key) =>
+                                               <Option key={modC?.id}>{modC?.name}</Option>
+                                           )}
+                                       </Select>
+                                   </Form.Item>
+                                   <Col span={24} className="d-flex justify-content-end">
+                                       <Button onClick={() => {
+                                           setOpen({open: false, item: undefined})
+                                           form.resetFields()
+                                       }} type="primary" danger htmlType="button">Cancel</Button>
+                                       <Button type="default" className="mx-1" htmlType="reset">Reset</Button>
+                                       <Button loading={loader} type="primary" htmlType="submit">Send</Button>
+                                   </Col>
+                               </Row>
+                           </Form>
+                       </Modal>
 
-                </Col>
-            </Row>
+                   </Col>
+               </Row>
+           </Spin>
         </div>
     );
 }

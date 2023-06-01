@@ -15,7 +15,7 @@ import {
 } from "antd";
 import {FaEdit} from "react-icons/fa";
 import {DeleteOutlined} from "@ant-design/icons";
-import {createElement, useEffect, useState} from "react";
+import { useEffect, useState} from "react";
 import instance from "../../../utils/axios_config";
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 import {BiAddToQueue} from "react-icons/bi";
@@ -216,6 +216,7 @@ function ModbusClient() {
                     <ToastContainer/>
 
                     <Pagination
+                        showQuickJumper
                         style={{float:"right"}}
                         current={currentPage}
                         pageSize={pageSize}
