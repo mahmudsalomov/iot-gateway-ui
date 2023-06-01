@@ -32,6 +32,11 @@ function ModbusClient() {
     const [pageSize, setPageSize] = useState(10);
 
 
+    const  _clients = useGetAllData({
+        url: "/modbus/client",
+        params: {page: currentPage, size: pageSize},
+        reFetch: [currentPage, pageSize]
+    })
 
     const sendData = async (values) => {
         let methodType = "";
@@ -53,9 +58,9 @@ function ModbusClient() {
             })
             // if (resp?.data?.success) {
             setLoader(false)
-            setReload(!reload)
             message.success(resp.data.message)
             setOpen({open: false, item: undefined});
+            _clients.fetch()
             if (methodType === "post") {
                 toast.success("saved - " + values?.name)
             } else {
@@ -86,7 +91,7 @@ function ModbusClient() {
                 url: `/modbus/client/reset/${client?.id}`
             })
             setLoader(false)
-            setReload(!reload)
+            _clients.fetch()
             toast.success("reset " + client?.name)
             console.log(resp)
         } catch (e) {
@@ -101,7 +106,7 @@ function ModbusClient() {
                 url: `/modbus/client/${client?.id}`
             })
             message.success(resp.data.message)
-            setReload(!reload)
+            _clients.fetch()
             toast.success("Delete - " + client?.name)
         } catch (e) {
             message.error("Error")
@@ -109,6 +114,7 @@ function ModbusClient() {
     }
 
     const changeIsConnected = async (client, value) =>  {
+        setLoader(true)
         try {
             console.log("connnn : ", value)
             let res = await instance({
@@ -116,27 +122,24 @@ function ModbusClient() {
                 url: `/modbus/client/isConnect/${client?.id}`
             })
             console.log(res);
-            _clients.reload=!_clients.reload
+
+            setLoader(false)
             if (value) {
                 toast.success(client?.name + " - Connected")
             } else {
                 toast.warning(client?.name + " - Disconnected")
             }
+            _clients.fetch();
         } catch (e) {
+            setLoader(false)
             console.log("error");
             toast.error("Server no connect")
         }
     }
 
-    const  _clients = useGetAllData({
-        url: "/modbus/client",
-        params: {page: currentPage, size: pageSize},
-        reFetch: [currentPage, pageSize]
-    })
-
     useEffect(() => {
 
-    }, [_clients.reload]);
+    }, []);
 
 
     return (

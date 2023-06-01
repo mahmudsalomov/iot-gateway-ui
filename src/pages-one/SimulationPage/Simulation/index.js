@@ -21,19 +21,6 @@ function Simulation() {
         reFetch: [currentPage, pageSize]
     })
 
-    // const getAllSimulation=async ()=>{
-    //     try {
-    //         let resp = await instance({
-    //             method:"get",
-    //             url:"/simulation"
-    //         })
-    //         console.log("RESSSSSSSSSSS : ",resp)
-    //         setSimulations(resp?.data)
-    //     }catch (e){
-    //         console.log("error")
-    //     }
-    // }
-
     const removeSimulation = async (simulation) => {
         try {
             let res = await instance({
@@ -42,6 +29,7 @@ function Simulation() {
             })
             toast.success(simulation?.name+" - deleted")
             setOpen({open: false, item: undefined})
+            _simulations.fetch()
         }catch (e){
             toast.error("No deleted")
         }
@@ -70,6 +58,7 @@ function Simulation() {
             }else {
                 toast.success(values?.name+" - saved")
             }
+            _simulations.fetch()
         }catch (e){
             console.log("No post")
             toast.error("No saved");
@@ -89,6 +78,7 @@ function Simulation() {
             }else {
                 toast.warning(simulation?.name+" - Disconnected")
             }
+            _simulations.fetch()
         }catch (e){
             console.log("error");
             toast.error("Server no connect")

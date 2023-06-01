@@ -13,8 +13,6 @@ const {TextArea} = Input
 function SimulationValue() {
     const [form] = Form.useForm()
     const [open, setOpen] = useState({open: false, item: undefined});
-    const [simulationValues,setSimulationValues] = useState([]);
-    const [simulations,setSimulations] = useState([]);
     const [simulation,setSimulation] = useState({});
     const [editState,setEditState] = useState({isEdit:false,simulation:{}});
     const [loader, setLoader] = useState(false)
@@ -30,19 +28,11 @@ function SimulationValue() {
         reFetch: [currentPage, pageSize]
     })
 
-
-    const getAllSimulation=async ()=>{
-        try {
-            let resp = await instance({
-                method:"get",
-                url:"/simulation"
-            })
-            console.log("RESSSSSSSSSSS : ",resp)
-            setSimulations(resp?.data)
-        }catch (e){
-            console.log("error")
-        }
-    }
+    const  _simulations = useGetAllData({
+        url: "/simulation/pages",
+        params: {page: currentPage, size: pageSize},
+        reFetch: [currentPage, pageSize]
+    })
 
     const sendData = async (values) =>{
         console.log("simm : ",simulation)
@@ -70,6 +60,7 @@ function SimulationValue() {
             }else {
                 toast.success(values?.tagName+" - saved")
             }
+            _simValues.fetch()
         }catch (e){
             toast.error("No connect server")
         }
@@ -77,10 +68,11 @@ function SimulationValue() {
 
     const setSimulationChange = async (id) =>{
         try {
-            simulations?.map(value => {
+            _simulations.data?.map(value => {
                 if (value?.id==id){
                     setSimulation(value);
                 }
+                _simValues.fetch()
             })
         }catch (e){
             console.log("error")
@@ -98,6 +90,7 @@ function SimulationValue() {
             }else {
                 toast.warning(simVal?.tagName+" - Disconnected")
             }
+            _simValues.fetch()
         }catch (e){
             toast.error("No connect server")
         }
@@ -108,15 +101,12 @@ function SimulationValue() {
                 method:"delete",
                 url:`/simulation/value/${value?.id}`
             })
-            toast.success(value?.tagName+" - deleted")
+            _simValues.fetch()
         }catch (e){
             toast.error("No deleted")
         }
     }
 
-    useEffect(()=>{
-        getAllSimulation();
-    },[])
     return(
         <div>
             <Row gutter={24}>
@@ -147,7 +137,7 @@ function SimulationValue() {
                             }}
                             onChange={(e) => setSimulationChange(e)}
                     >
-                        {simulations?.map((sim, key) =>
+                        {_simulations.data?.map((sim, key) =>
                             <Option key={sim?.id}>{sim?.name}</Option>
                         )}
                     </Select>
@@ -188,7 +178,6 @@ function SimulationValue() {
                                                 style={{color: 'green',fontSize: 24}}
                                                 onClick={() => {
                                                     console.log("click")
-                                                    setEditState({isEdit: true,simulation:value?.simulation})
                                                     setOpen({open: true, item: value?.id})
                                                     form.setFieldsValue(value)
                                                 }}
@@ -254,9 +243,7 @@ function SimulationValue() {
                                                     })
                                                 }}
                                         >
-                                            {simulations?.map((sim, key) =>
-                                                <Option key={simulation?.id}>{sim?.name}</Option>
-                                            )}
+                                                <Option key={simulation?.id}>{simulation?.name}</Option>
                                         </Select>
                                     </Form.Item>
                                     {/*<span>Simulation</span>*/}

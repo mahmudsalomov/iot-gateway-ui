@@ -35,19 +35,6 @@ function ModbusItem() {
         params: {page: currentPage, size: pageSize},
         reFetch: [currentPage, pageSize]
     })
-
-    // const getItems = async () => {
-    //     try {
-    //         let resp = await instance({
-    //             method: "get",
-    //             url: "/modbus/item"
-    //         })
-    //         console.log(resp?.data?.content)
-    //         setItems(resp?.data?.content)
-    //     } catch (e) {
-    //         message.error("Error")
-    //     }
-    // }
     const getIRegisters = async () => {
         try {
             let resp = await instance({
@@ -72,20 +59,6 @@ function ModbusItem() {
             message.error("Error")
         }
     }
-
-    // const getAllMClient = async () => {
-    //     try {
-    //         let resp = await instance({
-    //             method: "get",
-    //             url: "/modbus/client"
-    //         })
-    //         console.log("RESSSSSSSSSSS : ", resp)
-    //         console.log("total : ", resp?.data?.totalElements)
-    //         setModClients(resp?.data?.content)
-    //     } catch (e) {
-    //         message.error("Error")
-    //     }
-    // }
     const sendData = async (values) => {
         let methodType = "";
         values["modbusC"] = changeModClient;
@@ -112,6 +85,7 @@ function ModbusItem() {
             setOpen({open: false, item: undefined});
             form.resetFields()
             setReload(!reload)
+            _items.fetch()
             // } else {
             //     message.error("Error")
             //     setLoader(false)
@@ -126,6 +100,7 @@ function ModbusItem() {
         _clients.data?.map(mClient => {
             if (mClient?.id == id) {
                 setChangeModClient(mClient);
+                _items.fetch()
             }
         })
     }
@@ -136,7 +111,7 @@ function ModbusItem() {
                 method: "delete",
                 url: `/modbus/item/${id}`
             })
-            message.success(resp.data.message)
+            _items.fetch()
         } catch (e) {
             message.error("Error")
         }
