@@ -126,9 +126,9 @@ function SimulationValue() {
                             onSelect={(value) => {
                                 setStatusSelect({
                                     modbusC: value,
-                                    statusSelection: "modbusC"
+                                    statusSelection: "simulation"
                                 })
-                                form.setFieldValue("modbusC", value)
+                                form.setFieldValue("simulation", value)
                             }}
                             onClear={() => {
                                 form.setFieldsValue({
@@ -141,6 +141,7 @@ function SimulationValue() {
                             <Option key={sim?.id}>{sim?.name}</Option>
                         )}
                     </Select>
+
                 </Col>
             </Row>
             <Row gutter={24}>
@@ -163,7 +164,7 @@ function SimulationValue() {
                         <tbody>
                             {_simValues.data?.map((value,key) =>
                                 <tr>
-                                    <td className="text-center">{key+1}</td>
+                                    <td className="text-center">{((currentPage-1) * pageSize) + (key + 1)}</td>
                                     <td className="text-center">{value?.tagName}</td>
                                     <td className="text-center">{value?.simulation?.name}</td>
                                     <td className="text-center">{value?.min}</td>
@@ -243,7 +244,9 @@ function SimulationValue() {
                                                     })
                                                 }}
                                         >
-                                                <Option key={simulation?.id}>{simulation?.name}</Option>
+                                            {_simulations.data?.map(value =>
+                                                <Option key={value?.id}>{value?.name}</Option>
+                                            )}
                                         </Select>
                                     </Form.Item>
                                     {/*<span>Simulation</span>*/}

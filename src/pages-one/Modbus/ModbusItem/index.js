@@ -180,7 +180,7 @@ function ModbusItem() {
                            {
                                _items.data?.map((item, key) =>
                                    <tr>
-                                       <td className="text-center">{key + 1}</td>
+                                       <td className="text-center">{((currentPage-1) * pageSize) + (key + 1)}</td>
                                        <td className="text-center">{item?.id}</td>
                                        <td className="text-center">{item?.tagName}</td>
                                        <td className="text-center">{item?.address}</td>

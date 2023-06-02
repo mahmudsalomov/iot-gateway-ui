@@ -112,7 +112,7 @@ function Simulation() {
                         <tbody>
                             {_simulations.data?.map((simulation,key) =>
                                 <tr>
-                                    <td className="text-center">{key + 1}</td>
+                                    <td className="text-center">{((currentPage-1) * pageSize) + (key + 1)}</td>
                                     <td className="text-center">{simulation?.id}</td>
                                     <td className="text-center">{simulation?.name}</td>
                                     <td className="text-center">{simulation?.polling}</td>

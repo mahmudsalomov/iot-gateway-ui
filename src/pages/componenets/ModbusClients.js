@@ -133,6 +133,8 @@ const ModbusClients =()=> {
             .then(res=>{
                 getMClients();
                 checked?toast.success("Connected"):toast.error("Disconnected");
+
+
             })
             .catch(error=>{
                 toast.error("Error");
@@ -150,7 +152,7 @@ const ModbusClients =()=> {
                     console.log(error.message("Foreign key Modbus ITEM"))
                 })
         }else {
-            getMClients()
+
         }
     }
 
