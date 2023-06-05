@@ -4,6 +4,8 @@ import Login from "../auth/Login";
 import ModbusClient from "../../pages-one/Modbus/ModbusClient";
 import Simulation from "../../pages-one/SimulationPage/Simulation";
 import SimulationValue from "../../pages-one/SimulationPage/SimulationValue";
+import HttpRest from "../../pages-one/HttpRestTemplate/HttpRest";
+import HttpRestItem from "../../pages-one/HttpRestTemplate/HttpRestItem";
 
 function AppRoutes() {
     return(
@@ -14,6 +16,8 @@ function AppRoutes() {
                 <Route path="/login" element={<Login />}></Route>
                 <Route path="/simulation" element={<Simulation />}></Route>
                 <Route path="/simValue" element={<SimulationValue />}></Route>
+                <Route path="/httpRest" element={<HttpRest />}></Route>
+                <Route path="/httpRestItem" element={<HttpRestItem />}></Route>
             </Routes>
         </div>
     );

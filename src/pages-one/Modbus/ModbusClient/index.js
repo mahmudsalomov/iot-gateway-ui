@@ -18,6 +18,7 @@ import {DeleteOutlined} from "@ant-design/icons";
 import { useEffect, useState} from "react";
 import instance from "../../../utils/axios_config";
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
+import 'react-toastify/dist/ReactToastify.css';
 import {BiAddToQueue} from "react-icons/bi";
 import {GrUpdate} from "react-icons/gr";
 import {toast, ToastContainer} from "react-toastify";
@@ -176,7 +177,7 @@ function ModbusClient() {
                         <tbody>
                         {_clients?.data.map((client, key) =>
                             <tr>
-                                <td>{((currentPage-1) * pageSize) + (key + 1)}</td>
+                                <td className="text-center">{((currentPage-1) * pageSize) + (key + 1)}</td>
                                 <td className="text-center">{client?.id}</td>
                                 <td className="text-center">{client?.ip}</td>
                                 <td className="text-center">{client?.name}</td>

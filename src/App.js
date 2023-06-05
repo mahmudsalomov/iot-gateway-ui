@@ -2,13 +2,6 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import React, {useState} from "react";
 import DashboardComponent from "./components-one/DashboardComponents";
-import DashboardMenu from "./pages/dashboard/DashboardMenu";
-import {FaBars} from "react-icons/fa";
-import {GrClose} from "react-icons/gr";
-import ModbusItems from "./pages/componenets/ModbusItems";
-import MainPage from "./pages/MainPage";
-import ModbusClients from "./pages/componenets/ModbusClients";
-import {Route, Routes} from "react-router-dom";
 
 
 function App() {

@@ -13,9 +13,10 @@ import {BsDeviceSsd} from "react-icons/bs";
 import {GiMovementSensor} from "react-icons/gi";
 import {RiLogoutBoxLine} from "react-icons/ri";
 import AppRoutes from "../AppRoutes";
-import {SiMumble, SiMusicbrainz} from "react-icons/si";
-import {MdSensorWindow} from "react-icons/md";
+import {SiHttpie, SiMumble, SiMusicbrainz} from "react-icons/si";
+import {MdOutlineHttp, MdSensorWindow} from "react-icons/md";
 import {RxValue} from "react-icons/rx";
+import {BiSitemap} from "react-icons/bi";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -34,6 +35,11 @@ const DashboardComponent= () => {
     let dataSimulation= [
         {label:"Симуляция",icon:<SiMusicbrainz style={{fontSize:"20px"}}/>,key:"/simulation"},
         {label:"Значение симуляция",icon:<RxValue style={{fontSize:"20px"}}/>,key:"/simValue"}
+    ];
+
+    let dataHttpRest= [
+        {label:"HttpRest",icon:<MdOutlineHttp style={{fontSize:"20px"}}/>,key:"/httpRest"},
+        {label:"Пункт HttpRest",icon:<BiSitemap style={{fontSize:"20px"}}/>,key:"/httpRestItem"}
     ];
 
     return (
@@ -94,6 +100,21 @@ const DashboardComponent= () => {
                                 })
                             )
                         },
+
+                        {
+                            label: "HttpRest",
+                            icon: <SiHttpie  style={{fontSize:"20px"}} />,
+                            children: (
+                                dataHttpRest?.map(value => {
+                                    return {
+                                        label:value?.label,
+                                        icon:value?.icon,
+                                        key:value?.key
+                                    }
+                                })
+                            )
+                        },
+
                         {
                             label: "Выход",
                             icon: <RiLogoutBoxLine style={{fontSize:"20px"}}/>,
