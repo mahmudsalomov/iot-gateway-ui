@@ -1,4 +1,18 @@
-import {Button, Checkbox, Col, Form, Input, message, Modal, Pagination, Popconfirm, Row, Spin, Typography} from "antd";
+import {
+    Button,
+    Checkbox,
+    Col,
+    Form,
+    Input,
+    message,
+    Modal,
+    Pagination,
+    Popconfirm,
+    Row,
+    Spin,
+    Tooltip,
+    Typography
+} from "antd";
 import {BiAddToQueue} from "react-icons/bi";
 import {useEffect, useState} from "react";
 import {useGetAllData} from "../../../custom_hooks/useGetAllData";
@@ -80,8 +94,11 @@ function Rest() {
                         <Typography.Title level={4}>
                             HttpRest
                         </Typography.Title>
-                        <Button type={"primary"} onClick={() => setOpen({open: true, item: undefined})}
-                                className="my-1 bg-success"><BiAddToQueue style={{fontSize: "26px"}}/></Button>
+                        <Tooltip title="Добавление нового HttpRest" className="me-1">
+                            <Button type={"primary"} onClick={() => setOpen({open: true, item: undefined})}
+                                    className="my-1 bg-success"><BiAddToQueue style={{fontSize: "26px"}}/></Button>
+                        </Tooltip>
+
                     </Col>
                 </Row>
                 <Row gutter={24}>
@@ -96,7 +113,7 @@ function Rest() {
                                     <th className="d-sm-none d-md-table-cell text-center">URL</th>
                                     <th className="d-sm-none d-md-table-cell text-center">POLLING</th>
                                     <th className="d-sm-none d-md-table-cell text-center">ENABLE</th>
-                                    <th className="d-sm-none d-md-table-cell text-center">Изменить / Удалить</th>
+                                    <th className="d-sm-none d-md-table-cell text-center">Действия</th>
                                 </tr>
                             </thead>
                             <tbody>

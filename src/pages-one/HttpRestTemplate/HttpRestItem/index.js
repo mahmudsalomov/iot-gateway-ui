@@ -1,7 +1,10 @@
-import {Button, Col, Form, Input, Row, Select, Spin, Typography} from "antd";
+import {Button, Col, Form, Input, Pagination, Popconfirm, Row, Select, Spin, Tooltip, Typography} from "antd";
 import {useGetAllData} from "../../../custom_hooks/useGetAllData";
 import React, {useState} from "react";
 import {BiAddToQueue} from "react-icons/bi";
+import {ToastContainer} from "react-toastify";
+import {FaEdit} from "react-icons/fa";
+import {DeleteOutlined} from "@ant-design/icons";
 
 const {Option} = Select
 const {TextArea} = Input
@@ -31,6 +34,9 @@ function HttpRestItem() {
         reFetch: [currentPage, pageSize]
     })
 
+    const removeHttpRestItem = async () =>{
+
+    }
     const changeHttpRest = async ()=>{
 
     }
@@ -48,8 +54,10 @@ function HttpRestItem() {
                 <Row gutter={24} className="d-flex align-items-center">
 
                         <Col sm={24} xs={12} md={12} lg={2} >
-                            <Button type={"primary"} onClick={() => setOpen({open: true, item: undefined})}
-                                    className="my-1 bg-success"><BiAddToQueue style={{fontSize: "26px"}}/></Button>
+                            <Tooltip title="Добавление нового HttpRestItem" className="me-1">
+                                <Button type={"primary"} onClick={() => setOpen({open: true, item: undefined})}
+                                        className="my-1 bg-success"><BiAddToQueue style={{fontSize: "26px"}}/></Button>
+                            </Tooltip>
                         </Col>
                         <Col sm={24} xs={12} md={12} lg={4}>
                             <Select allowClear
@@ -82,12 +90,54 @@ function HttpRestItem() {
                             <thead className="d-md-table-header-group">
                                 <tr>
                                     <th className="d-sm-none d-md-table-cell text-center">T/R</th>
+                                    <th className="d-sm-none d-md-table-cell text-center">ID</th>
+                                    <th className="d-sm-none d-md-table-cell text-center">TAGNAME</th>
+                                    <th className="d-sm-none d-md-table-cell text-center">VALUE</th>
+                                    <th className="d-sm-none d-md-table-cell text-center">Действия</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                {_items.data?.map((value,key) =>
+                                    <tr>
+                                        <td className="text-center">{((currentPage-1) * pageSize) + (key + 1)}</td>
+                                        <td className="text-center">{value?.id}</td>
+                                        <td className="text-center">{value?.tagName}</td>
+                                        <td className="text-center">{value?.value}</td>
+                                        <td className="text-center">
+                                            <div className="d-flex justify-content-lg-center p-2">
+                                                <FaEdit
+                                                    style={{color: 'green', cursor: "pointer", fontSize: 24}}
+                                                    onClick={() => {
+                                                        console.log("click")
+                                                        setOpen({open: true, item:value?.id})
+                                                        form.setFieldsValue(value)
+                                                    }}/>
 
+                                                <Popconfirm
+                                                    onConfirm={() => removeHttpRestItem(value)}
+                                                    title={"Are sure?"}>
+                                                    <DeleteOutlined style={{color: 'red', fontSize: 24}}/>
+                                                </Popconfirm>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
+
+                        <ToastContainer/>
+
+                        <Pagination
+                            showQuickJumper
+                            style={{float:"right"}}
+                            current={currentPage}
+                            pageSize={pageSize}
+                            total={_items?._meta.totalElements}
+                            onChange={(page) => setCurrentPage(page)}
+                            onShowSizeChange={(page, size) => setPageSize(size)}
+                            showSizeChanger={true}
+                        />
+
                     </Col>
                 </Row>
 
