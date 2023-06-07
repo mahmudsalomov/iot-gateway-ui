@@ -6,6 +6,8 @@ import Simulation from "../../pages-one/SimulationPage/Simulation";
 import SimulationValue from "../../pages-one/SimulationPage/SimulationValue";
 import HttpRest from "../../pages-one/HttpRestTemplate/HttpRest";
 import HttpRestItem from "../../pages-one/HttpRestTemplate/HttpRestItem";
+import Broker from "../../pages-one/Broker";
+import Topic from "../../pages-one/Topic";
 
 function AppRoutes() {
     return(
@@ -18,6 +20,8 @@ function AppRoutes() {
                 <Route path="/simValue" element={<SimulationValue />}></Route>
                 <Route path="/httpRest" element={<HttpRest />}></Route>
                 <Route path="/httpRestItem" element={<HttpRestItem />}></Route>
+                <Route path="/broker" element={<Broker />}></Route>
+                <Route path="/topic" element={<Topic />}></Route>
             </Routes>
         </div>
     );

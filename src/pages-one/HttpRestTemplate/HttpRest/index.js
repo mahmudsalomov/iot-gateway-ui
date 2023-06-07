@@ -18,7 +18,7 @@ function Rest() {
     const [pageSize, setPageSize] = useState(10);
 
     const  _httpRests = useGetAllData({
-        url: "/httpRest/getHttpPages",
+        url: "/protocol/httpRest/getHttpPages",
         params: {page: currentPage, size: pageSize},
         reFetch: [currentPage, pageSize]
     })
@@ -31,7 +31,7 @@ function Rest() {
         try {
             let resp = await instance({
                 method: "delete",
-                url: `/httpRest/delete/${httpRest?.id}`
+                url: `/protocol/httpRest/delete/${httpRest?.id}`
             })
             toast.success("Delete - " + httpRest?.url)
             _httpRests.fetch()
@@ -48,10 +48,10 @@ function Rest() {
             if (open?.item){
                 values["id"] = open?.item
                 methodType = "put";
-                url = `/httpRest/update/${values.id}`;
+                url = `/protocol/httpRest/update/${values.id}`;
             }else {
                 methodType = "post";
-                url = "/httpRest/save"
+                url = "/protocol/httpRest/save"
             }
             let response = await instance({
                 method:methodType,

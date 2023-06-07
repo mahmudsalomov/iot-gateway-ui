@@ -20,13 +20,13 @@ function HttpRestItem() {
     });
 
     const  _httpRests = useGetAllData({
-        url: "/httpRest/getHttpPages",
+        url: "/protocol/httpRest/getHttpPages",
         params: {page: currentPage, size: pageSize},
         reFetch: [currentPage, pageSize]
     })
 
     const  _items = useGetAllData({
-        url: "/httRest/item/all",
+        url: "/protocol/httpRest/item/all",
         params: {page: currentPage, size: pageSize},
         reFetch: [currentPage, pageSize]
     })

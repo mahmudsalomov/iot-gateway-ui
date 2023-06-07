@@ -16,7 +16,7 @@ function Simulation() {
     const [pageSize, setPageSize] = useState(10);
 
     const  _simulations = useGetAllData({
-        url: "/simulation/pages",
+        url: "/protocol/simulation/pages",
         params: {page: currentPage, size: pageSize},
         reFetch: [currentPage, pageSize]
     })
@@ -25,7 +25,7 @@ function Simulation() {
         try {
             let res = await instance({
                 method:"delete",
-                url:`/simulation/${simulation?.id}`
+                url:`/protocol/simulation/${simulation?.id}`
             })
             toast.success(simulation?.name+" - deleted")
             setOpen({open: false, item: undefined})
@@ -41,10 +41,10 @@ function Simulation() {
         if (open?.item){
             values["id"] = open?.item
             methodType="put"
-            url=`/simulation/${values?.id}`
+            url=`/protocol/simulation/${values?.id}`
         }else {
             methodType="post"
-            url="/simulation"
+            url="/protocol/simulation"
         }
         try {
             let res = await instance({
@@ -70,7 +70,7 @@ function Simulation() {
             console.log("connnn : ",value)
             let res = await instance({
                 method:"get",
-                url: `/simulation/isConnect/${simulation?.id}`
+                url: `/protocol/simulation/isConnect/${simulation?.id}`
             })
             console.log(res);
             if (value){

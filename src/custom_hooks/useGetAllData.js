@@ -23,15 +23,15 @@ export const useGetAllData = ({url, isCall = "auto", params, reFetch = []}) => {
                 url,
                 params
             })
-            if (resp.data?.body?.success) {
-                console.log(resp)
-                setData(resp?.data?.body?.object);
+            console.log(resp)
+            if (resp.data?.success) {
+                setData(resp?.data?.object);
 
                 setReload(!reload)
                 setMeta({
-                    totalElements: resp?.data?.body.totalElements,
-                    page: resp?.data?.body.page,
-                    totalPages: resp?.body?.totalPages
+                    totalElements: resp?.data?.totalElements,
+                    page: resp?.data?.page,
+                    totalPages: resp?.data?.totalPages
                 })
                 setLoading(false)
             } else {

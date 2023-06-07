@@ -23,13 +23,13 @@ function SimulationValue() {
     });
 
     const  _simValues = useGetAllData({
-        url: "/simulation/value/pages",
+        url: "/protocol/simulation/value/pages",
         params: {page: currentPage, size: pageSize},
         reFetch: [currentPage, pageSize]
     })
 
     const  _simulations = useGetAllData({
-        url: "/simulation/pages",
+        url: "/protocol/simulation/pages",
         params: {page: currentPage, size: pageSize},
         reFetch: [currentPage, pageSize]
     })
@@ -42,10 +42,10 @@ function SimulationValue() {
         if (open?.item){
             values["id"] = open?.item
             methodType = "put";
-            url = `/simulation/value/${values?.id}`
+            url = `/protocol/simulation/value/${values?.id}`
         }else {
             methodType = "post";
-            url = "/simulation/value"
+            url = "/protocol/simulation/value"
         }
         try {
             let res = await instance({
@@ -83,7 +83,7 @@ function SimulationValue() {
         try {
             let res = await instance({
                 method:"get",
-                url:`/simulation/value/isConnect/${simVal?.id}`
+                url:`/protocol/simulation/value/isConnect/${simVal?.id}`
             })
             if (checked){
                 toast.success(simVal?.tagName+" - Connected")
@@ -99,7 +99,7 @@ function SimulationValue() {
         try {
             let res = await instance({
                 method:"delete",
-                url:`/simulation/value/${value?.id}`
+                url:`/protocol/simulation/value/${value?.id}`
             })
             _simValues.fetch()
         }catch (e){

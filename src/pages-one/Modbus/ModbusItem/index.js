@@ -25,13 +25,13 @@ function ModbusItem() {
     });
 
     const  _clients = useGetAllData({
-        url: "/modbus/client",
+        url: "/protocol/modbus/client",
         params: {page: currentPage, size: pageSize},
         reFetch: [currentPage, pageSize]
     })
 
     const  _items = useGetAllData({
-        url: "/modbus/item",
+        url: "/protocol/modbus/item",
         params: {page: currentPage, size: pageSize},
         reFetch: [currentPage, pageSize]
     })
@@ -39,10 +39,10 @@ function ModbusItem() {
         try {
             let resp = await instance({
                 method: "get",
-                url: "/modbus/register-type/all"
+                url: "/protocol/modbus/register-type/all"
             })
-            console.log("reg  : ", resp?.data)
-            setRegisters(resp?.data)
+            console.log("reg  : ", resp?.data?.object)
+            setRegisters(resp?.data?.object)
         } catch (e) {
             message.error("Error")
         }
@@ -51,10 +51,10 @@ function ModbusItem() {
         try {
             let resp = await instance({
                 method: "get",
-                url: "/modbus/registerVar-type/all"
+                url: "/protocol/modbus/registerVar-type/all"
             })
-            console.log("reg  : ", resp?.data)
-            setRegisterVarTypes(resp?.data)
+            console.log("reg  : ", resp?.data?.object)
+            setRegisterVarTypes(resp?.data?.object)
         } catch (e) {
             message.error("Error")
         }
@@ -76,7 +76,7 @@ function ModbusItem() {
         try {
             let resp = await instance({
                 method: methodType,
-                url: "/modbus/item",
+                url: "/protocol/modbus/item",
                 data: values
             })
             // if (resp?.data?.success) {
@@ -109,7 +109,7 @@ function ModbusItem() {
         try {
             let resp = await instance({
                 method: "delete",
-                url: `/modbus/item/${id}`
+                url: `/protocol/modbus/item/${id}`
             })
             _items.fetch()
         } catch (e) {

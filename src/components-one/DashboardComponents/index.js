@@ -7,7 +7,7 @@ import {
 import {Button, Image, Layout, Menu, Space, theme, Typography} from 'antd';
 import {FaBurn} from "react-icons/fa";
 import {VscTypeHierarchy} from "react-icons/vsc";
-import {HiOutlineStatusOnline} from "react-icons/hi";
+import {HiOutlineStatusOnline, HiOutlineTable, HiOutlineTicket} from "react-icons/hi";
 import {AiOutlineGateway} from "react-icons/ai";
 import {BsDeviceSsd} from "react-icons/bs";
 import {GiMovementSensor} from "react-icons/gi";
@@ -114,7 +114,16 @@ const DashboardComponent= () => {
                                 })
                             )
                         },
-
+                        {
+                            label: "Брокер",
+                            icon: <HiOutlineTable style={{fontSize:"20px"}}/>,
+                            key: '/broker',
+                        },
+                        {
+                            label: "Топик",
+                            icon: <HiOutlineTicket style={{fontSize:"20px"}}/>,
+                            key: '/topic',
+                        },
                         {
                             label: "Выход",
                             icon: <RiLogoutBoxLine style={{fontSize:"20px"}}/>,

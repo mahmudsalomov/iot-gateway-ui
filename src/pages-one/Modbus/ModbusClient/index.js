@@ -34,7 +34,7 @@ function ModbusClient() {
 
 
     const  _clients = useGetAllData({
-        url: "/modbus/client",
+        url: "/protocol/modbus/client",
         params: {page: currentPage, size: pageSize},
         reFetch: [currentPage, pageSize]
     })
@@ -45,7 +45,7 @@ function ModbusClient() {
         if (open.item) {
             values["id"] = open?.item
             methodType = "put";
-            url = `/modbus/client/${values?.id}`
+            url = `/protocol/modbus/client/${values?.id}`
         }else {
             methodType = "post"
         }
@@ -54,7 +54,7 @@ function ModbusClient() {
         try {
             let resp = await instance({
                 method: methodType,
-                url: "/modbus/client",
+                url: "/protocol/modbus/client",
                 data: values
             })
             // if (resp?.data?.success) {
@@ -89,7 +89,7 @@ function ModbusClient() {
             setLoader(true)
             let resp = await instance({
                 method: "get",
-                url: `/modbus/client/reset/${client?.id}`
+                url: `/protocol/modbus/client/reset/${client?.id}`
             })
             setLoader(false)
             _clients.fetch()
@@ -104,7 +104,7 @@ function ModbusClient() {
         try {
             let resp = await instance({
                 method: "delete",
-                url: `/modbus/client/${client?.id}`
+                url: `/protocol/modbus/client/${client?.id}`
             })
             message.success(resp.data.message)
             _clients.fetch()
@@ -120,7 +120,7 @@ function ModbusClient() {
             console.log("connnn : ", value)
             let res = await instance({
                 method: "get",
-                url: `/modbus/client/isConnect/${client?.id}`
+                url: `/protocol/modbus/client/isConnect/${client?.id}`
             })
             console.log(res);
 
