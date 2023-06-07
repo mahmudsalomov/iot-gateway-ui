@@ -23,6 +23,8 @@ const {Option} = Select
 
 function Topic() {
     const [brokerId, setBrokerId] = useState(null)
+    const [protocolType, setProtocolType] = useState(null)
+    const [targets, setTargets] = useState(null)
     const [form] = Form.useForm()
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -40,10 +42,38 @@ function Topic() {
         params: {
             page: currentPage,
             size: pageSize,
-            brokerId: brokerId
+            brokerId: brokerId,
+            protocolType: protocolType
         },
-        reFetch: [currentPage, pageSize, brokerId]
+        reFetch: [currentPage, pageSize, brokerId, protocolType]
     })
+
+    const _protocol_types = useGetAllData({
+        url: "/protocol/type/all",
+        params: {},
+        reFetch: []
+    })
+
+    const getTargets = async (e) => {
+        if (!e) {
+            form.resetFields(['targetId']);
+            setTargets([]);
+        }
+        try {
+            let resp = await instance({
+                method: "get",
+                url: getTargetUrlByType(e)
+            })
+            if (resp?.data?.success)
+                setTargets(resp?.data?.object)
+            else {
+                form.resetFields(['targetId']);
+                setTargets([])
+            }
+        } catch (e) {
+            console.log(e.message)
+        }
+    };
 
     const remove = async (id) => {
         try {
@@ -55,6 +85,19 @@ function Topic() {
             message.success(resp.data.message)
         } catch (e) {
             message.error("Error")
+        }
+    }
+
+    const getTargetUrlByType = (e) => {
+        switch (e) {
+            case 'HTTP':
+                return '/protocol/httpRest';
+            case 'MODBUS_TCP':
+                return '/protocol/modbus/client/all';
+            case 'SIMULATION':
+                return '/protocol/simulation';
+            default :
+                return '';
         }
     }
 
@@ -103,7 +146,7 @@ function Topic() {
             }
         } catch (e) {
             message.error("Error")
-        }finally {
+        } finally {
             setLoader(false)
         }
     }
@@ -112,7 +155,7 @@ function Topic() {
         <div>
             <Spin spinning={_topics.loading} size={20} direction="vertical">
 
-                <Row gutter={24} style={{alignItems: "center"}} className="mb-4 justify-content-between">
+                <Row gutter={24} style={{alignItems: "center"}} className="mb-4">
                     <Col span={4}>
                         <Select style={{width: "100%"}} value={brokerId} allowClear onChange={(e) => {
                             setBrokerId(e)
@@ -121,8 +164,16 @@ function Topic() {
                                                                value={item?.id}>{item?.ipAddress + ':' + item?.port}</Option>)}
                         </Select>
                     </Col>
-
                     <Col span={4}>
+                        <Select style={{width: "100%"}} value={protocolType} allowClear onChange={(e) => {
+                            setProtocolType(e)
+                        }} placeholder="Тип протокола">
+                            {_protocol_types.data?.map(item => <Option key={item}
+                                                                       value={item}>{item}</Option>)}
+                        </Select>
+                    </Col>
+
+                    <Col span={4} offset={12}>
                         <div style={{float: "right"}}>
                             <Tooltip title="Добавление нового топика" className="me-1">
                                 <Button type="primary" className=""
@@ -141,7 +192,9 @@ function Topic() {
                         <th className="d-sm-none d-md-table-cell" style={{width: "50px"}}>ИД</th>
                         <th className="d-sm-none d-md-table-cell">Топик</th>
                         <th className="d-sm-none d-md-table-cell">Брокер</th>
-                        <th className="d-sm-none d-md-table-cell">Holati</th>
+                        <th className="d-sm-none d-md-table-cell">Состояние</th>
+                        <th className="d-sm-none d-md-table-cell">Тип протокола</th>
+                        <th className="d-sm-none d-md-table-cell">Таргет ИД</th>
                         <th className="d-sm-none d-md-table-cell" style={{width: "180px"}}>Действия</th>
                     </tr>
                     </thead>
@@ -154,6 +207,8 @@ function Topic() {
                             <td><input type="checkbox" className="form-check-input my-2" checked={item.status === 1}
                                        style={{fontSize: "24px"}}
                                        onChange={(e) => changeIsConnected(item, e.target.checked)}/></td>
+                            <td>{item.type}</td>
+                            <td>{item.targetId}</td>
                             <td>
                                 <div className="d-flex justify-content-evenly p-2">
                                     <Tooltip title="Изменить" color="green">
@@ -161,6 +216,7 @@ function Topic() {
                                             style={{cursor: 'pointer', color: 'green', marginLeft: 20, fontSize: 22}}
                                             onClick={() => {
                                                 setOpen({open: true, item: item.id})
+                                                getTargets(item.type)
                                                 form.setFieldsValue(item)
                                             }}/>
                                     </Tooltip>
@@ -218,6 +274,28 @@ function Topic() {
                                 <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="name"
                                            label="Название тега">
                                     <Input placeholder="Название тега"/>
+                                </Form.Item>
+                            </Col>
+
+                            <Col span={12}>
+                                <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="type"
+                                           label="Тип протокола">
+                                    <Select style={{width: "100%"}} allowClear placeholder="Тип протокола" onChange={(e) => {
+                                        getTargets(e)
+                                    }}>
+                                        {_protocol_types.data?.map(item => <Option key={item}
+                                                                                   value={item}>{item}</Option>)}
+                                    </Select>
+                                </Form.Item>
+                            </Col>
+
+                            <Col span={12}>
+                                <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="targetId"
+                                           label="Протокол">
+                                    <Select style={{width: "100%"}} allowClear placeholder="Протокол">
+                                        {targets?.map(item => <Option key={item.id}
+                                                                      value={item.id}>{item.name}</Option>)}
+                                    </Select>
                                 </Form.Item>
                             </Col>
 
