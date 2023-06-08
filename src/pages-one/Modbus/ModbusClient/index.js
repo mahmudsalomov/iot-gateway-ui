@@ -26,9 +26,11 @@ import {useGetAllData} from "../../../custom_hooks/useGetAllData";
 
 function ModbusClient() {
     const [form] = Form.useForm()
-    const [loader, setLoader] = useState(false)
-    const [reload, setReload] = useState(false)
-    const [open, setOpen] = useState({open: false, item: undefined});
+    const [editModC,setEditModC] = useState({});
+    const [checked,setChecked] = useState(false);
+    const [loader, setLoader] = useState(false);
+    const [reload, setReload] = useState(false);
+    const [open, setOpen] = useState({open: false, item: undefined, editMod:{}});
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
 
@@ -44,6 +46,7 @@ function ModbusClient() {
         let url = "";
         if (open.item) {
             values["id"] = open?.item
+            values["enable"] = checked
             methodType = "put";
             url = `/protocol/modbus/client/${values?.id}`
         }else {
@@ -60,7 +63,7 @@ function ModbusClient() {
             // if (resp?.data?.success) {
             setLoader(false)
             message.success(resp.data.message)
-            setOpen({open: false, item: undefined});
+            setOpen({open: false, item: undefined, editMod:{}});
             _clients.fetch()
             if (methodType === "post") {
                 toast.success("saved - " + values?.name)
@@ -123,7 +126,7 @@ function ModbusClient() {
                 url: `/protocol/modbus/client/isConnect/${client?.id}`
             })
             console.log(res);
-
+            setEditModC({})
             setLoader(false)
             if (value) {
                 toast.success(client?.name + " - Connected")
@@ -135,6 +138,13 @@ function ModbusClient() {
             setLoader(false)
             console.log("error");
             toast.error("Server no connect")
+        }
+    }
+    const handleChange = async (check) =>{
+        try {
+            setChecked(check)
+        }catch (e){
+            console.log(e)
         }
     }
 
@@ -204,7 +214,7 @@ function ModbusClient() {
                                             style={{color: 'green', cursor: "pointer", fontSize: 24}}
                                             onClick={() => {
                                                 console.log("click")
-                                                setOpen({open: true, item: client?.id})
+                                                setOpen({open: true, item: client?.id, editMod:client})
                                                 form.setFieldsValue(client)
                                             }}/>
                                         </Tooltip>
@@ -244,7 +254,7 @@ function ModbusClient() {
                         footer={false}
                         open={open.open}
                         onCancel={() => {
-                            setOpen({open: false, item: undefined})
+                            setOpen({open: false, item: undefined, editMod:{}})
                             form.resetFields()
                         }}
                         title="Окно добавления клиенты modbus"
@@ -281,15 +291,18 @@ function ModbusClient() {
                                         <Input type="number" placeholder="Enter slaveId"/>
                                     </Form.Item>
                                 </Col>
-                                {/*<Col span={24}>*/}
-                                {/*    <Form.Item valuePropName="checked" rules={[{required: false, message: "Fill the field!"}]} name="enable"*/}
-                                {/*               label="Is Connected">*/}
-                                {/*        <Checkbox  placeholder="Checked enable"/>*/}
-                                {/*    </Form.Item>*/}
-                                {/*</Col>*/}
+                                {open.editMod?
+                                    <Col span={24}>
+                                        <Form.Item rules={[{required: false, message: "Fill the field!"}]} name="enable"
+                                                   label="Is Connected">
+                                            <Checkbox defaultChecked={open?.editMod?.enable} onChange={(e) => handleChange(e.target.checked)}   placeholder="Checked enable"></Checkbox>
+                                        </Form.Item>
+                                    </Col>:
+                                    ""
+                                }
                                 <Col span={24} className="d-flex justify-content-end">
                                     <Button onClick={() => {
-                                        setOpen({open: false, item: undefined})
+                                        setOpen({open: false, item: undefined, editMod:{}})
                                         form.resetFields()
                                     }} type="primary" danger htmlType="button">Cancel</Button>
                                     <Button type="default" className="mx-1" htmlType="reset">Reset</Button>

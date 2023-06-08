@@ -229,7 +229,7 @@ function HttpRestItem() {
                                                     onChange={(e) => changeHttpRest(e)}
                                             >
                                                 {_httpRests.data?.map(value =>
-                                                    <Option key={value?.id}>{value?.name}</Option>
+                                                    <Option key={httpRest?.id?httpRest?.id:value?.id}>{httpRest?.id?httpRest?.name:value?.name}</Option>
                                                 )}
                                             </Select>
                                         </Form.Item>
@@ -248,11 +248,8 @@ function HttpRestItem() {
                                 </Row>
                             </Form>
                         </Modal>
-
                     </Col>
                 </Row>
-
-
             </Spin>
         </div>
     );
