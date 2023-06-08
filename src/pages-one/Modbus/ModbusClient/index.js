@@ -11,7 +11,7 @@ import {
     Typography,
     Row,
     Space,
-    Spin
+    Spin, Tooltip
 } from "antd";
 import {FaEdit} from "react-icons/fa";
 import {DeleteOutlined} from "@ant-design/icons";
@@ -151,8 +151,10 @@ function ModbusClient() {
                     <Typography.Title level={4}>
                         Клиенты Modbus
                     </Typography.Title>
-                    <Button type={"primary"} onClick={() => setOpen({open: true, item: undefined})}
-                            className="my-1 bg-success"><BiAddToQueue style={{fontSize: "26px"}}/></Button>
+                    <Tooltip title="Добавление нового элемента" className="me-1">
+                        <Button type={"primary"} onClick={() => setOpen({open: true, item: undefined})}
+                                className="my-1 bg-success"><BiAddToQueue style={{fontSize: "26px"}}/></Button>
+                    </Tooltip>
                 </Col>
             </Row>
             <Row gutter={24}>
@@ -171,7 +173,7 @@ function ModbusClient() {
                             <th className="d-sm-none d-md-table-cell text-center">Topic</th>
                             <th className="d-sm-none d-md-table-cell text-center">Enable</th>
                             <th className="d-sm-none d-md-table-cell text-center">Обновлять</th>
-                            <th className="d-sm-none d-md-table-cell text-center">Изменить / Удалить</th>
+                            <th className="d-sm-none d-md-table-cell text-center">Действия</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -197,19 +199,24 @@ function ModbusClient() {
                                 </td>
                                 <td>
                                     <div className="d-flex justify-content-lg-center p-2">
-                                        <FaEdit
+                                        <Tooltip title="Изменить" className="me-1" color={"green"}>
+                                            <FaEdit
                                             style={{color: 'green', cursor: "pointer", fontSize: 24}}
                                             onClick={() => {
                                                 console.log("click")
                                                 setOpen({open: true, item: client?.id})
                                                 form.setFieldsValue(client)
                                             }}/>
-
-                                        <Popconfirm
-                                            onConfirm={() => removeModbusClient(client)}
-                                            title={"Are sure?"}>
-                                            <DeleteOutlined style={{color: 'red', fontSize: 24}}/>
-                                        </Popconfirm>
+                                        </Tooltip>
+                                        <Tooltip title="Удалить" className="me-1" color={"red"}>
+                                            <Popconfirm
+                                                okText={"Да"}
+                                                cancelText={"Отменить"}
+                                                onConfirm={() => removeModbusClient(client)}
+                                                title={"Вы уверены, что хотите удалить элемент?"}>
+                                                <DeleteOutlined style={{color: 'red', fontSize: 24}}/>
+                                            </Popconfirm>
+                                        </Tooltip>
                                     </div>
                                 </td>
                             </tr>

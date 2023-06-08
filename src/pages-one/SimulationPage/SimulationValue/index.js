@@ -1,4 +1,17 @@
-import {Button, Checkbox, Col, Form, Input, Modal, Pagination, Popconfirm, Row, Select, Typography} from "antd";
+import {
+    Button,
+    Checkbox,
+    Col,
+    Form,
+    Input,
+    Modal,
+    Pagination,
+    Popconfirm,
+    Row,
+    Select,
+    Tooltip,
+    Typography
+} from "antd";
 import {BiAddToQueue} from "react-icons/bi";
 import React, {useEffect, useState} from "react";
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
@@ -109,16 +122,11 @@ function SimulationValue() {
 
     return(
         <div>
-            <Row gutter={24}>
-                <Col span={24}>
-                    <Typography.Title level={4}>
-                        SimulationValue
-                    </Typography.Title>
-                </Col>
-            </Row>
             <Row gutter={24} className="align-items-center">
                 <Col sm={24} xs={24} md={12} lg={2}>
-                    <Button onClick={()=>setOpen({open: true, item: undefined})} type={"primary"} className="my-1 bg-success"><BiAddToQueue style={{fontSize:"26px"}}  /></Button>
+                    <Tooltip title="Добавление нового элемента" className="me-1">
+                        <Button onClick={()=>setOpen({open: true, item: undefined})} type={"primary"} className="my-1 bg-success"><BiAddToQueue style={{fontSize:"26px"}}  /></Button>
+                    </Tooltip>
                 </Col>
                 <Col sm={24} xs={24} md={12} lg={4} >
                     <Select allowClear
@@ -158,7 +166,7 @@ function SimulationValue() {
                                 <th className="d-sm-none d-md-table-cell text-center">Limit Max</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Value</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Enable</th>
-                                <th className="d-sm-none d-md-table-cell text-center">Изменить / Удалить</th>
+                                <th className="d-sm-none d-md-table-cell text-center">Действия</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -175,20 +183,25 @@ function SimulationValue() {
                                     <td className="text-center"><Checkbox onChange={(e)=>isConnect(value,e.target.checked)} defaultChecked={value?.enable}></Checkbox></td>
                                     <td className="text-center">
                                         <div className="d-flex justify-content-lg-center p-2">
-                                            <FaEdit
-                                                style={{color: 'green',fontSize: 24}}
-                                                onClick={() => {
-                                                    console.log("click")
-                                                    setOpen({open: true, item: value?.id})
-                                                    form.setFieldsValue(value)
-                                                }}
-                                            />
-
-                                            <Popconfirm
-                                                onConfirm={()=>removeSimVal(value)}
-                                                title={"Are sure?"}>
-                                                <DeleteOutlined style={{color: 'red' ,fontSize: 24}}/>
-                                            </Popconfirm>
+                                            <Tooltip title="Изменить" className="me-1" color={"green"}>
+                                                <FaEdit
+                                                        style={{color: 'green',fontSize: 24}}
+                                                        onClick={() => {
+                                                        console.log("click")
+                                                        setOpen({open: true, item: value?.id})
+                                                        form.setFieldsValue(value)
+                                                        }}
+                                                        />
+                                            </Tooltip>
+                                            <Tooltip title="Удалить" className="me-1" color={"red"}>
+                                                <Popconfirm
+                                                            okText={"Да"}
+                                                            cancelText={"Отменить"}
+                                                            onConfirm={()=>removeSimVal(value)}
+                                                            title={"Вы уверены, что хотите удалить элемент?"}>
+                                                            <DeleteOutlined style={{color: 'red' ,fontSize: 24}}/>
+                                                </Popconfirm>
+                                            </Tooltip>
                                         </div>
                                     </td>
                                 </tr>

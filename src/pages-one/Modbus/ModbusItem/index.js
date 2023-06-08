@@ -1,4 +1,18 @@
-import {Button, Col, Form, Input, message, Modal, Pagination, Popconfirm, Row, Select, Spin, Typography} from "antd";
+import {
+    Button,
+    Col,
+    Form,
+    Input,
+    message,
+    Modal,
+    Pagination,
+    Popconfirm,
+    Row,
+    Select,
+    Spin,
+    Tooltip,
+    Typography
+} from "antd";
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 import React, {useEffect, useState} from "react";
 import instance from "../../../utils/axios_config";
@@ -125,17 +139,12 @@ function ModbusItem() {
     return (
         <div>
            <Spin spinning={_clients.loading} size={20} direction="vertical">
-               <Row gutter={24}>
-                   <Col span={24}>
-                       <Typography.Title level={4}>
-                           Пункт Modbus
-                       </Typography.Title>
-                   </Col>
-               </Row>
                <Row gutter={24} className="align-items-center">
                    <Col sm={24} xs={12} md={12} lg={2} className="d-flex align-items-center">
-                       <Button type={"primary"} onClick={() => setOpen({open: true, item: undefined})}
-                               className="my-1 bg-success"><BiAddToQueue style={{fontSize: "26px"}}/></Button>
+                       <Tooltip title="Добавление нового элемента" className="me-1">
+                           <Button type={"primary"} onClick={() => setOpen({open: true, item: undefined})}
+                                   className="my-1 bg-success"><BiAddToQueue style={{fontSize: "26px"}}/></Button>
+                       </Tooltip>
                    </Col>
                    <Col sm={24} xs={12} md={12} lg={4}>
                        <Select allowClear
@@ -173,7 +182,7 @@ function ModbusItem() {
                                <th className="d-sm-none d-md-table-cell text-center">Var type</th>
                                <th className="d-sm-none d-md-table-cell text-center">Register</th>
                                <th className="d-sm-none d-md-table-cell text-center">Value</th>
-                               <th className="d-sm-none d-md-table-cell text-center">Изменить / Удалить</th>
+                               <th className="d-sm-none d-md-table-cell text-center">Действия</th>
                            </tr>
                            </thead>
                            <tbody>
@@ -189,19 +198,24 @@ function ModbusItem() {
                                        <td className="text-center">{item?.value}</td>
                                        <td className="text-center">
                                            <div className="d-flex justify-content-lg-center p-2">
-                                               <FaEdit
-                                                   style={{color: 'green', fontSize: 24}}
-                                                   onClick={() => {
-                                                       console.log("click")
-                                                       setOpen({open: true, item: item?.id})
-                                                       form.setFieldsValue(item)
+                                               <Tooltip title="Изменить" className="me-1" color={"green"}>
+                                                   <FaEdit
+                                                            style={{color: 'green', fontSize: 24}}
+                                                            onClick={() => {
+                                                            console.log("click")
+                                                            setOpen({open: true, item: item?.id})
+                                                            form.setFieldsValue(item)
                                                    }}/>
-
-                                               <Popconfirm
-                                                   onConfirm={() => removeModbusItem(item?.id)}
-                                                   title={"Are sure?"}>
-                                                   <DeleteOutlined style={{color: 'red', fontSize: 24}}/>
-                                               </Popconfirm>
+                                               </Tooltip>
+                                               <Tooltip title="Удалить" className="me-1" color={"red"}>
+                                                    <Popconfirm
+                                                                okText={"Да"}
+                                                                cancelText={"Отменить"}
+                                                                onConfirm={() => removeModbusItem(item?.id)}
+                                                                title={"Вы уверены, что хотите удалить элемент?"}>
+                                                                <DeleteOutlined style={{color: 'red', fontSize: 24}}/>
+                                                    </Popconfirm>
+                                               </Tooltip>
                                            </div>
                                        </td>
                                    </tr>
