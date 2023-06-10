@@ -1,6 +1,18 @@
-import {Button, Checkbox, Col, Form, Input, message, Modal, Pagination, Popconfirm, Row, Spin, Typography} from "antd";
-import {BiAddToQueue} from "react-icons/bi";
-import {useEffect, useState} from "react";
+import {
+    Button,
+    Checkbox,
+    Col,
+    Form,
+    Input,
+    message,
+    Modal,
+    Pagination,
+    Popconfirm,
+    Row,
+    Select,
+    Spin, Tooltip,
+} from "antd";
+import {useState} from "react";
 import {useGetAllData} from "../../../custom_hooks/useGetAllData";
 import {FaEdit} from "react-icons/fa";
 import {DeleteOutlined} from "@ant-design/icons";
@@ -8,26 +20,75 @@ import {toast, ToastContainer} from "react-toastify";
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 import 'react-toastify/dist/ReactToastify.css';
 import instance from "../../../utils/axios_config";
+import {MdAddCircle} from "react-icons/md";
+
+const {Option} = Select
 
 function Rest() {
     const [form] = Form.useForm()
     const [loader, setLoader] = useState(false)
-    const [reload, setReload] = useState(false)
     const [open, setOpen] = useState({open: false, item: undefined});
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
 
-    const  _httpRests = useGetAllData({
-        url: "/protocol/httpRest/getHttpPages",
-        params: {page: currentPage, size: pageSize},
-        reFetch: [currentPage, pageSize]
+    const [brokerId, setBrokerId] = useState(null)
+    const [topicId, setTopicId] = useState(null)
+    const _brokers = useGetAllData({
+        url: "/broker/all",
+        params: {},
+        reFetch: []
     })
 
-    const changeIsConnected = async () =>{
+    const [formTopics, setFormTopics] = useState([])
+    const [topics, setTopics] = useState([])
 
-    }
+    const _types = useGetAllData({
+        url: "/protocol/httprest/type/all",
+        params: {},
+        reFetch: []
+    })
 
-    const removeHttpRest = async (httpRest) =>{
+
+    const getTopics = async (e) => {
+        try {
+            let resp = await instance({
+                method: "get",
+                url: `/topic/filter?brokerId=${e}`
+            })
+            if (resp?.data?.success)
+                setTopics(resp?.data?.object)
+            else {
+                setTopics([])
+                setTopicId(null);
+            }
+        } catch (e) {
+            console.log(e.message)
+        }
+    };
+    const getFormTopics = async (e) => {
+        try {
+            let resp = await instance({
+                method: "get",
+                url: `/topic/filter?brokerId=${e}`
+            })
+            if (resp?.data?.success)
+                setFormTopics(resp?.data?.object)
+            else {
+                setFormTopics([])
+                form.resetFields(['topicId']);
+            }
+        } catch (e) {
+            console.log(e.message)
+        }
+    };
+
+    const _httpRests = useGetAllData({
+        url: "/protocol/httpRest/getHttpPages",
+        params: {page: currentPage, size: pageSize, brokerId: brokerId, topicId: topicId},
+        reFetch: [currentPage, pageSize, brokerId, topicId]
+    })
+
+    const removeHttpRest = async (httpRest) => {
         try {
             let resp = await instance({
                 method: "delete",
@@ -40,48 +101,74 @@ function Rest() {
             toast.error("No connect server")
         }
     }
-
-    const sendData = async (values) =>{
+    const connect = async (row, value) => {
         try {
-            let methodType = "";
-            let url = "";
-            if (open?.item){
-                values["id"] = open?.item
-                methodType = "put";
-                url = `/protocol/httpRest/update/${values.id}`;
-            }else {
-                methodType = "post";
-                url = "/protocol/httpRest/save"
-            }
-            let response = await instance({
-                method:methodType,
-                url:url,
-                data:values
+            let res = await instance({
+                method: "get",
+                url: `/protocol/httpRest/isConnect/${row?.id}`
             })
-            if (methodType==="put"){
-                toast.success(values.name + " - updated")
-            }else {
-                toast.success(values.name + " - saved")
+            if (value) {
+                toast.success(row?.name + " - Connected")
+            } else {
+                toast.warning(row?.name + " - Disconnected")
             }
-            setOpen({open: false, item: undefined});
-            form.resetFields();
-            _httpRests.fetch();
-        }catch (e){
-            message.error("Error")
-            toast.error("No connect server")
+            _httpRests.fetch()
+        } catch (e) {
+            toast.error("Error")
         }
     }
 
-    return(
+    const sendData = async (values) => {
+        try {
+            if (open?.item) {
+                values = {...values, id: open?.item}
+            }
+            let response = await instance({
+                method: open.item ? 'put' : 'post',
+                url: '/protocol/httpRest',
+                data: values
+            })
+            message.success(response.data.message)
+            setOpen({open: false, item: undefined});
+            form.resetFields();
+            _httpRests.fetch();
+        } catch (e) {
+            message.error("Error")
+        }
+    }
+
+    return (
         <div>
             <Spin spinning={_httpRests.loading} size={20} direction="vertical">
-                <Row gutter={24}>
-                    <Col span={24}>
-                        <Typography.Title level={4}>
-                            HttpRest
-                        </Typography.Title>
-                        <Button type={"primary"} onClick={() => setOpen({open: true, item: undefined})}
-                                className="my-1 bg-success"><BiAddToQueue style={{fontSize: "26px"}}/></Button>
+                <Row gutter={24} className="mb-4">
+                    <Col span={4}>
+                        <Select style={{width: "100%"}} value={brokerId} allowClear onChange={(e) => {
+                            setTopicId(null)
+                            setTopics([])
+                            setBrokerId(e)
+                            getTopics(e)
+                        }} placeholder="Брокер">
+                            {_brokers.data?.map(item => <Option key={item?.id}
+                                                                value={item?.id}>{item?.ipAddress + ':' + item?.port}</Option>)}
+                        </Select>
+                    </Col>
+                    <Col span={4}>
+                        <Select style={{width: "100%"}} value={topicId} allowClear onChange={(e) => {
+                            setTopicId(e)
+                        }} placeholder="Тип протокола">
+                            {topics?.map(item => <Option key={item?.id}
+                                                         value={item?.id}>{item?.name}</Option>)}
+                        </Select>
+                    </Col>
+                    <Col span={4} offset={12}>
+                        <div style={{float: "right"}}>
+                            <Tooltip title="Добавление нового протокола" className="me-1">
+                                <Button type="primary" className=""
+                                        onClick={() => setOpen({open: true, item: undefined})}>
+                                    <MdAddCircle style={{color: "white", fontSize: "20px"}}/>
+                                </Button>
+                            </Tooltip>
+                        </div>
                     </Col>
                 </Row>
                 <Row gutter={24}>
@@ -90,44 +177,58 @@ function Rest() {
                                datapagesize={false}
                                className="table table-bordered table-striped table-hover responsiveTable w-100">
                             <thead className="d-md-table-header-group">
-                                <tr>
-                                    <th className="d-sm-none d-md-table-cell text-center">T/R</th>
-                                    <th className="d-sm-none d-md-table-cell text-center">ID</th>
-                                    <th className="d-sm-none d-md-table-cell text-center">URL</th>
-                                    <th className="d-sm-none d-md-table-cell text-center">POLLING</th>
-                                    <th className="d-sm-none d-md-table-cell text-center">ENABLE</th>
-                                    <th className="d-sm-none d-md-table-cell text-center">Изменить / Удалить</th>
-                                </tr>
+                            <tr>
+                                <th className="d-sm-none d-md-table-cell text-center">ИД</th>
+                                <th className="d-sm-none d-md-table-cell text-center">Название</th>
+                                <th className="d-sm-none d-md-table-cell text-center">URL-адрес</th>
+                                <th className="d-sm-none d-md-table-cell text-center">Поллинг</th>
+                                <th className="d-sm-none d-md-table-cell text-center">Тип</th>
+                                <th className="d-sm-none d-md-table-cell text-center">Топик</th>
+                                <th className="d-sm-none d-md-table-cell text-center">Брокер</th>
+                                <th className="d-sm-none d-md-table-cell text-center">Статус</th>
+                                <th className="d-sm-none d-md-table-cell text-center">Действия</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                {_httpRests.data?.map((httRest,key)=>
-                                    <tr>
-                                        <td className="text-center">{((currentPage-1) * pageSize) + (key + 1)}</td>
-                                        <td className="text-center">{httRest?.id}</td>
-                                        <td className="text-center">{httRest?.url}</td>
-                                        <td className="text-center">{httRest?.polling}</td>
-                                        <td className="text-center"><Checkbox defaultChecked={httRest?.enable}
-                                                                              onChange={(e) => changeIsConnected(httRest, e.target.checked)}></Checkbox>
-                                        </td>
-                                        <td className="text-center">
-                                            <div className="d-flex justify-content-lg-center p-2">
+                            {_httpRests.data?.map((httRest, key) =>
+                                <tr>
+                                    <td className="text-center">{httRest?.id}</td>
+                                    <td className="text-center">{httRest?.name}</td>
+                                    <td className="text-center">{httRest?.url}</td>
+                                    <td className="text-center">{httRest?.polling}</td>
+                                    <td className="text-center">{httRest?.type}</td>
+                                    <td className="text-center">{httRest?.topic?.name}</td>
+                                    <td className="text-center">{httRest?.topic?.broker?.ipAddress + ':' + httRest?.topic?.broker?.port}</td>
+                                    <td className="text-center"><Checkbox defaultChecked={httRest?.enable}
+                                                                          onChange={(e) => connect(httRest, e.target.checked)}></Checkbox>
+                                    </td>
+                                    <td className="text-center">
+                                        <div className="d-flex justify-content-center p-2">
+                                            <Tooltip title="Изменить" color="green">
                                                 <FaEdit
                                                     style={{color: 'green', cursor: "pointer", fontSize: 24}}
                                                     onClick={() => {
-                                                        console.log("click")
-                                                        setOpen({open: true, item:httRest ?.id})
+                                                        setOpen({open: true, item: httRest?.id})
+                                                        form.setFieldsValue(httRest)
+                                                        form.setFieldValue(['brokerId'], httRest.topic?.broker?.id)
+                                                        form.setFieldValue(['topicId'], httRest.topic?.id)
+                                                        getFormTopics(httRest.topic?.broker?.id)
                                                         form.setFieldsValue(httRest)
                                                     }}/>
+                                            </Tooltip>
 
+                                            <Tooltip title="Удалить" color="red">
                                                 <Popconfirm
                                                     onConfirm={() => removeHttpRest(httRest)}
-                                                    title={"Are sure?"}>
+                                                    okText="Да" cancelText="Отменить"
+                                                    title={"Вы действительно хотите выполнить это действие?"}>
                                                     <DeleteOutlined style={{color: 'red', fontSize: 24}}/>
                                                 </Popconfirm>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )}
+                                            </Tooltip>
+                                        </div>
+                                    </td>
+                                </tr>
+                            )}
                             </tbody>
                         </table>
 
@@ -135,7 +236,7 @@ function Rest() {
 
                         <Pagination
                             showQuickJumper
-                            style={{float:"right"}}
+                            style={{float: "right"}}
                             current={currentPage}
                             pageSize={pageSize}
                             total={_httpRests?._meta.totalElements}
@@ -151,40 +252,68 @@ function Rest() {
                                 setOpen({open: false, item: undefined})
                                 form.resetFields()
                             }}
-                            title="Окно добавления HttpRest"
+                            title={open?.item ? "Изменить" : "Добавить"}
+                            centered
+                            width={600}
                         >
                             <Form form={form} layout="vertical" onFinish={sendData}>
                                 <Row gutter={24}>
-                                    <Col span={24}>
-                                        <Form.Item rules={[{required: true, message: "Fill the field!"}]} name="name"
-                                                   label="Name">
-                                            <Input placeholder="Enter name"/>
+                                    <Col span={12}>
+                                        <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="name"
+                                                   label="Название">
+                                            <Input placeholder="Название"/>
                                         </Form.Item>
                                     </Col>
-                                    <Col span={24}>
-                                        <Form.Item rules={[{required: true, message: "Fill the field!"}]} name="url"
-                                                   label="URL">
-                                            <Input placeholder="Enter url"/>
+
+                                    <Col span={12}>
+                                        <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="polling"
+                                                   label="Поллинг">
+                                            <Input type="number" placeholder="Поллинг"/>
                                         </Form.Item>
                                     </Col>
-                                    <Col span={24}>
-                                        <Form.Item rules={[{required: true, message: "Fill the field!"}]} name="polling"
-                                                   label="Polling">
-                                            <Input type="number" placeholder="Enter polling"/>
+
+                                    <Col span={12}>
+                                        <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="type"
+                                                   label="Тип">
+                                            <Select style={{width: "100%"}} allowClear placeholder="Тип">
+                                                {_types.data?.map(item => <Option key={item}
+                                                                                    value={item}>{item}</Option>)}
+                                            </Select>
                                         </Form.Item>
                                     </Col>
-                                    {/*<Col span={24}>*/}
-                                    {/*    <Form.Item rules={[{required: true, message: "Fill the field!"}]} name="slaveId"*/}
-                                    {/*               label="SlaveId">*/}
-                                    {/*        <Input type="number" placeholder="Enter slaveId"/>*/}
-                                    {/*    </Form.Item>*/}
-                                    {/*</Col>*/}
-                                    {/*<Col span={24}>*/}
-                                    {/*    <Form.Item valuePropName="checked" rules={[{required: false, message: "Fill the field!"}]} name="enable"*/}
-                                    {/*               label="Is Connected">*/}
-                                    {/*        <Checkbox  placeholder="Checked enable"/>*/}
-                                    {/*    </Form.Item>*/}
-                                    {/*</Col>*/}
+                                    <Col span={12}>
+                                        <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="url"
+                                                   label="URL-адрес">
+                                            <Input placeholder="URL-адрес"/>
+                                        </Form.Item>
+                                    </Col>
+
+                                    <Col span={12}>
+                                        <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
+                                                   name="brokerId"
+                                                   label="Брокер">
+                                            <Select style={{width: "100%"}} allowClear placeholder="Брокер"
+                                                    onChange={(e) => {
+                                                        getFormTopics(e)
+                                                        form.resetFields(['topicId']);
+                                                    }}>
+                                                {_brokers.data?.map(item => <Option key={item?.id}
+                                                                                    value={item?.id}>{item?.ipAddress + ':' + item?.port}</Option>)}
+                                            </Select>
+                                        </Form.Item>
+                                    </Col>
+
+                                    <Col span={12}>
+                                        <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
+                                                   name="topicId"
+                                                   label="Топик">
+                                            <Select style={{width: "100%"}} allowClear placeholder="Топик">
+                                                {formTopics?.map(item => <Option key={item.id}
+                                                                                 value={item.id}>{item.name}</Option>)}
+                                            </Select>
+                                        </Form.Item>
+                                    </Col>
+
                                     <Col span={24} className="d-flex justify-content-end">
                                         <Button onClick={() => {
                                             setOpen({open: false, item: undefined})
@@ -203,4 +332,5 @@ function Rest() {
         </div>
     );
 }
+
 export default Rest

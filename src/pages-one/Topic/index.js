@@ -42,10 +42,9 @@ function Topic() {
         params: {
             page: currentPage,
             size: pageSize,
-            brokerId: brokerId,
-            protocolType: protocolType
+            brokerId: brokerId
         },
-        reFetch: [currentPage, pageSize, brokerId, protocolType]
+        reFetch: [currentPage, pageSize, brokerId]
     })
 
     const _protocol_types = useGetAllData({
@@ -129,13 +128,13 @@ function Topic() {
         }
     }
 
-    const changeIsConnected = async (item, checked) => {
+    const reconnect = async (item, checked) => {
         setLoader(true)
         item.status = checked ? 1 : 0;
         try {
             let resp = await instance({
                 method: "put",
-                url: "/topic",
+                url: "/topic/reconnect",
                 data: item
             })
             if (resp?.data?.success) {
@@ -193,8 +192,6 @@ function Topic() {
                         <th className="d-sm-none d-md-table-cell">Топик</th>
                         <th className="d-sm-none d-md-table-cell">Брокер</th>
                         <th className="d-sm-none d-md-table-cell">Состояние</th>
-                        <th className="d-sm-none d-md-table-cell">Тип протокола</th>
-                        <th className="d-sm-none d-md-table-cell">Таргет ИД</th>
                         <th className="d-sm-none d-md-table-cell" style={{width: "180px"}}>Действия</th>
                     </tr>
                     </thead>
@@ -206,11 +203,9 @@ function Topic() {
                             <td>{item.broker?.ipAddress + ':' + item.broker?.port}</td>
                             <td><input type="checkbox" className="form-check-input my-2" checked={item.status === 1}
                                        style={{fontSize: "24px"}}
-                                       onChange={(e) => changeIsConnected(item, e.target.checked)}/></td>
-                            <td>{item.type}</td>
-                            <td>{item.targetId}</td>
+                                       onChange={(e) => reconnect(item, e.target.checked)}/></td>
                             <td>
-                                <div className="d-flex justify-content-evenly p-2">
+                                <div className="d-flex justify-content-center p-2">
                                     <Tooltip title="Изменить" color="green">
                                         <FaEdit
                                             style={{cursor: 'pointer', color: 'green', marginLeft: 20, fontSize: 22}}
@@ -226,7 +221,7 @@ function Topic() {
                                                     title={"Вы действительно хотите выполнить это действие?"}
                                                     onConfirm={() => remove(item.id)}>
                                             <DeleteOutlined
-                                                style={{color: 'red', marginLeft: 40, fontSize: 22}}/>
+                                                style={{color: 'red', fontSize: 22}}/>
                                         </Popconfirm>
                                     </Tooltip>
 
@@ -274,28 +269,6 @@ function Topic() {
                                 <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="name"
                                            label="Название тега">
                                     <Input placeholder="Название тега"/>
-                                </Form.Item>
-                            </Col>
-
-                            <Col span={12}>
-                                <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="type"
-                                           label="Тип протокола">
-                                    <Select style={{width: "100%"}} allowClear placeholder="Тип протокола" onChange={(e) => {
-                                        getTargets(e)
-                                    }}>
-                                        {_protocol_types.data?.map(item => <Option key={item}
-                                                                                   value={item}>{item}</Option>)}
-                                    </Select>
-                                </Form.Item>
-                            </Col>
-
-                            <Col span={12}>
-                                <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="targetId"
-                                           label="Протокол">
-                                    <Select style={{width: "100%"}} allowClear placeholder="Протокол">
-                                        {targets?.map(item => <Option key={item.id}
-                                                                      value={item.id}>{item.name}</Option>)}
-                                    </Select>
                                 </Form.Item>
                             </Col>
 

@@ -111,10 +111,10 @@ function Broker() {
                             <td>{item.ipAddress}</td>
                             <td>{item.port}</td>
                             <td>
-                                <div className="d-flex justify-content-evenly p-2">
+                                <div className="d-flex justify-content-center p-2">
                                     <Tooltip title="Изменить" color="green">
                                         <FaEdit
-                                            style={{cursor: 'pointer', color: 'green', marginLeft: 20, fontSize: 22}}
+                                            style={{cursor: 'pointer', color: 'green', fontSize: 22}}
                                             onClick={() => {
                                                 setOpen({open: true, item: item.id})
                                                 form.setFieldsValue(item)
@@ -126,7 +126,7 @@ function Broker() {
                                                     title={"Вы действительно хотите выполнить это действие?"}
                                                     onConfirm={() => remove(item.id)}>
                                             <DeleteOutlined
-                                                style={{color: 'red', marginLeft: 40, fontSize: 22}}/>
+                                                style={{color: 'red', fontSize: 22}}/>
                                         </Popconfirm>
                                     </Tooltip>
 
