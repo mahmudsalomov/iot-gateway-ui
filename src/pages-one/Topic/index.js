@@ -128,28 +128,6 @@ function Topic() {
         }
     }
 
-    const reconnect = async (item, checked) => {
-        setLoader(true)
-        item.status = checked ? 1 : 0;
-        try {
-            let resp = await instance({
-                method: "put",
-                url: "/topic/reconnect",
-                data: item
-            })
-            if (resp?.data?.success) {
-                await _topics.fetch()
-                message.success(resp.data.message)
-            } else {
-                message.error("Error")
-            }
-        } catch (e) {
-            message.error("Error")
-        } finally {
-            setLoader(false)
-        }
-    }
-
     return (
         <div>
             <Spin spinning={_topics.loading} size={20} direction="vertical">
@@ -191,7 +169,6 @@ function Topic() {
                         <th className="d-sm-none d-md-table-cell" style={{width: "50px"}}>ИД</th>
                         <th className="d-sm-none d-md-table-cell">Топик</th>
                         <th className="d-sm-none d-md-table-cell">Брокер</th>
-                        <th className="d-sm-none d-md-table-cell">Состояние</th>
                         <th className="d-sm-none d-md-table-cell" style={{width: "180px"}}>Действия</th>
                     </tr>
                     </thead>
@@ -201,9 +178,6 @@ function Topic() {
                             <td>{item.id}</td>
                             <td>{item.name}</td>
                             <td>{item.broker?.ipAddress + ':' + item.broker?.port}</td>
-                            <td><input type="checkbox" className="form-check-input my-2" checked={item.status === 1}
-                                       style={{fontSize: "24px"}}
-                                       onChange={(e) => reconnect(item, e.target.checked)}/></td>
                             <td>
                                 <div className="d-flex justify-content-center p-2">
                                     <Tooltip title="Изменить" color="green">
