@@ -207,6 +207,8 @@ function ModbusClient() {
                             <tr>
                                 <th className="d-sm-none d-md-table-cell text-center">ИД</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Название</th>
+                                <th className="d-sm-none d-md-table-cell text-center">Ip</th>
+                                <th className="d-sm-none d-md-table-cell text-center">Port</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Поллинг</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Слейв ИД</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Топик</th>
@@ -221,6 +223,8 @@ function ModbusClient() {
                                 <tr>
                                     <td className="text-center">{client?.id}</td>
                                     <td className="text-center">{client?.name}</td>
+                                    <td className="text-center">{client?.ip}</td>
+                                    <td className="text-center">{client?.port}</td>
                                     <td className="text-center">{client?.polling}</td>
                                     <td className="text-center">{client?.slaveId}</td>
                                     <td className="text-center">{client?.topic?.name}</td>
@@ -304,6 +308,20 @@ function ModbusClient() {
                                         <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="name"
                                                    label="Название">
                                             <Input placeholder="Название"/>
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={12}>
+                                        <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
+                                                   name="ip"
+                                                   label="ip">
+                                            <Input placeholder="ip"/>
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={12}>
+                                        <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
+                                                   name="port"
+                                                   label="port">
+                                            <Input type="number" placeholder="port"/>
                                         </Form.Item>
                                     </Col>
                                     <Col span={12}>
