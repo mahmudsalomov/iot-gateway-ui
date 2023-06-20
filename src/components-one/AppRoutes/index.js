@@ -8,6 +8,7 @@ import HttpRest from "../../pages-one/HttpRestTemplate/HttpRest";
 import HttpRestItem from "../../pages-one/HttpRestTemplate/HttpRestItem";
 import Broker from "../../pages-one/Broker";
 import Topic from "../../pages-one/Topic";
+import Websocket from "../../pages-one/Websocket/Websocket";
 
 function AppRoutes() {
     return(
@@ -22,6 +23,7 @@ function AppRoutes() {
                 <Route path="/httpRestItem" element={<HttpRestItem />}></Route>
                 <Route path="/broker" element={<Broker />}></Route>
                 <Route path="/topic" element={<Topic />}></Route>
+                <Route path="/websocket" element={<Websocket />}></Route>
             </Routes>
         </div>
     );

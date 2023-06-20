@@ -10,13 +10,14 @@ import {VscTypeHierarchy} from "react-icons/vsc";
 import {HiOutlineStatusOnline, HiOutlineTable, HiOutlineTicket} from "react-icons/hi";
 import {AiOutlineGateway} from "react-icons/ai";
 import {BsDeviceSsd} from "react-icons/bs";
-import {GiMovementSensor} from "react-icons/gi";
+import {GiElectricalSocket, GiMovementSensor} from "react-icons/gi";
 import {RiLogoutBoxLine} from "react-icons/ri";
 import AppRoutes from "../AppRoutes";
-import {SiHttpie, SiMumble, SiMusicbrainz} from "react-icons/si";
+import {SiHttpie, SiMumble, SiMusicbrainz, SiRsocket} from "react-icons/si";
 import {MdOutlineHttp, MdSensorWindow} from "react-icons/md";
 import {RxValue} from "react-icons/rx";
 import {BiSitemap} from "react-icons/bi";
+import {TbBrandSocketIo} from "react-icons/tb";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -40,6 +41,11 @@ const DashboardComponent= () => {
     let dataHttpRest= [
         {label:"HttpRest",icon:<MdOutlineHttp style={{fontSize:"20px"}}/>,key:"/httpRest"},
         {label:"Пункт HttpRest",icon:<BiSitemap style={{fontSize:"20px"}}/>,key:"/httpRestItem"}
+    ];
+
+    let dataWebsocket= [
+        {label:"Websocket",icon:<SiRsocket style={{fontSize:"20px"}}/>,key:"/websocket"},
+        {label:"Пункт Websocket",icon:<TbBrandSocketIo style={{fontSize:"20px"}}/>,key:"/websocketItem"}
     ];
 
     return (
@@ -110,6 +116,19 @@ const DashboardComponent= () => {
                                         label:value?.label,
                                         icon:value?.icon,
                                         key:value?.key
+                                    }
+                                })
+                            )
+                        },
+                        {
+                            label: "Websocket",
+                            icon: <GiElectricalSocket  style={{fontSize:"20px"}} />,
+                            children: (
+                                dataWebsocket?.map(value => {
+                                    return {
+                                        label:value?.label,
+                                        icon: value?.icon,
+                                        key: value?.key
                                     }
                                 })
                             )
