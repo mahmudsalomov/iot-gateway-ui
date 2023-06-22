@@ -194,8 +194,8 @@ function Websocket() {
                                     <td className="text-center">{web?.name}</td>
                                     <td className="text-center">{web?.url}</td>
                                     <td className="text-center">{web?.polling}</td>
-                                    <td className="text-center">{web?.topicDto?.name}</td>
-                                    <td className="text-center">{web?.topicDto?.broker?.ipAddress + ':' + web?.topicDto?.broker?.port}</td>
+                                    <td className="text-center">{web?.topic?.name}</td>
+                                    <td className="text-center">{web?.topic?.broker?.ipAddress + ':' + web?.topic?.broker?.port}</td>
                                     <td className="text-center"><Checkbox defaultChecked={web?.enable}
                                                                           onChange={(e) => connect(web, e.target.checked)}></Checkbox>
                                     </td>
@@ -207,9 +207,9 @@ function Websocket() {
                                                     onClick={() => {
                                                         setOpen({open: true, item: web?.id})
                                                         form.setFieldsValue(web)
-                                                        form.setFieldValue(['brokerId'], web.topicDto?.broker?.id)
-                                                        form.setFieldValue(['topicId'], web.topicDto?.id)
-                                                        getFormTopics(web.topicDto?.broker?.id)
+                                                        form.setFieldValue(['brokerId'], web.topic?.broker?.id)
+                                                        form.setFieldValue(['topicId'], web.topic?.id)
+                                                        getFormTopics(web.topic?.broker?.id)
                                                         form.setFieldsValue(web)
                                                     }}/>
                                             </Tooltip>

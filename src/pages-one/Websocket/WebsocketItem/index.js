@@ -110,6 +110,7 @@ function WebsocketItem() {
                             </Tooltip>
                         </div>
                     </Col>
+
                 </Row>
 
                 <Row gutter={24}>
@@ -131,7 +132,7 @@ function WebsocketItem() {
                                     <tr>
                                         <td className="text-center">{item?.id}</td>
                                         <td className="text-center">{item?.tagName}</td>
-                                        <td className="text-center">{item?.websocketDto?.name}</td>
+                                        <td className="text-center">{item?.websocket?.name}</td>
                                         <td className="text-center">{item?.value}</td>
                                         <td className="text-center">
                                             <div className="d-flex justify-content-center p-2">

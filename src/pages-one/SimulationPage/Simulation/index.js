@@ -13,7 +13,7 @@ import {
     Select, Tooltip
 } from "antd";
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {toast, ToastContainer} from "react-toastify";
 import instance from "../../../utils/axios_config";
 import {FaEdit} from "react-icons/fa";
@@ -96,7 +96,7 @@ function Simulation() {
         }
     }
 
-    const sendData = async (values, id) => {
+    const sendData = async (values) => {
         if (open?.item) {
             values = {...values, id: open?.item}
         }
@@ -109,6 +109,7 @@ function Simulation() {
             })
             message.success(res.data.message)
             setOpen({open: false, item: undefined})
+            form.resetFields()
             _simulations.fetch()
         } catch (e) {
             message.error("Error")
@@ -233,15 +234,14 @@ function Simulation() {
 
 
                         <Pagination
-                            showQuickJumper
                             style={{float: "right"}}
+                            showQuickJumper
                             current={currentPage}
                             pageSize={pageSize}
-                            total={_simulations._meta.totalElements}
+                            total={_simulations?._meta.totalElements}
                             onChange={(page) => setCurrentPage(page)}
                             onShowSizeChange={(page, size) => setPageSize(size)}
-                            showSizeChanger={true}
-                        />
+                            showSizeChanger={true}/>
 
                         <Modal
                             footer={false}
