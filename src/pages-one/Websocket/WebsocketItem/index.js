@@ -41,7 +41,7 @@ function WebsocketItem() {
 
     const _items = useGetAllData({
         url: "/protocol/websocket/item/all",
-        params: {page: currentPage, size: pageSize, httpRestId: websocketId},
+        params: {page: currentPage, size: pageSize, websocketId: websocketId},
         reFetch: [currentPage, pageSize, websocketId]
     })
 
