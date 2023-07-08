@@ -17,6 +17,7 @@ import {FaEdit} from "react-icons/fa";
 import {DeleteOutlined} from "@ant-design/icons";
 import {useGetAllData} from "../../custom_hooks/useGetAllData";
 import {MdAddCircle} from "react-icons/md";
+import Ping from "../../components-one/ping";
 
 
 function Broker() {
@@ -108,7 +109,9 @@ function Broker() {
                     {_brokers.data?.map((item, key) =>
                         <tr key={key}>
                             <td>{item.id}</td>
-                            <td>{item.ipAddress}</td>
+                            <td>{item.ipAddress}
+                                <Ping host={item?.ipAddress}></Ping>
+                            </td>
                             <td>{item.port}</td>
                             <td>
                                 <div className="d-flex justify-content-center p-2">

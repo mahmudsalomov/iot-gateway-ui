@@ -21,6 +21,7 @@ import {GrUpdate} from "react-icons/gr";
 import {toast, ToastContainer} from "react-toastify";
 import {useGetAllData} from "../../../custom_hooks/useGetAllData";
 import {MdAddCircle} from "react-icons/md";
+import Ping from "../../../components-one/ping";
 
 const {Option} = Select
 
@@ -223,7 +224,9 @@ function ModbusClient() {
                                 <tr>
                                     <td className="text-center">{client?.id}</td>
                                     <td className="text-center">{client?.name}</td>
-                                    <td className="text-center">{client?.ip}</td>
+                                    <td className="text-center">{client?.ip}
+                                        <Ping host={client?.ip}></Ping>
+                                    </td>
                                     <td className="text-center">{client?.port}</td>
                                     <td className="text-center">{client?.polling}</td>
                                     <td className="text-center">{client?.slaveId}</td>

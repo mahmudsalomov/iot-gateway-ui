@@ -65,7 +65,7 @@ const DashboardComponent= () => {
             >
                 <Space className="d-flex justify-content-evenly align-items-center p-2">
                     <AiOutlineGateway style={{fontSize:"40px",color:"white"}}/>
-                    <Typography.Text style={{color:"white",fontSize:"20px"}}>{collapsed?"":"IOT Gateway"}</Typography.Text>
+                    <Typography.Text style={{color:"white",fontSize:"20px"}}>{collapsed?"":"Uzliti IOT Gateway"}</Typography.Text>
                 </Space>
                 <div className="demo-logo-vertical" />
                 <Menu

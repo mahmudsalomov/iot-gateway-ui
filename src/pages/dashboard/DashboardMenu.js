@@ -15,7 +15,7 @@ const DashboardMenu =(props)=> {
                 <div className=" position-fixed p-3 box" style={props.open?{width:"5%"}:{width:"20%"}} >
                     <ul className=" list-unstyled p-3">
                         <div className="d-flex justify-content-between align-items-center">
-                            <h3 className="text-white"><MdOutlineAdminPanelSettings style={{fontSize:"32px"}} /> {props.open?"":"IOT Gateway Admin"}</h3>
+                            <h3 className="text-white"><MdOutlineAdminPanelSettings style={{fontSize:"32px"}} /> {props.open?"":"Uzliti IOT Gateway Admin"}</h3>
                         </div>
                         <div className="my-2" style={{backgroundColor:"white",width:"100%",height:"2px"}}></div>
                        <NavLink style={styleNavLink} className="text-white dx d-block" to="/"><RiFileList2Fill/>{props.open?"":"Modbus Clients"}</NavLink>
