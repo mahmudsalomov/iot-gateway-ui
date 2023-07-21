@@ -12,7 +12,7 @@ import {
     Spin, Select, Tooltip
 } from "antd";
 import {FaEdit} from "react-icons/fa";
-import {DeleteOutlined} from "@ant-design/icons";
+import {DeleteOutlined, MessageOutlined} from "@ant-design/icons";
 import {useEffect, useState} from "react";
 import instance from "../../../utils/axios_config";
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
@@ -22,6 +22,9 @@ import {toast, ToastContainer} from "react-toastify";
 import {useGetAllData} from "../../../custom_hooks/useGetAllData";
 import {MdAddCircle} from "react-icons/md";
 import Ping from "../../../components-one/ping";
+import TextArea from "antd/es/input/TextArea";
+import async from "async";
+import {io} from "socket.io-client";
 
 const {Option} = Select
 
@@ -29,6 +32,7 @@ function ModbusClient() {
     const [form] = Form.useForm()
     const [loader, setLoader] = useState(false)
     const [open, setOpen] = useState({open: false, item: undefined});
+    const [chatOpen, setChatOpen] = useState({open: false, item: undefined});
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
 
@@ -101,7 +105,7 @@ function ModbusClient() {
             form.resetFields()
         } catch (e) {
             message.error("Error")
-        }finally {
+        } finally {
             setLoader(false)
         }
     }
@@ -158,6 +162,15 @@ function ModbusClient() {
             console.log("error");
             toast.error("Server no connect")
         }
+    }
+
+    const test= ()=>{
+        const socket = io('http://192.168.0.123:16666', {
+            query: {
+                room: 'test'
+            }
+        });
+        socket.emit('test', 'Hello, bitch!');
     }
 
     useEffect(() => {
@@ -260,6 +273,22 @@ function ModbusClient() {
                                                         form.setFieldValue(['topicId'], client.topic?.id)
                                                         getFormTopics(client.topic?.broker?.id)
                                                         form.setFieldsValue(client)
+                                                    }}/>
+                                            </Tooltip>
+
+
+                                            <Tooltip title="Chat" color="blue">
+                                                <MessageOutlined
+                                                    onClick={() => {
+                                                        setChatOpen({open: true, item: undefined})
+                                                        test()
+                                                    }}
+                                                    style={{
+                                                        color: 'blue',
+                                                        marginLeft: 10,
+                                                        marginRight: 10,
+                                                        fontSize: 22,
+                                                        cursor: "pointer"
                                                     }}/>
                                             </Tooltip>
 
@@ -378,6 +407,22 @@ function ModbusClient() {
                                     </Col>
                                 </Row>
                             </Form>
+                        </Modal>
+
+
+                        {/*    ***********************Modal for payload ***********************/}
+                        <Modal
+                            footer={false}
+                            open={chatOpen.open}
+                            onCancel={() => {
+                                setChatOpen({open: false, item: undefined})
+                                // form.resetFields()
+                            }}
+                            title={"Mqtt"}
+                            centered
+                            width={600}
+                        >
+                            <TextArea value={"adfasdsda"} disabled/>
                         </Modal>
 
                     </Col>
