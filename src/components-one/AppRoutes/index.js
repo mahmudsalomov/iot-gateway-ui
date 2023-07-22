@@ -10,6 +10,8 @@ import Broker from "../../pages-one/Broker";
 import Topic from "../../pages-one/Topic";
 import Websocket from "../../pages-one/Websocket/Websocket";
 import WebsocketItem from "../../pages-one/Websocket/WebsocketItem";
+import Jdbc from "../../pages-one/Jdbc/Jdbc";
+import JdbcItem from "../../pages-one/Jdbc/JdbcItem";
 
 function AppRoutes() {
     return(
@@ -26,6 +28,8 @@ function AppRoutes() {
                 <Route path="/topic" element={<Topic />}></Route>
                 <Route path="/websocket" element={<Websocket />}></Route>
                 <Route path="/websocketItem" element={<WebsocketItem />}></Route>
+                <Route path="/jdbc" element={<Jdbc />}></Route>
+                <Route path="/jdbcItem" element={<JdbcItem />}></Route>
             </Routes>
         </div>
     );
