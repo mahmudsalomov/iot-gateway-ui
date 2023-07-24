@@ -258,7 +258,7 @@ function ModbusItem() {
                                                    label="Клиенты Modbus">
                                             <Select allowClear placeholder="Клиенты Modbus">
                                                 {_clients.data?.map((modC, key) =>
-                                                    <Option key={modC?.id} value={modC?.id}>{modC?.name}</Option>
+                                                    <Option key={modbusCId} value={modC?.id}>{modC?.name}</Option>
                                                 )}
                                             </Select>
                                         </Form.Item>
@@ -274,7 +274,6 @@ function ModbusItem() {
                                 </Row>
                             </Form>
                         </Modal>
-
                     </Col>
                 </Row>
             </Spin>

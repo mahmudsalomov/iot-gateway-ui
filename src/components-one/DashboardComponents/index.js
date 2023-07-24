@@ -5,11 +5,11 @@ import {
     MenuUnfoldOutlined,
 } from '@ant-design/icons';
 import {Button, Image, Layout, Menu, Space, theme, Typography} from 'antd';
-import {FaBurn} from "react-icons/fa";
+import {FaBurn, FaDatabase} from "react-icons/fa";
 import {VscTypeHierarchy} from "react-icons/vsc";
 import {HiOutlineStatusOnline, HiOutlineTable, HiOutlineTicket} from "react-icons/hi";
-import {AiFillDatabase, AiOutlineDatabase, AiOutlineGateway, AiTwotoneDatabase} from "react-icons/ai";
-import {BsDeviceSsd} from "react-icons/bs";
+import {AiFillDatabase, AiOutlineGateway} from "react-icons/ai";
+import {BsDatabaseFillGear, BsDeviceSsd} from "react-icons/bs";
 import {GiElectricalSocket, GiMovementSensor} from "react-icons/gi";
 import {RiLogoutBoxLine} from "react-icons/ri";
 import AppRoutes from "../AppRoutes";
@@ -47,11 +47,11 @@ const DashboardComponent= () => {
         {label:"Websocket",icon:<SiRsocket style={{fontSize:"20px"}}/>,key:"/websocket"},
         {label:"Пункт Websocket",icon:<TbBrandSocketIo style={{fontSize:"20px"}}/>,key:"/websocketItem"}
     ];
-    let dataJdbc= [
-        {label:"Jdbc",icon:<AiTwotoneDatabase style={{fontSize:"20px"}}/>,key:"/jdbc"},
-        {label:"Пункт Jdbc",icon:<AiOutlineDatabase style={{fontSize:"20px"}}/>,key:"/jdbcItem"}
-    ];
 
+    let dataJdbc= [
+        {label:"Jdbc",icon:<FaDatabase style={{fontSize:"20px"}}/>,key:"/jdbc"},
+        {label:"Пункт Jdbc",icon:<AiFillDatabase style={{fontSize:"20px"}}/>,key:"/jdbcItem"}
+    ];
 
     return (
         <Layout className="d-flex">
@@ -140,7 +140,7 @@ const DashboardComponent= () => {
                         },
                         {
                             label: "Jdbc",
-                            icon: <AiFillDatabase  style={{fontSize:"20px"}} />,
+                            icon: <BsDatabaseFillGear  style={{fontSize:"20px"}} />,
                             children: (
                                 dataJdbc?.map(value => {
                                     return {
