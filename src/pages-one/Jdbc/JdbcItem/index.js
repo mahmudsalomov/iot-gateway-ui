@@ -224,7 +224,7 @@ function JdbcItem() {
                                         <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
                                                    name="query"
                                                    label="Название запрос">
-                                            <Input.TextArea placeholder="SELECT * FROM ..." rows={4} maxLength={6666} />
+                                            <Input.TextArea placeholder="SELECT * FROM ..." rows={4} maxLength={66666} />
                                         </Form.Item>
                                     </Col>
                                     <Col span={24}>
