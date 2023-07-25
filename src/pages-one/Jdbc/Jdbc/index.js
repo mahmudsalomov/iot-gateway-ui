@@ -85,7 +85,7 @@ function Jdbc() {
             if (res?.data?.object) {
                 toast.success(res?.data.message)
             } else {
-                toast.warning(res?.data.message)
+                toast.success(res?.data.message)
             }
             if (res.status!==200){
                 toast.error(res?.data.message)
