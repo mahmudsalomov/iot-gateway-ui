@@ -169,6 +169,8 @@ function Topic() {
                         <th className="d-sm-none d-md-table-cell" style={{width: "50px"}}>ИД</th>
                         <th className="d-sm-none d-md-table-cell">Топик</th>
                         <th className="d-sm-none d-md-table-cell">Брокер</th>
+                        <th className="d-sm-none d-md-table-cell">Username</th>
+                        <th className="d-sm-none d-md-table-cell">Password</th>
                         <th className="d-sm-none d-md-table-cell" style={{width: "180px"}}>Действия</th>
                     </tr>
                     </thead>
@@ -178,6 +180,8 @@ function Topic() {
                             <td>{item.id}</td>
                             <td>{item.name}</td>
                             <td>{item.broker?.ipAddress + ':' + item.broker?.port}</td>
+                            <td>{item.username}</td>
+                            <td>{item.password}</td>
                             <td>
                                 <div className="d-flex justify-content-center p-2">
                                     <Tooltip title="Изменить" color="green">
@@ -243,6 +247,18 @@ function Topic() {
                                 <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="name"
                                            label="Название тега">
                                     <Input placeholder="Название тега"/>
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="username"
+                                           label="Username">
+                                    <Input placeholder="Username"/>
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="password"
+                                           label="Password">
+                                    <Input placeholder="Password"/>
                                 </Form.Item>
                             </Col>
 
