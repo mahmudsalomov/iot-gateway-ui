@@ -3,6 +3,7 @@ import {
     Checkbox,
     Col,
     Form,
+    TextArea,
     Input,
     message,
     Modal,
@@ -24,6 +25,8 @@ import axios from "axios";
 
 const {Option} = Select
 function JdbcItem() {
+
+    const { TextArea } = Input;
 
     const [form] = Form.useForm();
     const [loader, setLoader] = useState(false);
@@ -221,7 +224,7 @@ function JdbcItem() {
                                         <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
                                                    name="query"
                                                    label="Название запрос">
-                                            <Input placeholder="Название запрос"/>
+                                            <Input.TextArea placeholder="SELECT * FROM ..." rows={4} maxLength={6666} />
                                         </Form.Item>
                                     </Col>
                                     <Col span={24}>
