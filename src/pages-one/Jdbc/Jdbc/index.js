@@ -74,12 +74,12 @@ function Jdbc() {
         }
     };
 
-    const connect = async (web, value) => {
+    const connect = async (jdbc, value) => {
         try {
-            console.log("webbbbbbbbbbbbbbbbbbbbb",web)
+            console.log("webbbbbbbbbbbbbbbbbbbbb",jdbc)
             let res = await instance({
                 method: "get",
-                url: `/protocol/websocket/isConnect/${web?.id}`
+                url: `/protocol/jdbc/client/isConnect/${jdbc?.id}`
             })
             console.log("fefefe",res)
             if (res?.data?.object) {
@@ -113,11 +113,11 @@ function Jdbc() {
         }
     };
 
-    const removeWebsocket = async (websocket) => {
+    const removeJdbc = async (websocket) => {
         try {
             let resp = await instance({
                 method: "delete",
-                url: `/protocol/websocket/delete/${websocket?.id}`
+                url: `/protocol/jdbc/client/delete/${websocket?.id}`
             })
             toast.success("Delete - " + websocket?.url)
             _jdbc.fetch()
@@ -134,7 +134,7 @@ function Jdbc() {
             }
             let response = await instance({
                 method: open.item ? 'put' : 'post',
-                url: '/protocol/websocket',
+                url: '/protocol/jdbc/client',
                 data: values
             })
             message.success(response.data.message)
@@ -202,19 +202,19 @@ function Jdbc() {
                             </tr>
                             </thead>
                             <tbody>
-                            {_jdbc.data?.map((web, key) =>
+                            {_jdbc.data?.map((jdbc, key) =>
                                 <tr>
-                                    <td className="text-center">{web?.id}</td>
-                                    <td className="text-center">{web?.name}</td>
-                                    <td className="text-center">{web?.url}</td>
-                                    <td className="text-center">{web?.jdbcClassName}</td>
-                                    <td className="text-center">{web?.username}</td>
-                                    <td className="text-center">{web?.password}</td>
-                                    <td className="text-center">{web?.polling}</td>
-                                    <td className="text-center">{web?.topic?.name}</td>
-                                    <td className="text-center">{web?.topic?.broker?.ipAddress + ':' + web?.topic?.broker?.port}</td>
-                                    <td className="text-center"><Checkbox defaultChecked={web?.enable}
-                                                                          onChange={(e) => connect(web, e.target.checked)}></Checkbox>
+                                    <td className="text-center">{jdbc?.id}</td>
+                                    <td className="text-center">{jdbc?.name}</td>
+                                    <td className="text-center">{jdbc?.url}</td>
+                                    <td className="text-center">{jdbc?.jdbcClassName}</td>
+                                    <td className="text-center">{jdbc?.username}</td>
+                                    <td className="text-center">{jdbc?.password}</td>
+                                    <td className="text-center">{jdbc?.polling}</td>
+                                    <td className="text-center">{jdbc?.topic?.name}</td>
+                                    <td className="text-center">{jdbc?.topic?.broker?.ipAddress + ':' + jdbc?.topic?.broker?.port}</td>
+                                    <td className="text-center"><Checkbox defaultChecked={jdbc?.enable}
+                                                                          onChange={(e) => connect(jdbc, e.target.checked)}></Checkbox>
                                     </td>
                                     <td className="text-center">
                                         <div className="d-flex justify-content-center p-2">
@@ -222,18 +222,18 @@ function Jdbc() {
                                                 <FaEdit
                                                     style={{color: 'green', cursor: "pointer", fontSize: 24}}
                                                     onClick={() => {
-                                                        setOpen({open: true, item: web?.id})
-                                                        form.setFieldsValue(web)
-                                                        form.setFieldValue(['brokerId'], web.topic?.broker?.id)
-                                                        form.setFieldValue(['topicId'], web.topic?.id)
-                                                        getFormTopics(web.topic?.broker?.id)
-                                                        form.setFieldsValue(web)
+                                                        setOpen({open: true, item: jdbc?.id})
+                                                        form.setFieldsValue(jdbc)
+                                                        form.setFieldValue(['brokerId'], jdbc.topic?.broker?.id)
+                                                        form.setFieldValue(['topicId'], jdbc.topic?.id)
+                                                        getFormTopics(jdbc.topic?.broker?.id)
+                                                        form.setFieldsValue(jdbc)
                                                     }}/>
                                             </Tooltip>
 
                                             <Tooltip title="Удалить" color="red">
                                                 <Popconfirm
-                                                    onConfirm={() => removeWebsocket(web)}
+                                                    onConfirm={() => removeJdbc(jdbc)}
                                                     okText="Да" cancelText="Отменить"
                                                     title={"Вы действительно хотите выполнить это действие?"}>
                                                     <DeleteOutlined style={{color: 'red', fontSize: 24}}/>

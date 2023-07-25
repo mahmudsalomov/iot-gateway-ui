@@ -17,9 +17,10 @@ import {MdAddCircle} from "react-icons/md";
 import {FaEdit} from "react-icons/fa";
 import {DeleteOutlined} from "@ant-design/icons";
 import {toast, ToastContainer} from "react-toastify";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useGetAllData} from "../../../custom_hooks/useGetAllData";
 import instance from "../../../utils/axios_config";
+import axios from "axios";
 
 const {Option} = Select
 function JdbcItem() {
@@ -31,25 +32,42 @@ function JdbcItem() {
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
 
-    const [websocketId, setWebsocketId] = useState(null);
+    const [jdbcId, setJdbcId] = useState(null);
+    const [jdbcClients, setJdbcClients] = useState(null);
 
-    const _websockets = useGetAllData({
-        url: "/protocol/websocket/all",
-        params: {},
-        reFetch: []
-    })
+    // const _jdbc = useGetAllData({
+    //     url: "/protocol/jdbc/client",
+    //     params: {},
+    //     reFetch: []
+    // })
+    const getJdbc = async () => {
+        try {
+            let resp = await instance({
+                method:"get",
+                url:"/protocol/jdbc/client"
+            })
+            console.log("jfffffff : ",resp)
+            setJdbcClients(resp?.data)
+        }catch (e){
+            message.error("Error")
+        }
+    }
+
+    useEffect(() => {
+        getJdbc()
+    },[]);
 
     const _items = useGetAllData({
-        url: "/protocol/websocket/item/all",
-        params: {page: currentPage, size: pageSize, websocketId: websocketId},
-        reFetch: [currentPage, pageSize, websocketId]
+        url: "/protocol/jdbc/item/all",
+        params: {page: currentPage, size: pageSize, jdbcId: jdbcId},
+        reFetch: [currentPage, pageSize, jdbcId]
     })
 
     const removeItem = async (id) => {
         try {
             let resp = await instance({
                 method: "delete",
-                url: `/protocol/websocket/item/delete/${id}`
+                url: `/protocol/jdbc/item/${id}`
             })
             _items.fetch()
         } catch (e) {
@@ -65,7 +83,7 @@ function JdbcItem() {
         try {
             let resp = await instance({
                 method: open.item ? 'put' : 'post',
-                url: "/protocol/websocket/item",
+                url: "/protocol/jdbc/item",
                 data: values
             })
             setLoader(false)
@@ -81,6 +99,8 @@ function JdbcItem() {
     }
 
 
+
+
     return(
         <div>
             <Spin spinning={_items.loading} size={20} direction="vertical">
@@ -89,12 +109,12 @@ function JdbcItem() {
                     <Col span={4}>
                         <Select allowClear
                                 className="w-100"
-                                placeholder="Websocket"
+                                placeholder="Jdbc"
                                 onChange={(e) => {
-                                    setWebsocketId(e)
+                                    setJdbcId(e)
                                 }}
                         >
-                            {_websockets.data?.map((item) =>
+                            {jdbcClients?.map((item) =>
                                 <Option key={item?.id} value={item?.id}>{item?.name}</Option>
                             )}
                         </Select>
@@ -121,7 +141,9 @@ function JdbcItem() {
                             <tr>
                                 <th className="d-sm-none d-md-table-cell text-center">ИД</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Название тега</th>
-                                <th className="d-sm-none d-md-table-cell text-center">HttpRest</th>
+                                <th className="d-sm-none d-md-table-cell text-center">Название запрос</th>
+                                <th className="d-sm-none d-md-table-cell text-center">Название имя столбца</th>
+                                <th className="d-sm-none d-md-table-cell text-center">Jdbc</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Value</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Действия</th>
                             </tr>
@@ -132,7 +154,9 @@ function JdbcItem() {
                                     <tr>
                                         <td className="text-center">{item?.id}</td>
                                         <td className="text-center">{item?.tagName}</td>
-                                        <td className="text-center">{item?.websocket?.name}</td>
+                                        <td className="text-center">{item?.query}</td>
+                                        <td className="text-center">{item?.columnName}</td>
+                                        <td className="text-center">{item?.jdbc?.name}</td>
                                         <td className="text-center">{item?.value}</td>
                                         <td className="text-center">
                                             <div className="d-flex justify-content-center p-2">
@@ -195,10 +219,24 @@ function JdbcItem() {
                                     </Col>
                                     <Col span={24}>
                                         <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
-                                                   name="websocketId"
-                                                   label="Websocket">
-                                            <Select allowClear placeholder="Websocket">
-                                                {_websockets.data?.map((item) =>
+                                                   name="query"
+                                                   label="Название запрос">
+                                            <Input placeholder="Название запрос"/>
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={24}>
+                                        <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
+                                                   name="columnName"
+                                                   label="Название имя столбца">
+                                            <Input placeholder="Название имя столбца"/>
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={24}>
+                                        <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
+                                                   name="jdbcId"
+                                                   label="Jdbc">
+                                            <Select allowClear placeholder="Jdbc">
+                                                {jdbcClients?.map((item) =>
                                                     <Option key={item?.id} value={item?.id}>{item?.name}</Option>
                                                 )}
                                             </Select>
