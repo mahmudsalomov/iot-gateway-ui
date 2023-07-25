@@ -113,13 +113,13 @@ function Jdbc() {
         }
     };
 
-    const removeJdbc = async (websocket) => {
+    const removeJdbc = async (jdbc) => {
         try {
             let resp = await instance({
                 method: "delete",
-                url: `/protocol/jdbc/client/delete/${websocket?.id}`
+                url: `/protocol/jdbc/client/${jdbc?.id}`
             })
-            toast.success("Delete - " + websocket?.url)
+            toast.success("Delete - " + jdbc?.url)
             _jdbc.fetch()
         } catch (e) {
             message.error("Error")
