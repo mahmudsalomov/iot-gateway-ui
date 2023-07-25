@@ -59,8 +59,8 @@ function JdbcItem() {
 
     const _items = useGetAllData({
         url: "/protocol/jdbc/item/all",
-        params: {page: currentPage, size: pageSize, jdbcId: jdbcId},
-        reFetch: [currentPage, pageSize, jdbcId]
+        params: { size: pageSize, page: currentPage, jdbcId: jdbcId},
+        reFetch: [pageSize, currentPage, pageSize, jdbcId]
     })
 
     const removeItem = async (id) => {
