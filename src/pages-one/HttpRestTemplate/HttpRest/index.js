@@ -11,8 +11,9 @@ import {
     Row,
     Select,
     Spin, Tooltip,
+    Radio, Space
 } from "antd";
-import {useState} from "react";
+import React, {useState} from "react";
 import {useGetAllData} from "../../../custom_hooks/useGetAllData";
 import {FaEdit} from "react-icons/fa";
 import {DeleteOutlined} from "@ant-design/icons";
@@ -30,6 +31,7 @@ function Rest() {
     const [open, setOpen] = useState({open: false, item: undefined});
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
+    const [httpType,setHttpType] = useState("");
 
     const [brokerId, setBrokerId] = useState(null)
     const [topicId, setTopicId] = useState(null)
@@ -48,6 +50,30 @@ function Rest() {
         reFetch: []
     })
 
+    const _httpTypes = useGetAllData({
+        url: "/protocol/httprest/http-type/all",
+        params: {},
+        reFetch: []
+    })
+
+    const [checkedBody, setCheckedBody] = useState(false);
+    const [checkedParam, setCheckedParam] = useState(false);
+    const [checkedPath, setCheckedPath] = useState(false);
+    const [disabled, setDisabled] = useState(false);
+
+
+    const onChangeBody = (e) => {
+        console.log('checked = ', e.target.checked);
+        setCheckedBody(e.target.checked);
+    };
+    const onChangeParam = (e) => {
+        console.log('checked = ', e.target.checked);
+        setCheckedParam(e.target.checked);
+    };
+    const onChangePath = (e) => {
+        console.log('checked = ', e.target.checked);
+        setCheckedPath(e.target.checked);
+    };
 
     const getTopics = async (e) => {
         try {
@@ -88,6 +114,12 @@ function Rest() {
         reFetch: [currentPage, pageSize, brokerId, topicId]
     })
 
+    const [value, setValue] = useState(1);
+    const checkRadio = (e)=> {
+        console.log('radio checked', e.target.value);
+        setValue(e.target.value);
+    };
+
     const removeHttpRest = async (httpRest) => {
         try {
             let resp = await instance({
@@ -118,11 +150,17 @@ function Rest() {
         }
     }
 
+    console.log("http type : ",httpType)
+
+
     const sendData = async (values) => {
         try {
             if (open?.item) {
                 values = {...values, id: open?.item}
             }
+            values = {...values, isBody:checkedBody}
+            values = {...values, isParam:checkedParam}
+            values = {...values, isPath:checkedPath}
             let response = await instance({
                 method: open.item ? 'put' : 'post',
                 url: '/protocol/httpRest',
@@ -183,6 +221,8 @@ function Rest() {
                                 <th className="d-sm-none d-md-table-cell text-center">URL-адрес</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Поллинг</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Тип</th>
+                                <th className="d-sm-none d-md-table-cell text-center">Тип Http</th>
+                                <th className="d-sm-none d-md-table-cell text-center">Тип Http</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Топик</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Брокер</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Статус</th>
@@ -197,6 +237,14 @@ function Rest() {
                                     <td className="text-center">{httRest?.url}</td>
                                     <td className="text-center">{httRest?.polling}</td>
                                     <td className="text-center">{httRest?.type}</td>
+                                    <td className="text-center">{httRest?.httpType}</td>
+                                    <td className="text-center" style={{
+                                        // whiteSpace: "nowrap",
+                                        // width: "50px",
+                                        // overflow: "hidden",
+                                        // textOverflow: "ellipsis",
+                                        // border: "1px solid #000000"
+                                                                         }}>{httRest?.body}</td>
                                     <td className="text-center">{httRest?.topic?.name}</td>
                                     <td className="text-center">{httRest?.topic?.broker?.ipAddress + ':' + httRest?.topic?.broker?.port}</td>
                                     <td className="text-center"><Checkbox defaultChecked={httRest?.enable}
@@ -282,6 +330,70 @@ function Rest() {
                                         </Form.Item>
                                     </Col>
                                     <Col span={12}>
+                                        <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="httpType"
+                                                   label="Тип http">
+                                            <Select style={{width: "100%"}} allowClear placeholder="Тип http" onChange={(e)=>setHttpType(e)}>
+                                                {_httpTypes.data?.map(item => <Option key={item}
+                                                                                  value={item}>{item}</Option>)}
+                                            </Select>
+                                        </Form.Item>
+                                    </Col>
+
+                                    <Col span={12} style={{ marginBottom: '10px' }}>
+                                        <Form.Item name="isBody" value={checkedBody}>
+                                            <Checkbox name="isBody" checked={checkedBody} style={{fontSize:'16px'}} onChange={onChangeBody}>
+                                                {!checkedBody?"Request Body":null}
+                                            </Checkbox>
+                                        </Form.Item>
+                                        {checkedBody?
+                                            <Col span={24}>
+                                                <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
+                                                           name="body"
+                                                           label="Название тело">
+                                                    <Input.TextArea placeholder="{.....}" rows={10}  maxLength={66666} />
+                                                </Form.Item>
+                                            </Col>:null
+                                        }
+                                    </Col>
+                                    <Col span={12} style={{ marginBottom: '10px'}}>
+                                        <Form.Item name="isParam">
+                                            <Checkbox checked={checkedParam} disabled={disabled} style={{fontSize:'16px'}} onChange={onChangeParam}>
+                                                {!checkedParam?"Request Param":null}
+                                            </Checkbox>
+                                        </Form.Item>
+                                        {checkedParam?
+                                            <Col span={24}>
+                                                <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="paramKey"
+                                                           label="Ключ параметра"
+                                                >
+                                                    <Input placeholder="Ключ"/>
+                                                </Form.Item>
+                                                <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="paramValue"
+                                                           label="Значение параметра"
+                                                >
+                                                    <Input placeholder="Значение"/>
+                                                </Form.Item>
+                                            </Col>:null
+                                        }
+                                    </Col>
+                                    <Col span={12} style={{ marginBottom: '10px' }}>
+                                        <Form.Item name="isPath">
+                                            <Checkbox checked={checkedPath} style={{fontSize:'16px'}} disabled={disabled} onChange={onChangePath}>
+                                                {!checkedPath?"Path Variable":null}
+                                            </Checkbox>
+                                        </Form.Item>
+                                        {checkedPath?
+                                            <Col span={24}>
+                                                <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="pathValue"
+                                                           label="Значение переменной пути"
+                                                >
+                                                    <Input placeholder="Значение"/>
+                                                </Form.Item>
+                                            </Col>:null
+                                        }
+                                    </Col>
+
+                                    <Col span={24} >
                                         <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="url"
                                                    label="URL-адрес">
                                             <Input placeholder="URL-адрес"/>
