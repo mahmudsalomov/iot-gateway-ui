@@ -54,7 +54,7 @@ const DashboardComponent= () => {
     ];
 
     return (
-        <Layout className="d-flex">
+        <Layout className="d-flex" style={{minHeight:"100vh"}}>
             <Sider
                 style={{height:"100vh"}}
                 breakpoint="lg"
@@ -182,7 +182,7 @@ const DashboardComponent= () => {
                         }}
                     />
                 </Header>
-                <Content style={{ margin: '24px 16px 0', height:'100%',overflowY:"scroll" }}>
+                <Content style={{ margin: '24px 16px 0', height:'90vh' }}>
                     <div style={{ padding: 24,background:colorBgContainer}}><AppRoutes /></div>
                 </Content>
             </Layout>

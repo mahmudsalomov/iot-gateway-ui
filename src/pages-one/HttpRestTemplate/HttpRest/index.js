@@ -211,7 +211,7 @@ function Rest() {
                 </Row>
                 <Row gutter={24}>
                     <Col span={24}>
-                        <table style={{verticalAlign: "middle"}}
+                        <table style={{verticalAlign: "middle",height:"90vh",overflowY:"scroll"}}
                                datapagesize={false}
                                className="table table-bordered table-striped table-hover responsiveTable w-100">
                             <thead className="d-md-table-header-group">
