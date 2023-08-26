@@ -25,6 +25,10 @@ import Ping from "../../../components-one/ping";
 import TextArea from "antd/es/input/TextArea";
 import async from "async";
 import {io} from "socket.io-client";
+import * as stompClient from "socket.io-client";
+import {over} from "stompjs";
+import SockJS from "sockjs-client";
+import {BASE_URL_WEBSOCKET} from "../../../utils/API_PATH";
 
 const {Option} = Select
 
@@ -35,6 +39,10 @@ function ModbusClient() {
     const [chatOpen, setChatOpen] = useState({open: false, item: undefined});
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
+    const [sock, setSock] = useState(new SockJS(BASE_URL_WEBSOCKET));
+    const [stompClient, setStompClient] = useState(over(sock));
+    // const [id, setId] = useState('');
+
 
     const [brokerId, setBrokerId] = useState(null)
     const [topicId, setTopicId] = useState(null)
@@ -164,18 +172,60 @@ function ModbusClient() {
         }
     }
 
-    const test= ()=>{
-        const socket = io('http://192.168.0.123:16666', {
-            query: {
-                room: 'test'
-            }
-        });
-        socket.emit('test', 'Hello, bitch!');
+    const test = (id)=>{
+        console.log(id)
+        // setId(id)
+        connect()
+        // const socket = io('http://192.168.0.123:16666', {
+        //     query: {
+        //         room: 'test'
+        //     }
+        // });
+        // socket.emit('test', 'Hello, bitch!');
     }
 
     useEffect(() => {
 
     }, []);
+
+
+
+
+
+
+    //FOR WEBSOCKET
+    const connect = () => {
+        console.log("Connect")
+        stompClient.debug = null
+        setStompClient(stompClient);
+        stompClient.connect({}, onConnected, onError);
+        // console.log(id)
+    }
+
+    const onError = (err) => {
+        console.log(err);
+    }
+    const onConnected = () => {
+        console.log("onConnected")
+        if (stompClient.connected) {
+            stompClient.subscribe('/topic/message/MODBUS_TCP/'+1, function (data) {
+                // stompClient.subscribe('/topic/well/12', function (data) {
+                console.log("SUBSSSSSSSSSSSSSSSSSSSSS")
+                console.log(data)
+                message.success(data.body)
+                // setPressureApi(JSON.parse(message.body))
+                // console.log(message.body)
+                // console.log(message)
+                // console.log("WITHOUT JSON")
+                // console.log(message.body)
+                // let data=JSON.parse(message.body);
+                // console.log("JSON")
+                // console.log(data)
+                // console.log(data[0])
+            });
+
+        }
+    }
 
 
     return (
@@ -281,7 +331,7 @@ function ModbusClient() {
                                                 <MessageOutlined
                                                     onClick={() => {
                                                         setChatOpen({open: true, item: undefined})
-                                                        test()
+                                                        test(client?.id)
                                                     }}
                                                     style={{
                                                         color: 'blue',
