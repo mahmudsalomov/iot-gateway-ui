@@ -172,25 +172,19 @@ function ModbusClient() {
         }
     }
 
-    const test = (id)=>{
-        console.log(id)
-        // setId(id)
-        connect()
-        // const socket = io('http://192.168.0.123:16666', {
-        //     query: {
-        //         room: 'test'
-        //     }
-        // });
-        // socket.emit('test', 'Hello, bitch!');
-    }
+
 
     useEffect(() => {
-
+        connect()
     }, []);
 
 
 
-
+    const testConnect = (id)=>{
+        console.log(id)
+        // connect()
+        x()
+    }
 
 
     //FOR WEBSOCKET
@@ -199,31 +193,43 @@ function ModbusClient() {
         stompClient.debug = null
         setStompClient(stompClient);
         stompClient.connect({}, onConnected, onError);
-        // console.log(id)
+        console.log("fuck")
+        console.log(stompClient)
+        console.log(stompClient.connected)
     }
 
     const onError = (err) => {
+        console.log("Error")
         console.log(err);
     }
     const onConnected = () => {
         console.log("onConnected")
+        // if (stompClient.connected) {
+        //     stompClient.subscribe('/topic/message/MODBUS_TCP/'+1, function (data) {
+        //         console.log("SUBSSSSSSSSSSSSSSSSSSSSS")
+        //         console.log(data)
+        //         message.success(data.body)
+        //     });
+        // }
+    }
+
+    const x = () => {
         if (stompClient.connected) {
             stompClient.subscribe('/topic/message/MODBUS_TCP/'+1, function (data) {
-                // stompClient.subscribe('/topic/well/12', function (data) {
                 console.log("SUBSSSSSSSSSSSSSSSSSSSSS")
                 console.log(data)
                 message.success(data.body)
-                // setPressureApi(JSON.parse(message.body))
-                // console.log(message.body)
-                // console.log(message)
-                // console.log("WITHOUT JSON")
-                // console.log(message.body)
-                // let data=JSON.parse(message.body);
-                // console.log("JSON")
-                // console.log(data)
-                // console.log(data[0])
             });
+        }
+    }
 
+    const x1 = () => {
+        if (stompClient.connected) {
+            stompClient.unsubscribe('/topic/message/MODBUS_TCP/'+1, function (data) {
+                console.log("SUBSSSSSSSSSSSSSSSSSSSSS")
+                console.log(data)
+                message.success(data.body)
+            });
         }
     }
 
@@ -330,8 +336,8 @@ function ModbusClient() {
                                             <Tooltip title="Chat" color="blue">
                                                 <MessageOutlined
                                                     onClick={() => {
+                                                        // testConnect(client?.id)
                                                         setChatOpen({open: true, item: undefined})
-                                                        test(client?.id)
                                                     }}
                                                     style={{
                                                         color: 'blue',
@@ -466,6 +472,7 @@ function ModbusClient() {
                             open={chatOpen.open}
                             onCancel={() => {
                                 setChatOpen({open: false, item: undefined})
+                                // x1()
                                 // form.resetFields()
                             }}
                             title={"Mqtt"}

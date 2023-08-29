@@ -78,7 +78,7 @@ const DashboardComponent= () => {
     const onConnected = () => {
         console.log("onConnected")
         if (stompClient.connected) {
-            stompClient.subscribe('/topic/message/MODBUS_TCP/1', function (data) {
+            stompClient.subscribe('/topic/exception', function (data) {
             // stompClient.subscribe('/topic/well/12', function (data) {
                 console.log("SUBSSSSSSSSSSSSSSSSSSSSS")
                 console.log(data)
@@ -98,7 +98,7 @@ const DashboardComponent= () => {
     }
 
     useEffect(() => {
-        connect()
+        // connect()
 
     }, []);
 
