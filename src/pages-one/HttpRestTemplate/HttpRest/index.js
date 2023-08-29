@@ -222,7 +222,7 @@ function Rest() {
                                 <th className="d-sm-none d-md-table-cell text-center">Поллинг</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Тип</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Тип Http</th>
-                                <th className="d-sm-none d-md-table-cell text-center">Тип Http</th>
+                                <th className="d-sm-none d-md-table-cell text-center">Тело запроса</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Топик</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Брокер</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Статус</th>
