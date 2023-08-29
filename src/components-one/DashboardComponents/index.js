@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
 } from '@ant-design/icons';
-import {Button, Image, Layout, Menu, Space, theme, Typography} from 'antd';
+import {Button, Image, Layout, Menu, message, Space, theme, Typography} from 'antd';
 import {FaBurn, FaDatabase} from "react-icons/fa";
 import {VscTypeHierarchy} from "react-icons/vsc";
 import {HiOutlineStatusOnline, HiOutlineTable, HiOutlineTicket} from "react-icons/hi";
@@ -18,6 +18,9 @@ import {MdOutlineHttp, MdSensorWindow} from "react-icons/md";
 import {RxValue} from "react-icons/rx";
 import {BiSitemap} from "react-icons/bi";
 import {TbBrandSocketIo} from "react-icons/tb";
+import {BASE_URL_WEBSOCKET} from "../../utils/API_PATH";
+import {over} from 'stompjs';
+import SockJS from 'sockjs-client';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -27,6 +30,10 @@ const DashboardComponent= () => {
     const {
         token: { colorBgContainer },
     } = theme.useToken();
+
+    const [sock, setSock] = useState(new SockJS(BASE_URL_WEBSOCKET));
+    const [stompClient, setStompClient] = useState(over(sock));
+
 
     let dataModbus= [
         {label:"Клиенты Modbus",icon:<BsDeviceSsd style={{fontSize:"20px"}}/>,key:"/"},
@@ -52,6 +59,48 @@ const DashboardComponent= () => {
         {label:"Jdbc",icon:<FaDatabase style={{fontSize:"20px"}}/>,key:"/jdbc"},
         {label:"Пункт Jdbc",icon:<AiFillDatabase style={{fontSize:"20px"}}/>,key:"/jdbcItem"}
     ];
+
+
+    //FOR WEBSOCKET
+    const connect = () => {
+        console.log("Connect")
+        // let Sock = new SockJS('http://192.168.0.100:8888/our-websocket');
+        // setSock(new SockJS(BASE_URL_WEBSOCKET));
+        // setStompClient(over(sock));
+        stompClient.debug = null
+        setStompClient(stompClient);
+        stompClient.connect({}, onConnected, onError);
+    }
+
+    const onError = (err) => {
+        console.log(err);
+    }
+    const onConnected = () => {
+        console.log("onConnected")
+        if (stompClient.connected) {
+            stompClient.subscribe('/topic/message/MODBUS_TCP/1', function (data) {
+            // stompClient.subscribe('/topic/well/12', function (data) {
+                console.log("SUBSSSSSSSSSSSSSSSSSSSSS")
+                console.log(data)
+                message.success(data.body)
+                // setPressureApi(JSON.parse(message.body))
+                // console.log(message.body)
+                // console.log(message)
+                // console.log("WITHOUT JSON")
+                // console.log(message.body)
+                // let data=JSON.parse(message.body);
+                // console.log("JSON")
+                // console.log(data)
+                // console.log(data[0])
+            });
+
+        }
+    }
+
+    useEffect(() => {
+        connect()
+
+    }, []);
 
     return (
         <Layout className="d-flex" style={{minHeight:"100vh"}}>
