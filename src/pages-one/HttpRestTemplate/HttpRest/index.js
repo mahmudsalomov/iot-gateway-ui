@@ -339,7 +339,7 @@ function Rest() {
                                         </Form.Item>
                                     </Col>
 
-                                    <Col span={12} style={{ marginBottom: '10px' }}>
+                                    <Col span={24} style={{ marginBottom: '10px' }}>
                                         <Form.Item name="isBody" value={checkedBody}>
                                             <Checkbox name="isBody" checked={checkedBody} style={{fontSize:'16px'}} onChange={onChangeBody}>
                                                 {!checkedBody?"Request Body":null}
