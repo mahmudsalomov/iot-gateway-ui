@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {
+    LogoutOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
 } from '@ant-design/icons';
@@ -75,6 +76,10 @@ const DashboardComponent= () => {
     const onError = (err) => {
         console.log(err);
     }
+
+    const logOut = () => {
+        localStorage.clear();
+    };
     const onConnected = () => {
         console.log("onConnected")
         if (stompClient.connected) {
@@ -210,20 +215,30 @@ const DashboardComponent= () => {
                             icon: <HiOutlineTicket style={{fontSize:"20px"}}/>,
                             key: '/topic',
                         },
-                        {
-                            label: "Выход",
-                            icon: <RiLogoutBoxLine style={{fontSize:"20px"}}/>,
-                            key: '/login',
-                        },
+                        // {
+                        //     label: "Выход",
+                        //     icon: <RiLogoutBoxLine style={{fontSize:"20px"}}/>,
+                        //     key: '/login',
+                        // },
                     ]}
                 />
             </Sider>
             <Layout>
-                <Header style={{ padding: 0, background:colorBgContainer}} >
+                <Header className={"d-flex justify-content-between"} style={{ padding: 0, background:colorBgContainer}} >
                     <Button
                         type="text"
                         icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                         onClick={() => setCollapsed(!collapsed)}
+                        style={{
+                            fontSize: '16px',
+                            width: 64,
+                            height: 64,
+                        }}
+                    />
+                    <Button
+                        type="text"
+                        icon={<LogoutOutlined/>}
+                        onClick={()=>logOut()}
                         style={{
                             fontSize: '16px',
                             width: 64,

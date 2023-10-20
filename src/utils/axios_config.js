@@ -1,5 +1,5 @@
 import axios from "axios";
-import {BASE_URL} from "./API_PATH";
+import {ACCESS_TOKEN, BASE_URL, REFRESH_TOKEN} from "./API_PATH";
 
 const instance = axios.create();
 instance.defaults.baseURL = BASE_URL
@@ -8,6 +8,19 @@ const onRequestSuccess = (config) => {
     // if (token) {
     //     config.headers.Authorization = `Bearer ${token}`
     // }
+    if (config?.notRequireAuth) {
+        delete config?.notRequireAuth
+    } else {
+        let token = localStorage.getItem(ACCESS_TOKEN)
+        let refreshToken = localStorage.getItem(REFRESH_TOKEN)
+        if (token) {
+            config.headers.Authorization = 'Bearer ' + token
+            if (config?.requireRefreshToken) {
+                config.headers['refresh-token'] = refreshToken
+                delete config?.requireRefreshToken
+            }
+        }
+    }
     return config
 }
 

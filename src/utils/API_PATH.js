@@ -1,6 +1,11 @@
-export const BASE_URL = "http://192.168.0.127:9339/api/gateway";
-export const BASE_URL_WEBSOCKET = "http://192.168.0.127:9339/show";
-export const SOCKET_URL = "http://192.168.0.127:16666?room=test";
+export const BASE_URL = "http://localhost:9339/api/gateway";
+export const BASE_URL_WEBSOCKET = "http://localhost:9339/show";
+export const SOCKET_URL = "http://localhost:16666?room=test";
+
+
+export const ACCESS_TOKEN="ACCESS_TOKEN";
+export const REFRESH_TOKEN="REFRESH_TOKEN";
+
 
 // ***********Modbus Clients**********
 export const GET_ALL_MODBUS_CLIENT = BASE_URL + "/modbus/client/all";
