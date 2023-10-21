@@ -19,9 +19,12 @@ import {MdOutlineHttp, MdSensorWindow} from "react-icons/md";
 import {RxValue} from "react-icons/rx";
 import {BiSitemap} from "react-icons/bi";
 import {TbBrandSocketIo} from "react-icons/tb";
-import {BASE_URL_WEBSOCKET} from "../../utils/API_PATH";
+import {ACCESS_TOKEN, BASE_URL_WEBSOCKET, REFRESH_TOKEN} from "../../utils/API_PATH";
 import {over} from 'stompjs';
 import SockJS from 'sockjs-client';
+import instance from "../../utils/axios_config";
+import Login from "../auth/Login";
+import useAuthStore from "../../store/store";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -34,7 +37,7 @@ const DashboardComponent= () => {
 
     const [sock, setSock] = useState(new SockJS(BASE_URL_WEBSOCKET));
     const [stompClient, setStompClient] = useState(over(sock));
-
+    const isValid=useAuthStore((state)=>state.isValid);
 
     let dataModbus= [
         {label:"Клиенты Modbus",icon:<BsDeviceSsd style={{fontSize:"20px"}}/>,key:"/"},
@@ -102,12 +105,15 @@ const DashboardComponent= () => {
         }
     }
 
+    const check = async () => {
+        if (!localStorage.getItem(ACCESS_TOKEN)||!localStorage.getItem(REFRESH_TOKEN)) return false;
+    }
     useEffect(() => {
         // connect()
-
+        // if (check()) navigate("/login")
     }, []);
 
-    return (
+    return ( check()?
         <Layout className="d-flex" style={{minHeight:"100vh"}}>
             <Sider
                 style={{height:"100vh"}}
@@ -250,7 +256,7 @@ const DashboardComponent= () => {
                     <div style={{ padding: 24,background:colorBgContainer}}><AppRoutes /></div>
                 </Content>
             </Layout>
-        </Layout>
+        </Layout>:<Login/>
     );
 };
 

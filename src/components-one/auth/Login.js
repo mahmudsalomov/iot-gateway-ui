@@ -52,7 +52,7 @@ function Login() {
             localStorage.setItem(REFRESH_TOKEN, data?.refreshToken);
             setValid(true)
             setLoading(false)
-            navigate("/")
+            data?.token?navigate("/"):navigate("/login")
         } catch (e) {
             console.log(e)
             message.error("Имя пользователя или пароль неверны")

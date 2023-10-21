@@ -33,6 +33,9 @@ const onResponseSuccess = (config) => {
 }
 
 const onResponseError = (config) => {
+    console.log("ERROOOOOOOOR")
+    console.log(config)
+    console.log(config.resp)
     return Promise.reject(config)
 }
 

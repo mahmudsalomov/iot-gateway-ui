@@ -19,7 +19,7 @@ function AppRoutes() {
             <Routes>
                 <Route path="/" element={<ModbusClient />}></Route>
                 <Route path="/item" element={<ModbusItem />}></Route>
-                <Route path="/login" element={<Login />}></Route>
+                <Route path="/login" element={<Login/>}></Route>
                 <Route path="/simulation" element={<Simulation />}></Route>
                 <Route path="/simValue" element={<SimulationValue />}></Route>
                 <Route path="/httpRest" element={<HttpRest />}></Route>
