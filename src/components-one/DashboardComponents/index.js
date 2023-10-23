@@ -82,6 +82,7 @@ const DashboardComponent= () => {
 
     const logOut = () => {
         localStorage.clear();
+        window.location.reload()
     };
     const onConnected = () => {
         console.log("onConnected")
