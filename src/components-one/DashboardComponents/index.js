@@ -106,13 +106,13 @@ const DashboardComponent= () => {
         }
     }
 
-    const check = async () => {
-        if (!localStorage.getItem(ACCESS_TOKEN)||!localStorage.getItem(REFRESH_TOKEN)) return false;
+    const check = () => {
+        return localStorage.getItem(ACCESS_TOKEN)&&localStorage.getItem(REFRESH_TOKEN);
     }
-    useEffect(() => {
-        // connect()
-        // if (check()) navigate("/login")
-    }, []);
+    // useEffect(() => {
+    //     // connect()
+    //     // if (check()) navigate("/login")
+    // }, []);
 
     return ( check()?
         <Layout className="d-flex" style={{minHeight:"100vh"}}>
