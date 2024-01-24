@@ -3,7 +3,7 @@ import {Button, message, Space} from 'antd';
 import { useState } from 'react';
 import instance from "../../utils/axios_config";
 const Ping = (props) => {
-    const [loading, setLoading] = useState([]);
+    const [loading, setLoading] = useState(false);
 
 
     const ping = async () => {
