@@ -146,6 +146,7 @@ function JdbcItem() {
                                 <th className="d-sm-none d-md-table-cell text-center">Название тега</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Название запрос</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Название имя столбца</th>
+                                <th className="d-sm-none d-md-table-cell text-center">Наз. имя стол. времени</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Jdbc</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Value</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Действия</th>
@@ -159,6 +160,7 @@ function JdbcItem() {
                                         <td className="text-center">{item?.tagName}</td>
                                         <td className="text-center">{item?.query}</td>
                                         <td className="text-center">{item?.columnName}</td>
+                                        <td className="text-center">{item?.timestampColumnName}</td>
                                         <td className="text-center">{item?.jdbc?.name}</td>
                                         <td className="text-center">{item?.value}</td>
                                         <td className="text-center">
@@ -232,6 +234,13 @@ function JdbcItem() {
                                                    name="columnName"
                                                    label="Название имя столбца">
                                             <Input placeholder="Название имя столбца"/>
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={24}>
+                                        <Form.Item rules={[{required: false}]}
+                                                   name="timestampColumnName"
+                                                   label="Название имя столбца времени">
+                                            <Input placeholder="Название имя столбца времени"/>
                                         </Form.Item>
                                     </Col>
                                     <Col span={24}>
