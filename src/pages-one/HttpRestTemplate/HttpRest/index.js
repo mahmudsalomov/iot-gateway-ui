@@ -400,6 +400,17 @@ function Rest() {
                                         </Form.Item>
                                     </Col>
 
+                                    <Col span={24} >
+                                        <Form.Item rules={[{required: false}]}
+                                                   name="parser"
+                                                   label="parser">
+                                            <Input.TextArea placeholder="function(){
+                                            }" rows={10}  maxLength={66666} />
+                                        </Form.Item>
+                                    </Col>
+
+
+
                                     <Col span={12}>
                                         <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
                                                    name="brokerId"
