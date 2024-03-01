@@ -23,6 +23,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import instance from "../../../utils/axios_config";
 import {MdAddCircle} from "react-icons/md";
 
+import CodeMirror from '@uiw/react-codemirror';
+import {javascript} from '@codemirror/lang-javascript';
+import {python} from '@codemirror/lang-python';
+
 const {Option} = Select
 
 function Rest() {
@@ -31,7 +35,7 @@ function Rest() {
     const [open, setOpen] = useState({open: false, item: undefined});
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
-    const [httpType,setHttpType] = useState("");
+    const [httpType, setHttpType] = useState("");
 
     const [brokerId, setBrokerId] = useState(null)
     const [topicId, setTopicId] = useState(null)
@@ -60,6 +64,7 @@ function Rest() {
     const [checkedParam, setCheckedParam] = useState(false);
     const [checkedPath, setCheckedPath] = useState(false);
     const [disabled, setDisabled] = useState(false);
+    const [selectedParserType, setSelectedParserType] = useState("");
 
 
     const onChangeBody = (e) => {
@@ -115,7 +120,7 @@ function Rest() {
     })
 
     const [value, setValue] = useState(1);
-    const checkRadio = (e)=> {
+    const checkRadio = (e) => {
         console.log('radio checked', e.target.value);
         setValue(e.target.value);
     };
@@ -150,7 +155,7 @@ function Rest() {
         }
     }
 
-    console.log("http type : ",httpType)
+    console.log("http type : ", httpType)
 
 
     const sendData = async (values) => {
@@ -158,9 +163,9 @@ function Rest() {
             if (open?.item) {
                 values = {...values, id: open?.item}
             }
-            values = {...values, isBody:checkedBody}
-            values = {...values, isParam:checkedParam}
-            values = {...values, isPath:checkedPath}
+            values = {...values, isBody: checkedBody}
+            values = {...values, isParam: checkedParam}
+            values = {...values, isPath: checkedPath}
             let response = await instance({
                 method: open.item ? 'put' : 'post',
                 url: '/protocol/httpRest',
@@ -173,6 +178,11 @@ function Rest() {
         } catch (e) {
             message.error("Error")
         }
+    }
+
+    function onSelectParserType(value) {
+        console.log(value)
+        setSelectedParserType(value);
     }
 
     return (
@@ -211,7 +221,7 @@ function Rest() {
                 </Row>
                 <Row gutter={24}>
                     <Col span={24}>
-                        <table style={{verticalAlign: "middle",height:"90vh",overflowY:"scroll"}}
+                        <table style={{verticalAlign: "middle", height: "90vh", overflowY: "scroll"}}
                                datapagesize={false}
                                className="table table-bordered table-striped table-hover responsiveTable w-100">
                             <thead className="d-md-table-header-group">
@@ -223,6 +233,7 @@ function Rest() {
                                 <th className="d-sm-none d-md-table-cell text-center">Тип</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Тип Http</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Тело запроса</th>
+                                {/*<th className="d-sm-none d-md-table-cell text-center">Script</th>*/}
                                 <th className="d-sm-none d-md-table-cell text-center">Топик</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Брокер</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Статус</th>
@@ -244,7 +255,8 @@ function Rest() {
                                         // overflow: "hidden",
                                         // textOverflow: "ellipsis",
                                         // border: "1px solid #000000"
-                                                                         }}>{httRest?.body}</td>
+                                    }}>{httRest?.body}</td>
+                                    {/*<td className="text-center">{httRest?.parser}</td>*/}
                                     <td className="text-center">{httRest?.topic?.name}</td>
                                     <td className="text-center">{httRest?.topic?.broker?.ipAddress + ':' + httRest?.topic?.broker?.port}</td>
                                     <td className="text-center"><Checkbox defaultChecked={httRest?.enable}
@@ -314,7 +326,8 @@ function Rest() {
                                     </Col>
 
                                     <Col span={12}>
-                                        <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="polling"
+                                        <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
+                                                   name="polling"
                                                    label="Поллинг">
                                             <Input type="number" placeholder="Поллинг"/>
                                         </Form.Item>
@@ -325,90 +338,128 @@ function Rest() {
                                                    label="Тип">
                                             <Select style={{width: "100%"}} allowClear placeholder="Тип">
                                                 {_types.data?.map(item => <Option key={item}
-                                                                                    value={item}>{item}</Option>)}
-                                            </Select>
-                                        </Form.Item>
-                                    </Col>
-                                    <Col span={12}>
-                                        <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="httpType"
-                                                   label="Тип http">
-                                            <Select style={{width: "100%"}} allowClear placeholder="Тип http" onChange={(e)=>setHttpType(e)}>
-                                                {_httpTypes.data?.map(item => <Option key={item}
                                                                                   value={item}>{item}</Option>)}
                                             </Select>
                                         </Form.Item>
                                     </Col>
+                                    <Col span={12}>
+                                        <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
+                                                   name="httpType"
+                                                   label="Тип http">
+                                            <Select style={{width: "100%"}} allowClear placeholder="Тип http"
+                                                    onChange={(e) => setHttpType(e)}>
+                                                {_httpTypes.data?.map(item => <Option key={item}
+                                                                                      value={item}>{item}</Option>)}
+                                            </Select>
+                                        </Form.Item>
+                                    </Col>
 
-                                    <Col span={24} style={{ marginBottom: '10px' }}>
+                                    <Col span={24} style={{marginBottom: '10px'}}>
                                         <Form.Item name="isBody" value={checkedBody}>
-                                            <Checkbox name="isBody" checked={checkedBody} style={{fontSize:'16px'}} onChange={onChangeBody}>
-                                                {!checkedBody?"Request Body":null}
+                                            <Checkbox name="isBody" checked={checkedBody} style={{fontSize: '16px'}}
+                                                      onChange={onChangeBody}>
+                                                {!checkedBody ? "Request Body" : null}
                                             </Checkbox>
                                         </Form.Item>
-                                        {checkedBody?
+                                        {checkedBody ?
                                             <Col span={24}>
                                                 <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
                                                            name="body"
                                                            label="Название тело">
-                                                    <Input.TextArea placeholder="{.....}" rows={10}  maxLength={66666} />
+                                                    <Input.TextArea placeholder="{.....}" rows={10} maxLength={66666}/>
                                                 </Form.Item>
-                                            </Col>:null
+                                            </Col> : null
                                         }
                                     </Col>
-                                    <Col span={12} style={{ marginBottom: '10px'}}>
+                                    <Col span={12} style={{marginBottom: '10px'}}>
                                         <Form.Item name="isParam">
-                                            <Checkbox checked={checkedParam} disabled={disabled} style={{fontSize:'16px'}} onChange={onChangeParam}>
-                                                {!checkedParam?"Request Param":null}
+                                            <Checkbox checked={checkedParam} disabled={disabled}
+                                                      style={{fontSize: '16px'}} onChange={onChangeParam}>
+                                                {!checkedParam ? "Request Param" : null}
                                             </Checkbox>
                                         </Form.Item>
-                                        {checkedParam?
+                                        {checkedParam ?
                                             <Col span={24}>
-                                                <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="paramKey"
+                                                <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
+                                                           name="paramKey"
                                                            label="Ключ параметра"
                                                 >
                                                     <Input placeholder="Ключ"/>
                                                 </Form.Item>
-                                                <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="paramValue"
+                                                <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
+                                                           name="paramValue"
                                                            label="Значение параметра"
                                                 >
                                                     <Input placeholder="Значение"/>
                                                 </Form.Item>
-                                            </Col>:null
+                                            </Col> : null
                                         }
                                     </Col>
-                                    <Col span={12} style={{ marginBottom: '10px' }}>
+                                    <Col span={12} style={{marginBottom: '10px'}}>
                                         <Form.Item name="isPath">
-                                            <Checkbox checked={checkedPath} style={{fontSize:'16px'}} disabled={disabled} onChange={onChangePath}>
-                                                {!checkedPath?"Path Variable":null}
+                                            <Checkbox checked={checkedPath} style={{fontSize: '16px'}}
+                                                      disabled={disabled} onChange={onChangePath}>
+                                                {!checkedPath ? "Path Variable" : null}
                                             </Checkbox>
                                         </Form.Item>
-                                        {checkedPath?
+                                        {checkedPath ?
                                             <Col span={24}>
-                                                <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="pathValue"
+                                                <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
+                                                           name="pathValue"
                                                            label="Значение переменной пути"
                                                 >
                                                     <Input placeholder="Значение"/>
                                                 </Form.Item>
-                                            </Col>:null
+                                            </Col> : null
                                         }
                                     </Col>
 
-                                    <Col span={24} >
+                                    <Col span={24}>
                                         <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="url"
                                                    label="URL-адрес">
                                             <Input placeholder="URL-адрес"/>
                                         </Form.Item>
                                     </Col>
 
-                                    <Col span={24} >
-                                        <Form.Item rules={[{required: false}]}
-                                                   name="parser"
-                                                   label="parser">
-                                            <Input.TextArea placeholder="function(){
-                                            }" rows={10}  maxLength={66666} />
+
+                                    <Col span={24}>
+                                        <Form.Item rules={[{required: false}]} name="parserType"
+                                                   label="Тип">
+                                            <Select style={{width: "100%"}} allowClear onSelect={onSelectParserType}
+                                                    placeholder="Parser type">
+                                                <Option selected key="JS" value={"JS"}></Option>
+                                                <Option key="PYTHON" value={"PYTHON"}></Option>
+                                            </Select>
                                         </Form.Item>
                                     </Col>
 
+
+                                    {/*{selectedParserType && (*/}
+                                    {/*    <Col span={24}>*/}
+                                    {/*        <Form.Item rules={[{required: false}]} name="parser" label="Parser">*/}
+                                    {/*            <CodeMirror*/}
+                                    {/*                value={""}*/}
+                                    {/*                height="200px"*/}
+                                    {/*                options={{*/}
+                                    {/*                    mode: selectedParserType === 'JS' ? 'javascript' : 'python',*/}
+                                    {/*                    theme: 'default',*/}
+                                    {/*                    lineNumbers: true*/}
+                                    {/*                }}*/}
+                                    {/*            />*/}
+                                    {/*        </Form.Item>*/}
+                                    {/*    </Col>*/}
+                                    {/*)}*/}
+
+                                    <Col span={24}>
+                                        <Form.Item rules={[{required: false}]}
+                                                   name="parser"
+                                                   label="Parser">
+                                            <CodeMirror value={""} height="200px"
+                                                        extensions={[javascript(),python()]}/>
+                                            {/*<Input.TextArea placeholder="function(){*/}
+                                            {/*}" rows={10}  maxLength={66666} />*/}
+                                        </Form.Item>
+                                    </Col>
 
 
                                     <Col span={12}>
