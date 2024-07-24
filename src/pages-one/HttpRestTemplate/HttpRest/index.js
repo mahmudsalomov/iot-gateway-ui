@@ -138,18 +138,22 @@ function Rest() {
             toast.error("No connect server")
         }
     }
-    const connect = async (row, value) => {
+    const connect = async (httpRest) => {
         try {
             let res = await instance({
                 method: "get",
-                url: `/protocol/httpRest/isConnect/${row?.id}`
+                url: `/protocol/httpRest/isConnect/${httpRest?.id}`
             })
-            if (res?.data?.success) {
-                toast.success(row?.name + " - Connected")
-            } else {
-                toast.warning(row?.name + " - Disconnected")``
+            if (res?.data?.success){
+                if (res?.data?.object) {
+                    toast.success(httpRest?.name + " - Connected")
+                } else {
+                    toast.warning(httpRest?.name + " - Disconnected")``
+                }
+                _httpRests.fetch()
+            }else {
+                console.error(res?.data?.message)
             }
-            _httpRests.fetch()
         } catch (e) {
             toast.error("Error")
         }
@@ -256,7 +260,7 @@ function Rest() {
                                     <td className="text-center">{httRest?.topic?.name}</td>
                                     <td className="text-center">{httRest?.topic?.broker?.ipAddress + ':' + httRest?.topic?.broker?.port}</td>
                                     <td className="text-center"><Checkbox defaultChecked={httRest?.enable}
-                                                                          onChange={(e) => connect(httRest, e.target.checked)}></Checkbox>
+                                                                          onChange={(e) => connect(httRest)}></Checkbox>
                                     </td>
                                     <td className="text-center">
                                         <div className="d-flex justify-content-center p-2">

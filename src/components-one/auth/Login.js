@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {isImageUrl} from "antd/es/upload/utils";
 import {AiFillLock} from "react-icons/ai";
 import './style.css';
@@ -52,7 +52,14 @@ function Login() {
             localStorage.setItem(REFRESH_TOKEN, data?.refreshToken);
             setValid(true)
             setLoading(false)
-            data?.token?navigate("/"):navigate("/login")
+            if (localStorage.getItem("ACCESS_TOKEN") === data?.token){
+                navigate("/")
+            }else {
+                navigate("/login")
+            }
+            window.location.reload()
+            // data?.token?navigate("/"):navigate("/login")
+            // window.location.reload()
         } catch (e) {
             console.log(e)
             message.error("Имя пользователя или пароль неверны")
