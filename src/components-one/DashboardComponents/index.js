@@ -18,6 +18,7 @@ import {SiHttpie, SiMumble, SiMusicbrainz, SiRsocket} from "react-icons/si";
 import {MdOutlineHttp, MdSensorWindow} from "react-icons/md";
 import {RxValue} from "react-icons/rx";
 import {BiSitemap} from "react-icons/bi";
+import imageLogo from "../../assets/cloud.png";
 import {TbBrandSocketIo} from "react-icons/tb";
 import {ACCESS_TOKEN, BASE_URL_WEBSOCKET, REFRESH_TOKEN} from "../../utils/API_PATH";
 import {over} from 'stompjs';
@@ -115,7 +116,7 @@ const DashboardComponent= () => {
     // }, []);
 
     return ( check()?
-        <Layout className="d-flex" style={{minHeight:"100vh"}}>
+        <Layout className="d-flex" >
             <Sider
                 style={{height:"100vh"}}
                 breakpoint="lg"
@@ -131,6 +132,7 @@ const DashboardComponent= () => {
             >
                 <Space className="d-flex justify-content-evenly align-items-center p-2">
                     <AiOutlineGateway style={{fontSize:"40px",color:"white"}}/>
+                    {/*<Image style={{backgroundColor:"white",color:"white"}} src={imageLogo} />*/}
                     <Typography.Text style={{color:"white",fontSize:"20px"}}>{collapsed?"":"Uzliti IOT Gateway"}</Typography.Text>
                 </Space>
                 <div className="demo-logo-vertical" />
@@ -253,7 +255,7 @@ const DashboardComponent= () => {
                         }}
                     />
                 </Header>
-                <Content style={{ margin: '24px 16px 0', height:'90vh' }}>
+                <Content style={{ margin: '24px 16px 0', height:'80vh'}}>
                     <div style={{ padding: 24,background:colorBgContainer}}><AppRoutes /></div>
                 </Content>
             </Layout>

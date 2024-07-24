@@ -270,11 +270,11 @@ function ModbusClient() {
                 </Row>
                 <Row gutter={24}>
                     <Col span={24}>
-                        <table style={{verticalAlign: "middle"}}
+                        <table style={{verticalAlign: "middle", height:'70vh'}}
                                datapagesize={false}
                                className="table table-bordered table-striped table-hover responsiveTable w-100">
-                            <thead className="d-md-table-header-group">
-                            <tr>
+                            <thead className="d-md-table-header-group" style={{display:'table',width:'100%',tableLayout:'fixed'}}>
+                            <tr style={{display:'table',width:'100%',tableLayout:'fixed'}}>
                                 <th className="d-sm-none d-md-table-cell text-center">ИД</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Название</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Ip</th>
@@ -288,9 +288,9 @@ function ModbusClient() {
                                 <th className="d-sm-none d-md-table-cell text-center">Действия</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody style={{display:'block',height:'90%',overflow:'auto'}}>
                             {_clients?.data.map((client) =>
-                                <tr>
+                                <tr style={{display:'table',width:'100%',tableLayout:'fixed'}}>
                                     <td className="text-center">{client?.id}</td>
                                     <td className="text-center">{client?.name}</td>
                                     <td className="text-center">{client?.ip}

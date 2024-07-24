@@ -162,10 +162,10 @@ function Topic() {
                     </Col>
                 </Row>
 
-                <table style={{verticalAlign: "middle"}}
+                <table style={{verticalAlign: "middle", height:'70vh'}}
                        className="table table-bordered table-striped table-hover responsiveTable w-100">
-                    <thead className="d-md-table-header-group text-center">
-                    <tr>
+                    <thead className="d-md-table-header-group text-center" style={{display:'table',width:'100%',tableLayout:'fixed'}}>
+                    <tr style={{display:'table',width:'100%',tableLayout:'fixed'}}>
                         <th className="d-sm-none d-md-table-cell" style={{width: "50px"}}>ИД</th>
                         <th className="d-sm-none d-md-table-cell">Топик</th>
                         <th className="d-sm-none d-md-table-cell">Брокер</th>
@@ -174,9 +174,9 @@ function Topic() {
                         <th className="d-sm-none d-md-table-cell" style={{width: "180px"}}>Действия</th>
                     </tr>
                     </thead>
-                    <tbody className="text-center">
+                    <tbody className="text-center" style={{display:'block',height:'90%',overflow:'auto'}}>
                     {_topics.data?.map((item, key) =>
-                        <tr key={key}>
+                        <tr key={key} style={{display:'table',width:'100%',tableLayout:'fixed'}}>
                             <td>{item.id}</td>
                             <td>{item.name}</td>
                             <td>{item.broker?.ipAddress + ':' + item.broker?.port}</td>

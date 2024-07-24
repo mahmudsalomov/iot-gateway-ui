@@ -140,10 +140,10 @@ function ModbusItem() {
                 </Row>
                 <Row gutter={24}>
                     <Col span={24}>
-                        <table style={{verticalAlign: "middle", overflowY: "scroll", maxHeight: "90%"}}
+                        <table style={{verticalAlign: "middle", height:'70vh'}}
                                className="table table-bordered table-striped table-hover responsiveTable w-100">
-                            <thead className="d-md-table-header-group">
-                            <tr>
+                            <thead className="d-md-table-header-group" style={{display:'table',width:'100%',tableLayout:'fixed'}}>
+                            <tr style={{display:'table',width:'100%',tableLayout:'fixed'}}>
                                 <th className="d-sm-none d-md-table-cell text-center">ИД</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Название тега</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Аддресс</th>
@@ -154,10 +154,10 @@ function ModbusItem() {
                                 <th className="d-sm-none d-md-table-cell text-center">Действия</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody style={{display:'block',height:'90%',overflow:'auto'}}>
                             {
                                 _items.data?.map((item, key) =>
-                                    <tr>
+                                    <tr style={{display:'table',width:'100%',tableLayout:'fixed'}}>
                                         <td className="text-center">{item?.id}</td>
                                         <td className="text-center">{item?.tagName}</td>
                                         <td className="text-center">{item?.address}</td>

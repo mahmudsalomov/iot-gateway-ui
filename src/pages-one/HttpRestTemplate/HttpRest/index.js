@@ -144,10 +144,10 @@ function Rest() {
                 method: "get",
                 url: `/protocol/httpRest/isConnect/${row?.id}`
             })
-            if (value) {
+            if (res?.data?.success) {
                 toast.success(row?.name + " - Connected")
             } else {
-                toast.warning(row?.name + " - Disconnected")
+                toast.warning(row?.name + " - Disconnected")``
             }
             _httpRests.fetch()
         } catch (e) {
@@ -221,11 +221,11 @@ function Rest() {
                 </Row>
                 <Row gutter={24}>
                     <Col span={24}>
-                        <table style={{verticalAlign: "middle", height: "90vh", overflowY: "scroll"}}
+                        <table style={{verticalAlign: "middle",height:'70vh'}}
                                datapagesize={false}
                                className="table table-bordered table-striped table-hover responsiveTable w-100">
-                            <thead className="d-md-table-header-group">
-                            <tr>
+                            <thead className="d-md-table-header-group" style={{display:'table',width:'98.9%',tableLayout:'fixed'}}>
+                            <tr style={{display:'table',width:'100%',tableLayout:'fixed'}}>
                                 <th className="d-sm-none d-md-table-cell text-center">ИД</th>
                                 <th className="d-sm-none d-md-table-cell text-center">Название</th>
                                 <th className="d-sm-none d-md-table-cell text-center">URL-адрес</th>
@@ -240,22 +240,18 @@ function Rest() {
                                 <th className="d-sm-none d-md-table-cell text-center">Действия</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody style={{display:'block',height:'90%',overflow:'auto',width:'99.6'}}>
                             {_httpRests.data?.map((httRest, key) =>
-                                <tr>
+                                <tr style={{display:'table',width:'100%',tableLayout:'fixed'}}>
                                     <td className="text-center">{httRest?.id}</td>
                                     <td className="text-center">{httRest?.name}</td>
-                                    <td className="text-center">{httRest?.url}</td>
+                                    <td className="text-center" style={{overflow:'auto'}}>{httRest?.url}</td>
                                     <td className="text-center">{httRest?.polling}</td>
                                     <td className="text-center">{httRest?.type}</td>
                                     <td className="text-center">{httRest?.httpType}</td>
-                                    <td className="text-center" style={{
-                                        // whiteSpace: "nowrap",
-                                        // width: "50px",
-                                        // overflow: "hidden",
-                                        // textOverflow: "ellipsis",
-                                        // border: "1px solid #000000"
-                                    }}>{httRest?.body}</td>
+                                    <div style={{overflow:'auto',maxHeight:'10vh'}}>
+                                        <td className="text-center" style={{width:'100%'}}>{httRest?.body}</td>
+                                    </div>
                                     {/*<td className="text-center">{httRest?.parser}</td>*/}
                                     <td className="text-center">{httRest?.topic?.name}</td>
                                     <td className="text-center">{httRest?.topic?.broker?.ipAddress + ':' + httRest?.topic?.broker?.port}</td>
@@ -321,7 +317,7 @@ function Rest() {
                                     <Col span={12}>
                                         <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="name"
                                                    label="Название">
-                                            <Input placeholder="Название"/>
+                                            <Input type="text" placeholder="Название"/>
                                         </Form.Item>
                                     </Col>
 
@@ -384,13 +380,13 @@ function Rest() {
                                                            name="paramKey"
                                                            label="Ключ параметра"
                                                 >
-                                                    <Input placeholder="Ключ"/>
+                                                    <Input type="text" placeholder="Ключ"/>
                                                 </Form.Item>
                                                 <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
                                                            name="paramValue"
                                                            label="Значение параметра"
                                                 >
-                                                    <Input placeholder="Значение"/>
+                                                    <Input type="text" placeholder="Значение"/>
                                                 </Form.Item>
                                             </Col> : null
                                         }
@@ -408,7 +404,7 @@ function Rest() {
                                                            name="pathValue"
                                                            label="Значение переменной пути"
                                                 >
-                                                    <Input placeholder="Значение"/>
+                                                    <Input type="text" placeholder="Значение"/>
                                                 </Form.Item>
                                             </Col> : null
                                         }
@@ -417,7 +413,7 @@ function Rest() {
                                     <Col span={24}>
                                         <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="url"
                                                    label="URL-адрес">
-                                            <Input placeholder="URL-адрес"/>
+                                            <Input type="text" placeholder="URL-адрес"/>
                                         </Form.Item>
                                     </Col>
 
@@ -429,6 +425,7 @@ function Rest() {
                                                     placeholder="Parser type">
                                                 <Option selected key="JS" value={"JS"}></Option>
                                                 <Option key="PYTHON" value={"PYTHON"}></Option>
+
                                             </Select>
                                         </Form.Item>
                                     </Col>
