@@ -4,9 +4,6 @@ import React, {useEffect, useState} from "react";
 import DashboardComponent from "./components-one/DashboardComponents";
 import {ACCESS_TOKEN, REFRESH_TOKEN} from "./utils/API_PATH";
 import Login from "./components-one/auth/Login";
-import useAuthStore from "./store/store";
-import instance from "./utils/axios_config";
-import {message} from "antd";
 
 
 function App() {

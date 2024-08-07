@@ -99,7 +99,7 @@ function Broker() {
                        className="table table-bordered table-striped table-hover responsiveTable w-100">
                     <thead className="d-md-table-header-group text-center" style={{display:'table',width:'100%',tableLayout:'fixed'}}>
                     <tr style={{display:'table',width:'100%',tableLayout:'fixed'}}>
-                        <th className="d-sm-none d-md-table-cell" style={{width: "50px"}}>ИД</th>
+                        <th className="d-sm-none d-md-table-cell">ИД</th>
                         <th className="d-sm-none d-md-table-cell">ИП адрес</th>
                         <th className="d-sm-none d-md-table-cell">Порт</th>
                         <th className="d-sm-none d-md-table-cell" style={{width: "180px"}}>Действия</th>
