@@ -147,10 +147,11 @@ function Rest() {
             if (res?.data?.success){
                 if (res?.data?.object) {
                     toast.success(httpRest?.name + " - Connected")
+                    _httpRests.fetch()
                 } else {
-                    toast.warning(httpRest?.name + " - Disconnected")``
+                    toast.warning(httpRest?.name + " - Disconnected")
+                    _httpRests.fetch()
                 }
-                _httpRests.fetch()
             }else {
                 console.error(res?.data?.message)
             }
@@ -259,7 +260,7 @@ function Rest() {
                                     {/*<td className="text-center">{httRest?.parser}</td>*/}
                                     <td className="text-center">{httRest?.topic?.name}</td>
                                     <td className="text-center">{httRest?.topic?.broker?.ipAddress + ':' + httRest?.topic?.broker?.port}</td>
-                                    <td className="text-center"><Checkbox defaultChecked={httRest?.enable}
+                                    <td className="text-center"><Checkbox checked={httRest?.enable}
                                                                           onChange={(e) => connect(httRest)}></Checkbox>
                                     </td>
                                     <td className="text-center">
