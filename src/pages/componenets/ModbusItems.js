@@ -146,10 +146,12 @@ const ModbusItems =()=> {
     const [registerType,setRegisterType] = useState("");
     const [address,setAddress] = useState(0);
     const [mClient,setMClient] = useState({});
+
     const editItem=(item)=>{
-        openEditModal();
-        setMItem(item);
+        console.log("efeefefefefef Mc Mc Mc :::: "+mClient)
         setMClient(item?.modbusC)
+        setMItem(item);
+        openEditModal();
     }
 
     const sendEditData=()=>{
@@ -218,6 +220,7 @@ const ModbusItems =()=> {
                                     <td>{mItem.type}</td>
                                     <td>{mItem?.value==="ERROR"?"No Segnal":mItem?.value}</td>
                                     <td><button className="btn btn-primary" onClick={()=>editItem(mItem)}><BiEdit/></button></td>
+
                                     <td><button className="btn btn-danger" onClick={()=>removeItem(mItem.id)}><RiDeleteBin6Fill/></button></td>
                                 </tr>
                             )}

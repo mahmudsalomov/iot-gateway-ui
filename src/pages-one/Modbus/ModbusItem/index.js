@@ -69,7 +69,7 @@ function ModbusItem() {
     }
     const sendData = async (values) => {
         if (open.item) {
-            values = {...values, id: open?.item}
+            values = {...values, id: open?.item?.id}
         }
         setLoader(true)
         try {
@@ -171,8 +171,11 @@ function ModbusItem() {
                                                     <FaEdit
                                                         style={{color: 'green', fontSize: 24}}
                                                         onClick={() => {
-                                                            setOpen({open: true, item: item?.id})
-                                                            form.setFieldsValue(item)
+                                                            setOpen({ open: true, item: item });
+                                                            form.setFieldsValue({
+                                                                ...item,
+                                                                modbusCId: item?.modbusC?.id // <--- aynan shu MUHIM
+                                                            });
                                                         }}/>
                                                 </Tooltip>
 
@@ -253,13 +256,22 @@ function ModbusItem() {
                                     </Col>
 
                                     <Col span={24}>
-                                        <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
-                                                   name="modbusCId"
-                                                   label="Клиенты Modbus">
-                                            <Select allowClear placeholder="Клиенты Modbus">
-                                                {_clients.data?.map((modC, key) =>
-                                                    <Option key={modbusCId} value={modC?.id}>{modC?.name}</Option>
-                                                )}
+                                        <Form.Item
+                                            rules={[{ required: true, message: "Обязательное поле" }]}
+                                            name="modbusCId"
+                                            label="Клиенты Modbus"
+                                        >
+                                            <Select
+                                                allowClear
+                                                placeholder="Клиенты Modbus"
+                                                showSearch
+                                                optionFilterProp="children"
+                                            >
+                                                {_clients.data?.map((modC) => (
+                                                    <Option key={modC?.id} value={modC?.id}>
+                                                        {modC?.name}
+                                                    </Option>
+                                                ))}
                                             </Select>
                                         </Form.Item>
                                     </Col>
