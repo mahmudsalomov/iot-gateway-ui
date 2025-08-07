@@ -148,7 +148,6 @@ const ModbusItems =()=> {
     const [mClient,setMClient] = useState({});
 
     const editItem=(item)=>{
-        console.log("efeefefefefef Mc Mc Mc :::: "+mClient)
         setMClient(item?.modbusC)
         setMItem(item);
         openEditModal();
