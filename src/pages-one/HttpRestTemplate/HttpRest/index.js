@@ -195,7 +195,7 @@ function Rest() {
             <Spin spinning={_httpRests.loading} size={20} direction="vertical">
                 <Row gutter={24} className="mb-4">
                     <Col span={4}>
-                        <Select style={{width: "100%"}} value={brokerId} allowClear onChange={(e) => {
+                        <Select showSearch optionFilterProp="children" style={{width: "100%"}} value={brokerId} allowClear onChange={(e) => {
                             setTopicId(null)
                             setTopics([])
                             setBrokerId(e)
@@ -206,7 +206,7 @@ function Rest() {
                         </Select>
                     </Col>
                     <Col span={4}>
-                        <Select style={{width: "100%"}} value={topicId} allowClear onChange={(e) => {
+                        <Select showSearch optionFilterProp="children" style={{width: "100%"}} value={topicId} allowClear onChange={(e) => {
                             setTopicId(e)
                         }} placeholder="Тип протокола">
                             {topics?.map(item => <Option key={item?.id}
@@ -337,7 +337,7 @@ function Rest() {
                                     <Col span={12}>
                                         <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="type"
                                                    label="Тип">
-                                            <Select style={{width: "100%"}} allowClear placeholder="Тип">
+                                            <Select showSearch optionFilterProp="children" style={{width: "100%"}} allowClear placeholder="Тип">
                                                 {_types.data?.map(item => <Option key={item}
                                                                                   value={item}>{item}</Option>)}
                                             </Select>
@@ -347,7 +347,7 @@ function Rest() {
                                         <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
                                                    name="httpType"
                                                    label="Тип http">
-                                            <Select style={{width: "100%"}} allowClear placeholder="Тип http"
+                                            <Select showSearch optionFilterProp="children" style={{width: "100%"}} allowClear placeholder="Тип http"
                                                     onChange={(e) => setHttpType(e)}>
                                                 {_httpTypes.data?.map(item => <Option key={item}
                                                                                       value={item}>{item}</Option>)}
@@ -426,7 +426,7 @@ function Rest() {
                                     <Col span={24}>
                                         <Form.Item rules={[{required: false}]} name="parserType"
                                                    label="Тип">
-                                            <Select style={{width: "100%"}} allowClear onSelect={onSelectParserType}
+                                            <Select showSearch optionFilterProp="children" style={{width: "100%"}} allowClear onSelect={onSelectParserType}
                                                     placeholder="Parser type">
                                                 <Option selected key="JS" value={"JS"}></Option>
                                                 <Option key="PYTHON" value={"PYTHON"}></Option>
@@ -468,7 +468,7 @@ function Rest() {
                                         <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
                                                    name="brokerId"
                                                    label="Брокер">
-                                            <Select style={{width: "100%"}} allowClear placeholder="Брокер"
+                                            <Select showSearch optionFilterProp="children" style={{width: "100%"}} allowClear placeholder="Брокер"
                                                     onChange={(e) => {
                                                         getFormTopics(e)
                                                         form.resetFields(['topicId']);
@@ -483,7 +483,7 @@ function Rest() {
                                         <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
                                                    name="topicId"
                                                    label="Топик">
-                                            <Select style={{width: "100%"}} allowClear placeholder="Топик">
+                                            <Select showSearch optionFilterProp="children" style={{width: "100%"}} allowClear placeholder="Топик">
                                                 {formTopics?.map(item => <Option key={item.id}
                                                                                  value={item.id}>{item.name}</Option>)}
                                             </Select>

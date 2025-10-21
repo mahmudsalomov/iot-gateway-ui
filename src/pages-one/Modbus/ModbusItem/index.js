@@ -115,6 +115,8 @@ function ModbusItem() {
                         <Select allowClear
                                 className="w-100"
                                 placeholder="Клиенты Modbus"
+                                showSearch
+                                optionFilterProp="children"
                                 onChange={(e) => {
                                     setModbusCId(e)
                                 }}
@@ -237,7 +239,7 @@ function ModbusItem() {
                                         <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
                                                    name="register"
                                                    label="Регистр">
-                                            <Select allowClear placeholder="Регистр">
+                                            <Select showSearch optionFilterProp="children" allowClear placeholder="Регистр">
                                                 {registers?.map((register, key) =>
                                                     <Option key={register}>{register}</Option>
                                                 )}
@@ -247,7 +249,7 @@ function ModbusItem() {
                                     <Col span={12}>
                                         <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="type"
                                                    label="Var type">
-                                            <Select allowClear placeholder="Var type">
+                                            <Select showSearch optionFilterProp="children" allowClear placeholder="Var type">
                                                 {registerVarTypes?.map((registertype, key) =>
                                                     <Option key={registertype}>{registertype}</Option>
                                                 )}

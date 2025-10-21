@@ -110,7 +110,7 @@ function JdbcItem() {
                 <Row gutter={24} className="mb-4">
 
                     <Col span={4}>
-                        <Select allowClear
+                        <Select showSearch optionFilterProp="children" allowClear
                                 className="w-100"
                                 placeholder="Jdbc"
                                 onChange={(e) => {
@@ -247,7 +247,7 @@ function JdbcItem() {
                                         <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
                                                    name="jdbcId"
                                                    label="Jdbc">
-                                            <Select allowClear placeholder="Jdbc">
+                                            <Select showSearch optionFilterProp="children" allowClear placeholder="Jdbc">
                                                 {jdbcClients?.map((item) =>
                                                     <Option key={item?.id} value={item?.id}>{item?.name}</Option>
                                                 )}

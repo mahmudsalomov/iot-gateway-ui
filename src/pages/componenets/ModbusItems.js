@@ -13,6 +13,7 @@ import Modal from "react-modal";
 import {type} from "@testing-library/user-event/dist/type";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {Select} from "antd";
 
 const ModbusItems =()=> {
 
@@ -186,12 +187,12 @@ const ModbusItems =()=> {
                     <h1>Modbus Items</h1>
                     <div className="d-flex">
                         <button className="btn btn-success  my-2" onClick={openModal}>Add</button>
-                        <select onChange={(e)=>getItemByMCId(e)} className="form-select-sm mx-2" id="modbusC">
+                        <Select showSearch optionFilterProp="children" onChange={(e)=>getItemByMCId(e)} className="form-select-sm mx-2" id="modbusC">
                             <option value="">Select Modbus Clients</option>
                             {modbusClients?.map((mClient,key)=>
                                     <option  value={mClient.id}>{key+1+" - "+mClient.name}</option>
                             )}
-                        </select>
+                        </Select>
                     </div>
                     <div className="mt-2">
                         <table className="table table-striped table-bordered">
@@ -237,31 +238,31 @@ const ModbusItems =()=> {
                                 {/*<input id="register" className="form-control my-2" required={true} type="text" placeholder="Enter Register"/>*/}
                                 <div className="d-flex justify-content-between align-items-center my-2 p-2 border">
                                     <p className="my-0">Register : </p>
-                                    <select name="" id="register" className="form-select-sm">
+                                    <Select showSearch optionFilterProp="children" name="" id="register" className="form-select-sm">
                                         {
                                             types?.map(type=>
                                                 <option value={type}>{type}</option>
                                             )
                                         }
-                                    </select>
+                                    </Select>
                                 </div>
                                 <div className="d-flex justify-content-between align-items-center my-2 p-2 border">
                                     <p className="my-0">Register Type : </p>
-                                    <select name="" id="type" className="form-select-sm">
+                                    <Select showSearch optionFilterProp="children" name="" id="type" className="form-select-sm">
                                         {
                                             varTypes?.map(type=>
                                                 <option value={type}>{type}</option>
                                             )
                                         }
-                                    </select>
+                                    </Select>
                                 </div>
 
                                 <input id="address" className="form-control my-2" required={true} type="number" placeholder="Enter Address"/>
                                 <div className="d-flex justify-content-between align-items-center p-2 border">
                                     <p className="my-0">Modbus Client : </p>
-                                    <select id="modbusC" className="form-select-sm my-1">
+                                    <Select showSearch optionFilterProp="children" id="modbusC" className="form-select-sm my-1">
                                         <option>{modbus.name}</option>
-                                    </select>
+                                    </Select>
                                 </div>
                             </div>
                             <div className="d-flex justify-content-between my-2">
@@ -280,31 +281,31 @@ const ModbusItems =()=> {
                                 {/*<input id="register" className="form-control my-2" required={true} type="text" placeholder="Enter Register"/>*/}
                                 <div className="d-flex justify-content-between align-items-center my-2 p-2 border">
                                     <p className="my-0">Register : </p>
-                                    <select defaultValue={mItem.register} name="" id="register" onChange={(e)=>setRegister(e.target.value)} className="form-select-sm">
+                                    <Select showSearch optionFilterProp="children" defaultValue={mItem.register} name="" id="register" onChange={(e)=>setRegister(e.target.value)} className="form-select-sm">
                                         {
                                             types?.map(type=>
                                                 <option value={type}>{type}</option>
                                             )
                                         }
-                                    </select>
+                                    </Select>
                                 </div>
                                 <div className="d-flex justify-content-between align-items-center my-2 p-2 border">
                                     <p className="my-0">Register Type : </p>
-                                    <select name="" defaultValue={mItem.type} onChange={(e)=>setRegisterType(e.target.value)} id="type" className="form-select-sm">
+                                    <Select showSearch optionFilterProp="children" name="" defaultValue={mItem.type} onChange={(e)=>setRegisterType(e.target.value)} id="type" className="form-select-sm">
                                         {
                                             varTypes?.map(type=>
                                                 <option value={type}>{type}</option>
                                             )
                                         }
-                                    </select>
+                                    </Select>
                                 </div>
 
                                 <input id="address" defaultValue={mItem.address} onChange={(e)=>setAddress(e.target.value)} className="form-control my-2" required={true} type="number" placeholder="Enter Address"/>
                                 <div className="d-flex justify-content-between align-items-center p-2 border">
                                     <p className="my-0">Modbus Client : </p>
-                                    <select value={mClient?.name} id="modbusC" className="form-select-sm my-1">
+                                    <Select showSearch optionFilterProp="children" value={mClient?.name} id="modbusC" className="form-select-sm my-1">
                                         <option>{mClient?.name}</option>
-                                    </select>
+                                    </Select>
                                 </div>
                             </div>
                             <div className="d-flex justify-content-between my-2">

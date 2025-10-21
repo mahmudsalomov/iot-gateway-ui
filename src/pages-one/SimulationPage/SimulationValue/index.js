@@ -82,7 +82,7 @@ function SimulationValue() {
             <Spin spinning={_simValues.loading} size={20} direction="vertical">
                 <Row gutter={24} className="mb-4">
                     <Col sm={4}>
-                        <Select allowClear
+                        <Select showSearch optionFilterProp="children" allowClear
                                 className="w-100"
                                 placeholder="Симуляция"
                                 onChange={(e) => setSimulationId(e)}
@@ -199,7 +199,7 @@ function SimulationValue() {
                                         <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
                                                    name="simulationId"
                                                    label="Симуляция">
-                                            <Select allowClear placeholder="Симуляция"
+                                            <Select showSearch optionFilterProp="children" allowClear placeholder="Симуляция"
                                             >
                                                 {_simulations.data?.map(value =>
                                                     <Option key={value?.id} value={value?.id}>{value?.name}</Option>

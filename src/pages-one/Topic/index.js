@@ -134,7 +134,7 @@ function Topic() {
 
                 <Row gutter={24} style={{alignItems: "center"}} className="mb-4">
                     <Col span={4}>
-                        <Select style={{width: "100%"}} value={brokerId} allowClear onChange={(e) => {
+                        <Select style={{width: "100%"}} showSearch optionFilterProp="children" value={brokerId} allowClear onChange={(e) => {
                             setBrokerId(e)
                         }} placeholder="Брокер">
                             {brokers.data?.map(item => <Option key={item?.id}
@@ -142,7 +142,7 @@ function Topic() {
                         </Select>
                     </Col>
                     <Col span={4}>
-                        <Select style={{width: "100%"}} value={protocolType} allowClear onChange={(e) => {
+                        <Select style={{width: "100%"}} value={protocolType} showSearch optionFilterProp="children" allowClear onChange={(e) => {
                             setProtocolType(e)
                         }} placeholder="Тип протокола">
                             {_protocol_types.data?.map(item => <Option key={item}
@@ -236,7 +236,7 @@ function Topic() {
                             <Col span={12}>
                                 <Form.Item rules={[{required: true, message: "Обязательное поле"}]} name="brokerId"
                                            label="Брокер">
-                                    <Select style={{width: "100%"}} allowClear placeholder="Брокер">
+                                    <Select style={{width: "100%"}} showSearch optionFilterProp="children" allowClear placeholder="Брокер">
                                         {brokers.data?.map(item => <Option key={item?.id}
                                                                            value={item?.id}>{item?.ipAddress + ':' + item?.port}</Option>)}
                                     </Select>

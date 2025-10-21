@@ -87,7 +87,7 @@ function WebsocketItem() {
                 <Row gutter={24} className="mb-4">
 
                     <Col span={4}>
-                        <Select allowClear
+                        <Select showSearch optionFilterProp="children" allowClear
                                 className="w-100"
                                 placeholder="Websocket"
                                 onChange={(e) => {
@@ -197,7 +197,7 @@ function WebsocketItem() {
                                         <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
                                                    name="websocketId"
                                                    label="Websocket">
-                                            <Select allowClear placeholder="Websocket">
+                                            <Select showSearch optionFilterProp="children" allowClear placeholder="Websocket">
                                                 {_websockets.data?.map((item) =>
                                                     <Option key={item?.id} value={item?.id}>{item?.name}</Option>
                                                 )}

@@ -85,7 +85,7 @@ function HttpRestItem() {
             <Spin spinning={_items.loading} size={20} direction="vertical">
                 <Row gutter={24} className="mb-4">
                     <Col span={4}>
-                        <Select allowClear
+                        <Select showSearch optionFilterProp="children" allowClear
                                 className="w-100"
                                 placeholder="HttpRest"
                                 onChange={(e) => {
@@ -193,7 +193,7 @@ function HttpRestItem() {
                                         <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
                                                    name="httpRestId"
                                                    label="HttpRest">
-                                            <Select allowClear placeholder="HttpRest">
+                                            <Select showSearch optionFilterProp="children" allowClear placeholder="HttpRest">
                                                 {_httpRests.data?.map((item) =>
                                                     <Option key={item?.id} value={item?.id}>{item?.name}</Option>
                                                 )}

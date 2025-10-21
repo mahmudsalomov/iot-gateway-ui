@@ -145,7 +145,7 @@ function Simulation() {
             <Spin spinning={_simulations.loading} size={20} direction="vertical">
                 <Row gutter={24} className="mb-4">
                     <Col span={4}>
-                        <Select style={{width: "100%"}} value={brokerId} allowClear onChange={(e) => {
+                        <Select showSearch optionFilterProp="children" style={{width: "100%"}} value={brokerId} allowClear onChange={(e) => {
                             setTopicId(null)
                             setTopics([])
                             setBrokerId(e)
@@ -156,7 +156,7 @@ function Simulation() {
                         </Select>
                     </Col>
                     <Col span={4}>
-                        <Select style={{width: "100%"}} value={topicId} allowClear onChange={(e) => {
+                        <Select showSearch optionFilterProp="children" style={{width: "100%"}} value={topicId} allowClear onChange={(e) => {
                             setTopicId(e)
                         }} placeholder="Тип протокола">
                             {topics?.map(item => <Option key={item?.id}
@@ -274,7 +274,7 @@ function Simulation() {
                                         <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
                                                    name="brokerId"
                                                    label="Брокер">
-                                            <Select style={{width: "100%"}} allowClear placeholder="Брокер"
+                                            <Select showSearch optionFilterProp="children" style={{width: "100%"}} allowClear placeholder="Брокер"
                                                     onChange={(e) => {
                                                         getFormTopics(e)
                                                         form.resetFields(['topicId']);
@@ -289,7 +289,7 @@ function Simulation() {
                                         <Form.Item rules={[{required: true, message: "Обязательное поле"}]}
                                                    name="topicId"
                                                    label="Топик">
-                                            <Select style={{width: "100%"}} allowClear placeholder="Топик">
+                                            <Select showSearch optionFilterProp="children" style={{width: "100%"}} allowClear placeholder="Топик">
                                                 {formTopics?.map(item => <Option key={item.id}
                                                                                  value={item.id}>{item.name}</Option>)}
                                             </Select>
